@@ -1,4 +1,4 @@
-node(env.NODE) {
+node('vm1') {
 	echo sh('printenv | sort')
 
 	stage 'checkout Source Code'
