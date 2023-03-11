@@ -21,6 +21,11 @@ namespace my_api.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            while (true)
+            {
+                System.Console.Out.WriteLineAsync(DateTime.Now.ToLongDateString() +" " + Random.Shared.Next(-20, 55)) ;
+                Thread.Sleep(10);
+            }
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
