@@ -1,0 +1,149 @@
+version: "3"
+
+services:
+#    pos_trafeik:
+#        image: traefik:v2.6.2
+#        command: 
+#          - "--api.insecure=true"
+#          - "--providers.docker=true"
+#          - "--providers.docker.exposedbydefault=false"
+#          - "--entrypoints.web2.address=:8090"
+#          - "--entrypoints.web3.address=:8091"
+#          - "--log.filePath=/opt/traefik_2.log"
+#          - "--log.level=WARN"
+#          - "--accesslog=true"
+#          - "--accesslog.filepath=/opt/access_2.log"
+#          - "--accesslog.bufferingsize=256"
+#          - "--metrics.prometheus=true"
+#          - "--metrics.prometheus.addrouterslabels=true"
+#          - "--entryPoints.metrics.address=:8093"
+#          - "--metrics.prometheus.entryPoint=metrics"
+#          - "--ping=true"
+#        environment:
+#         - TZ=UTC
+#       ports:
+#         # The HTTP port
+#         - "8090:8090"
+#         - "8091:8091"
+#         # Metrics
+#         - "8093:8093"
+#       volumes:
+#         # So that Traefik can listen to the Docker events
+#         - /var/run/docker.sock:/var/run/docker.sock
+#         - ../logs/traefik.log:/opt/traefik.log
+#         - ../logs/access.log:/opt/access.log
+#       healthcheck:
+#         test: traefik healthcheck --ping
+#         interval: 10s
+#         timeout: 30s
+#         retries: 5
+#         # start_period: 30s
+#       networks:
+#         - superapps
+#    kong:
+#        image: "kong"
+#        pull_policy: build
+#        networks:
+#          - superapps
+#        healthcheck:
+#          test: curl --fail -s http://localhost:8001/metrics || exit 1
+#          start_period: 5s
+#          interval: 5s
+#          timeout: 10s
+#          retries: 3
+#        ports:
+#          - 8000:8000
+#        user: root
+#        command: >
+#           bash -c "apk add --no-cache curl git gcc musl-dev
+#            && luarocks install luaossl OPENSSL_DIR=/usr/local/kong CRYPTO_DIR=/usr/local/kong
+#            && kong start"      
+#        environment:
+#          - KONG_DATABASE=postgres
+#          - KONG_PG_HOST=${api_gateway_dbhost}
+#          - KONG_PG_USER=${api_gateway_dbuser}
+#          - KONG_PG_PASSWORD=${api_gateway_dbpass}
+#          - KONG_PG_DATABASE=${api_gateway_dbname}
+#          - KONG_PROXY_ACCESS_LOG=/dev/stdout
+#          - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+#          - KONG_PROXY_ERROR_LOG=/dev/stderr
+#          - KONG_ADMIN_ERROR_LOG=/dev/stderr
+#          - KONG_ADMIN_LISTEN=0.0.0.0:8001
+#        deploy:
+#          replicas: 1
+#          resources:
+#            limits:
+#              cpus: "0.2"
+#              memory: 200M
+#          restart_policy:
+#            condition: always     
+#    konga:
+#        image: "pantsel/konga"
+#        pull_policy: build
+#        networks:
+#          - superapps
+#        healthcheck:
+#          test: curl -I http://localhost:1337/#/login || exit 1
+#          start_period: 5s
+#          interval: 5s
+#          timeout: 10s
+#          retries: 3
+#        ports:
+#          - 1337:1337
+#        environment:
+#          - TOKEN_SECRET=123123edad123edad3fasda
+#          - NODE_ENV=production
+#        volumes:
+#          - konga:/app/kongadata
+#        deploy:
+#          replicas: 1
+#          resources:
+#            limits:
+#              cpus: "0.2"
+#              memory: 200M
+#          restart_policy:
+#            condition: always        
+    my_api:
+        labels:
+          - traefik.enable=true
+#         - "traefik.docker.lbswarm=true"    
+          - "traefik.http.routers.eventscheduler_service.entrypoints=webInternal"
+          - "traefik.http.services.eventscheduler_service.loadbalancer.server.port=80"
+          - "traefik.http.services.eventscheduler_service.loadbalancer.server.scheme=http"      
+          - "traefik.http.routers.eventscheduler_service.rule=PathPrefix(`/scheduler`)"
+          - "traefik.http.routers.eventscheduler_service.middlewares=voucher_service_stripprefix"
+          - "traefik.http.middlewares.eventscheduler_service.stripprefix.prefixes=/scheduler,/scheduler/"
+        build: ./my_api
+        image: "my_api:${BUILD_NUMBER}"
+        pull_policy: build
+        healthcheck:
+          test: curl --fail -s http://localhost|| exit 1
+          start_period: 5s
+          interval: 5s
+          timeout: 10s
+          retries: 3
+        networks:
+          - jenkins
+        environment:
+          - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+        volumes:
+          - /logs/my_api/:/src/app/logs
+        deploy:
+          replicas: 1
+          resources:
+            limits:
+              cpus: "0.2"
+              memory: 200M
+          restart_policy:
+            condition: always
+        logging:
+          driver: "local"
+          options:
+            max-size: "1GiB"
+            max-file: 7
+            compress: "true"
+  
+networks:
+  jenkins:
+    driver: bridge
+    external: true
