@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "4.2.0.0",
+        "fileVersion": "4.2.0-4.22220.5 (432d17a8)",
+        "semanticVersion": "4.2.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS0162",
+          "level": "warning",
+          "message": "Unreachable code detected",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/sourcecode/my_api/my_api/my_api/Controllers/WeatherForecastController.cs",
+                "region": {
+                  "startLine": 29,
+                  "startColumn": 13,
+                  "endLine": 29,
+                  "endColumn": 19
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "S4487",
+          "level": "warning",
+          "message": "Remove this unread private field '_logger' or refactor the code to use its value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/sourcecode/my_api/my_api/my_api/Controllers/WeatherForecastController.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 61,
+                  "endLine": 14,
+                  "endColumn": 68
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2190",
+          "level": "warning",
+          "message": "Add a way to break out of this method's recursion.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/sourcecode/my_api/my_api/my_api/Controllers/WeatherForecastController.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 45,
+                  "endLine": 22,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CS0162": {
+          "id": "CS0162",
+          "shortDescription": "Unreachable code detected",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0162)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "S2190": {
+          "id": "S2190",
+          "shortDescription": "Recursion should not be infinite",
+          "fullDescription": "Recursion happens when control enters a loop that has no exit. This can happen a method invokes itself, when a pair of methods invoke each other, or when goto statements are used to move between two segments of code. It can be a useful tool, but unless the method includes a provision to break out of the recursion and return, the recursion will continue until the stack overflows and the program crashes.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2190",
+          "properties": {
+            "category": "Blocker Bug",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S4487": {
+          "id": "S4487",
+          "shortDescription": "Unread \"private\" fields should be removed",
+          "fullDescription": "Private fields only used to store values without reading them later is a case of dead store. So changing the value of such field is useless and most probably indicates a serious error in the code.",
+          "defaultLevel": "note",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-4487",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay",
+              "Unnecessary"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

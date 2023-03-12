@@ -1,0 +1,6 @@
+projectKey=TestApi
+serverUrl=http://localhost:9911
+serverVersion=9.9.0.65466
+dashboardUrl=http://localhost:9911/dashboard?id=TestApi
+ceTaskId=AYbRPABxxNmbecXkc8VK
+ceTaskUrl=http://localhost:9911/api/ce/task?id=AYbRPABxxNmbecXkc8VK
