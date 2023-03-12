@@ -35,9 +35,9 @@ FROM base AS final
 WORKDIR /src/app
 COPY --from=publish /app/publish .
 
-RUN apt-get update
+#RUN apt-get update
 
-RUN apt-get install curl -y
+#RUN apt-get install curl -y
 
 ENTRYPOINT ["dotnet", "my_api.dll"]	
 
