@@ -18,7 +18,7 @@ COPY . .
 
 RUN echo $(ls -1 /src)
 
-#RUN dotnet restore -s "http://10.110.100.61:9090/v3/index.json"  -s "https://api.nuget.org/v3/index.json" "my_api.csproj"
+RUN dotnet restore -s "http://10.110.100.61:9090/v3/index.json"  -s "https://api.nuget.org/v3/index.json" "my_api.csproj"
 
 #WORKDIR "/src"
 #RUN dotnet build "my_api.csproj" -c Release -o /app/build
