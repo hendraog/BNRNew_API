@@ -19,7 +19,7 @@ namespace my_api_test
             var res = s.Get();
             
 
-            Assert.Equal(true, true);
+            Assert.True(res !=null);
         }
     }
 }
