@@ -1,16 +1,14 @@
 ﻿namespace my_api.Controllers
 {
-    public class dao :idao
+    public class Dao :Idao
     {
         public string generateRadom()
         {
-
             return "ss";
-
         }
     }
 
-    public interface idao
+    public interface Idao
     {
         public string generateRadom();
     }
