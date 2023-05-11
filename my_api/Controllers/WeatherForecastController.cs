@@ -20,17 +20,30 @@ namespace my_api.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Get(int kon = 0 )
         {
             this.dao.generateRadom();
 
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            if(kon == 0)
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)] + dao.generateRadom()
-            })
-            .ToArray();
+                return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = Summaries[Random.Shared.Next(Summaries.Length)] + dao.generateRadom()
+                })
+                .ToArray();
+            }else
+            {
+                return Enumerable.Range(1, 22).Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = Summaries[Random.Shared.Next(Summaries.Length)] + dao.generateRadom()
+                })
+                    .ToArray();
+
+            }
         }
 
       
