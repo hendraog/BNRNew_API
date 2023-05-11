@@ -22,6 +22,7 @@ public class UnitTest1
         var s = new WeatherForecastController(m.Object);
 
         var res = s.Get();
+        var res1 = s.Get(23);
 
 
         Assert.True(res != null);
