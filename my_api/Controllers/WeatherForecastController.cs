@@ -12,7 +12,7 @@ namespace my_api.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        public idao dao;
+        public Idao dao;
 
         public WeatherForecastController(Idao dao)
         {
