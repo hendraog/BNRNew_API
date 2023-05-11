@@ -14,7 +14,7 @@ namespace my_api.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         public idao dao;
 
-        public WeatherForecastController(idao dao)
+        public WeatherForecastController(Idao dao)
         {
             this.dao = dao;
         }

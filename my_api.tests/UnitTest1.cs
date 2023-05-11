@@ -11,7 +11,7 @@ public class UnitTest1
     {
         Mock<ILogger> l = new Mock<ILogger>();
 
-        Mock<idao> m = new Mock<idao>();
+        Mock<Idao> m = new Mock<Idao>();
         m.Setup(x => x.generateRadom()).Returns("dfd");
 
         var s = new WeatherForecastController(m.Object);
