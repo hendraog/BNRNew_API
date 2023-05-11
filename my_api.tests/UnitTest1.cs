@@ -11,6 +11,11 @@ public class UnitTest1
     {
         Mock<ILogger> l = new Mock<ILogger>();
 
+
+        Idao d = new Dao();
+        d.generateRadom();
+
+
         Mock<Idao> m = new Mock<Idao>();
         m.Setup(x => x.generateRadom()).Returns("dfd");
 
