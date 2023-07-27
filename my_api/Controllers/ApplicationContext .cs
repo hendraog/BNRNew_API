@@ -7,7 +7,8 @@ namespace my_api.Controllers
         public DbSet<User> Users { get; set; }
         public ApplicationContext()
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
+            Database.Migrate();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

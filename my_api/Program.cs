@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using my_api.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,7 +39,10 @@ using (ApplicationContext db = new ApplicationContext())
     {
         Console.WriteLine($"{u.Id}.{u.Name} - {u.Age}");
     }
+
 }
+
+
 
 app.UseAuthorization();
 
