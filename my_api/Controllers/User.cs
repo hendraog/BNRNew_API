@@ -9,5 +9,6 @@
 
 		public string initial2 { get; set; } = "";
 		public string initial3 { get; set; } = "";
+		public string initial4 { get; set; } = "";
 	}
 }
