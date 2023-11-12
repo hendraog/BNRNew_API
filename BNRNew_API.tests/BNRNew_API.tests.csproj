@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\my_api\BNRNew_API.csproj" />
+    <ProjectReference Include="..\BNRNew_API\BNRNew_API.csproj" />
   </ItemGroup>
 
 </Project>

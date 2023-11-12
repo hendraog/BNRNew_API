@@ -5,15 +5,22 @@
 namespace BNRNew_API.Migrations
 {
     /// <inheritdoc />
-    public partial class initialdb2 : Migration
+    public partial class initial2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateIndex(
-                name: "user_idx1",
+            migrationBuilder.AddColumn<string>(
+                name: "key1",
                 table: "user",
-                column: "UserName",
+                type: "TEXT",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.CreateIndex(
+                name: "user_idx2",
+                table: "user",
+                columns: new[] { "Role", "key1" },
                 unique: true);
         }
 
@@ -21,7 +28,11 @@ namespace BNRNew_API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropIndex(
-                name: "user_idx1",
+                name: "user_idx2",
+                table: "user");
+
+            migrationBuilder.DropColumn(
+                name: "key1",
                 table: "user");
         }
     }

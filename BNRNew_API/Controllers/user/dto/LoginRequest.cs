@@ -15,5 +15,7 @@ namespace BNRNew_API.Controllers.user.dto
     public class LoginResponse : BaseDtoResponse
     {
         public User data { get; set; }
+        public string accessToken { get; set; }
+        public string refreshToken { get; set; }
     }
 }

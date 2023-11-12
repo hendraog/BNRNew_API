@@ -3,13 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using BNRNew_API.Controllers;
 using BNRNew_API.Controllers.user.dto;
 using BNRNew_API.Entities;
+using BNRNew_API.config;
+using BNRNew_API.utils;
+using BNRNew_API.Controllers.dto;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var config = ConfigHelper.loadConfig<AppConfig>(new ConfigurationBuilder(),"dev");
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton<AppConfig>(config);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -63,6 +68,8 @@ using (ApplicationContext db = new ApplicationContext())
     }
 
 }*/
+
+app.UseMiddleware<RequestResponseLoggingMiddleware<JWTModel>>(config.jwtSecret);
 
 
 app.UseDefaultFiles(); // Enables default file mapping on the web root.

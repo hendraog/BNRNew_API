@@ -1,12 +1,15 @@
 ﻿using System;
+using BNRNew_API.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Hosting;
 
 #nullable disable
 
 namespace BNRNew_API.Migrations
 {
     /// <inheritdoc />
-    public partial class initialdb : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,12 +27,19 @@ namespace BNRNew_API.Migrations
                     UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Active = table.Column<bool>(type: "INTEGER", nullable: false),
-                    role = table.Column<string>(type: "TEXT", nullable: false)
+                    Role = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_user", x => x.id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "user_idx1",
+                table: "user",
+            column: "UserName",
+            unique: true);
+
         }
 
         /// <inheritdoc />
