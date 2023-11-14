@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BNRNew_API.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20231112080606_initial2")]
-    partial class initial2
+    [Migration("20231112115035_initial1")]
+    partial class initial1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,16 +54,9 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("key1")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("id");
 
                     b.HasIndex(new[] { "UserName" }, "user_idx1")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Role", "key1" }, "user_idx2")
                         .IsUnique();
 
                     b.ToTable("user");

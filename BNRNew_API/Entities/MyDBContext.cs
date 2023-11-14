@@ -16,7 +16,7 @@ namespace BNRNew_API.Entities
         {
             Database.Migrate();
 
-            var userData = this.user.FirstOrDefault();
+            var userData = user.FirstOrDefault();
             if (userData == null)
             {
                 this.user.Add(new User
@@ -26,8 +26,7 @@ namespace BNRNew_API.Entities
                     Active = true,
                     Role = AppConstant.Role_SUPERADMIN,
                     CreatedBy = 1,
-                    CreatedAt = DateTime.UtcNow,
-                    key1 = "T"
+                    CreatedAt = DateTime.UtcNow
                 });
             }
             this.SaveChanges();

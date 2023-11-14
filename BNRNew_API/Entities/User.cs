@@ -8,7 +8,6 @@ namespace BNRNew_API.Entities
     // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     [Table("user")]
     [Index("UserName" ,Name = "user_idx1", IsUnique = true)]
-    [Index("Role", "key1", Name = "user_idx2", IsUnique = true)]
     public class User
     {
         [Key]
@@ -37,8 +36,7 @@ namespace BNRNew_API.Entities
 
         [Required]
         public string? Role { get; set; }
-        
-        public string key1 { get; set; }
+      
 
     }
 }

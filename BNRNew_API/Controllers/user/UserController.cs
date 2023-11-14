@@ -62,8 +62,7 @@ namespace BNRNew_API.Controllers.auth
                 Role = request.Role,
                 Active = true,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = session.id!.Value,
-                key1 = "t"
+                CreatedBy = session.id!.Value
             });
             
             return Ok();    
@@ -82,7 +81,6 @@ namespace BNRNew_API.Controllers.auth
 
             user.UserName = request.UserName ??  user.UserName;
             user.Password = request.Password ?? user.Password;
-            user.key1 = request.key1 ?? user.key1;
             user.Role = request.Role ?? user.Role;
             user.Active = request.active ?? user.Active;
             user.UpdatedAt = DateTime.UtcNow;   

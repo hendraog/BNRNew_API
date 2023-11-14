@@ -1,15 +1,12 @@
 ﻿using System;
-using BNRNew_API.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Hosting;
 
 #nullable disable
 
 namespace BNRNew_API.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initial1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,9 +34,8 @@ namespace BNRNew_API.Migrations
             migrationBuilder.CreateIndex(
                 name: "user_idx1",
                 table: "user",
-            column: "UserName",
-            unique: true);
-
+                column: "UserName",
+                unique: true);
         }
 
         /// <inheritdoc />

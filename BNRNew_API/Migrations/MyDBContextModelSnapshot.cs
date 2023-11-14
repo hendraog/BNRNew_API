@@ -51,16 +51,9 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("key1")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("id");
 
                     b.HasIndex(new[] { "UserName" }, "user_idx1")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Role", "key1" }, "user_idx2")
                         .IsUnique();
 
                     b.ToTable("user");
