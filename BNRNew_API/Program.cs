@@ -6,6 +6,7 @@ using BNRNew_API.Entities;
 using BNRNew_API.config;
 using BNRNew_API.utils;
 using BNRNew_API.Controllers.dto;
+using BNRNew_API.Controllers.golongan;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ var config = ConfigHelper.loadConfig<AppConfig>(new ConfigurationBuilder(),"dev"
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGolonganService, GolonganService>();
 builder.Services.AddSingleton<AppConfig>(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

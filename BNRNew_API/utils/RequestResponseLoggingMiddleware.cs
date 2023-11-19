@@ -179,6 +179,11 @@ namespace BNRNew_API.utils
                                     }
                                 }
                             }
+                            else
+                            {
+                                httpCode = 500;
+                                errorMessage = sqliteException.Message;
+                            }
                         }
                     }
 
