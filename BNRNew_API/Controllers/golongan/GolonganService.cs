@@ -26,13 +26,13 @@ namespace BNRNew_API.Controllers.golongan
         }
 
     
-        public List<Golongan> getGolongan(string filter, int page, int pageSize)
+        public List<Golongan> getGolongan(string search, int page, int pageSize)
         {
             IQueryable<Golongan> q = ctx.golongan;
-            if (!filter.IsNullOrEmpty())
-                q= q.Where(e => EF.Functions.Like(e.golongan, $"%{filter}%"));
+            if (!search.IsNullOrEmpty())
+                q= q.Where(e => EF.Functions.Like(e.golongan, $"%{search}%"));
 
-            q = q.Skip(page -1 * pageSize).Take(pageSize);
+            q = q.Skip((page -1) * pageSize).Take(pageSize);
 
             return q.ToListAsync().Result;
         }
