@@ -7,6 +7,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>BNRApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +33,7 @@
     <Folder Include="Controllers\report\" />
     <Folder Include="Controllers\ticket\" />
     <Folder Include="Migrations\" />
+    <Folder Include="utils\custom_exception\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

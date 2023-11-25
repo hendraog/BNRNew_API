@@ -9,6 +9,7 @@ namespace BNRNew_API.Controllers.auth
 {
     [ApiController]
     [Route("user")]
+
     public class UserController : BaseController
     {
 
@@ -22,12 +23,8 @@ namespace BNRNew_API.Controllers.auth
         }
 
         /// <summary>
-        /// Retrieves a specific product by unique id
+        /// Login User
         /// </summary>
-        /// <remarks>Awesomeness!</remarks>
-        /// <response code="200">Product created</response>
-        /// <response code="400">Product has missing/invalid values</response>
-        /// <response code="500">Oops! Can't create your product right now</response>
         [Route("login")]
         [HttpPost]
         public ActionResult<LoginResponse> loginUser([FromBody] LoginRequest request)
@@ -56,8 +53,12 @@ namespace BNRNew_API.Controllers.auth
         }
 
 
+        /// <summary>
+        /// Untuk melakukan create user
+        /// </summary>
+
         [HttpPost]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<BaseDtoResponse> createUser([FromBody] CreateUserRequest request)
         {
             var session = getSession();
@@ -77,7 +78,7 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpPut]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<BaseDtoResponse> updateUser([FromBody] UpdateUserRequest request)
         {
             var session = getSession();
@@ -98,7 +99,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet,Route("")]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<GetUserResponse> getUsers(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(this.userService.GetUsers(filter,page,pageSize));
@@ -106,13 +107,17 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpGet, Route("{userId}")]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<User> getUserDetail(long userId)
         {
             return Ok(this.userService.GetUserDetail(
                 userId
             ));
         }
+
+        /// <summary>
+        /// ambil profile dari user berdasarkan token login
+        /// </summary>
 
         [HttpGet, Route("profile")]
         [Authorize()]

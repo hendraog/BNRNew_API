@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BNRNew_API</name>
+    </assembly>
+    <members>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.loginUser(BNRNew_API.Controllers.user.dto.LoginRequest)">
+            <summary>
+            Login User
+            </summary>
+            <remarks>Awesomeness!</remarks>
+            <response code="200">Product created</response>
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial1">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial2">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.utils.AuthorizeAttribute">
+            attribute untuk melakukan validasi JWT token 
+        </member>
+        <member name="M:BNRNew_API.utils.JWTHelper.validateTokenRaw``1(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+             Fungsi ini di gunakan untuk melakukan validatasi Token JWT. pada method ini , default nya akan di lakukan validasi dengan
+             Validate Audience => false
+             ValidateIssuerSigningKey => true
+            </summary>
+            <param name="securityKey">securityKey untuk enkripsi JWT token yg akan di lakukan validasi. </param>
+            <param name="token">JWT Token yg akan di validasi. </param>
+            <param name="validateLifetime">apakah token JWT perlu di validasi lifetimenya </param>
+            <param name="validateIssuer">apakah token JWT perlu di validasi issuernya </param>
+            <param name="skewTime">Nilai skewtime dari token JWT, Skewtime di gunakankan untuk mentolerir validasi pada lifetime dimana jika 2 server berbeda waktunya maka akan di tolerir sebanyak nilai menit yg ada di parameter ini </param>
+            
+        </member>
+        <member name="M:BNRNew_API.utils.JWTHelper.validateToken``1(System.String,System.String)">
+            <summary>
+             Fungsi ini di gunakan untuk melakukan validatasi Token JWT. pada method ini , default nya akan di lakukan validasi dengan
+             Validasi lifetime => true 
+             validasi Issuer => false 
+             Validate Audience => false
+             ValidateIssuerSigningKey => true
+             skew time => 5 menit
+            </summary>
+            <param name="secret">Secret/Password untuk enkripsi JWT token yg akan di lakukan validasi. </param>
+            <param name="token">JWT Token yg akan di validasi. </param>
+            
+        </member>
+        <member name="M:BNRNew_API.utils.JWTHelper.validateToken``1(System.String,System.String,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+             Fungsi ini di gunakan untuk melakukan validatasi Token JWT. pada method ini , default nya akan di lakukan validasi dengan
+             Validate Audience => false
+             ValidateIssuerSigningKey => true
+            </summary>
+            <param name="secret">secret untuk enkripsi JWT token yg akan di lakukan validasi. </param>
+            <param name="token">JWT Token yg akan di validasi. </param>
+            <param name="validateLifetime">apakah token JWT perlu di validasi lifetimenya </param>
+            <param name="validateIssuer">apakah token JWT perlu di validasi issuernya </param>
+            <param name="skewTime">Nilai skewtime dari token JWT, Skewtime di gunakankan untuk mentolerir validasi pada lifetime dimana jika 2 server berbeda waktunya maka akan di tolerir sebanyak nilai menit yg ada di parameter ini </param>
+            
+        </member>
+        <member name="M:BNRNew_API.utils.JWTHelper.validateTokenAsymetric``1(System.String,System.String,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+             Fungsi ini di gunakan untuk melakukan validatasi Token JWT yg di signing menggunakan asymetric key. pada method ini , default nya akan di lakukan validasi dengan
+             Validate Audience => false
+             ValidateIssuerSigningKey => true
+            </summary>
+            <param name="publicKey">publicKey untuk decrypt JWT token yg akan di lakukan validasi. </param>
+            <param name="token">JWT Token yg akan di validasi. </param>
+            <param name="validateLifetime">apakah token JWT perlu di validasi lifetimenya </param>
+            <param name="validateIssuer">apakah token JWT perlu di validasi issuernya </param>
+            <param name="skewTime">Nilai skewtime dari token JWT, Skewtime di gunakankan untuk mentolerir validasi pada lifetime dimana jika 2 server berbeda waktunya maka akan di tolerir sebanyak nilai menit yg ada di parameter ini </param>
+            
+        </member>
+    </members>
+</doc>

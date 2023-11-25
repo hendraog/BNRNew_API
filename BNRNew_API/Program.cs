@@ -9,7 +9,6 @@ using BNRNew_API.Controllers.dto;
 using BNRNew_API.Controllers.golongan;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var config = ConfigHelper.loadConfig<AppConfig>(new ConfigurationBuilder(),"dev");
 
 builder.Services.AddControllers();
@@ -19,8 +18,18 @@ builder.Services.AddSingleton<AppConfig>(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1",
+        new ()
+        {
+            Title = "BNRAPI - V1",
+            Version = "v1"
+        }
+    );
+    var filePath = Path.Combine(System.AppContext.BaseDirectory, "BNRApi.xml");
+    c.IncludeXmlComments(filePath);
+});
 
 builder.Services.AddDbContext<MyDBContext>(options =>
 {
@@ -64,6 +73,7 @@ var app = builder.Build();
 app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

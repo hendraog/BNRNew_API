@@ -1,4 +1,5 @@
-﻿using BNRNew_API.CustomeAttribute;
+﻿using BNRNew_API.Controllers.user.dto;
+using BNRNew_API.CustomeAttribute;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -141,69 +142,58 @@ namespace BNRNew_API.utils
                         requestLog.response_data = obj;
                         requestLog.duration_ms = watch.ElapsedMilliseconds;
                     }
-                    //Skip Logging untuk health check
-
                     System.Console.WriteLine(JsonSerializer.Serialize(requestLog) + "\r\n");
                 }
                 catch (Exception e)
                 {
                     watch.Stop();
-
-                    string errorMessage = null;
-                    int httpCode = 500;
-
-                    if (e.InnerException != null)
+                    BaseDtoResponse errResult = new BaseDtoResponse
                     {
-                        if (e.InnerException is SqliteException sqliteException)
-                        {
-                            if(sqliteException.SqliteErrorCode == 19) // constraint
-                            {
-                                httpCode = 400;
-                                errorMessage = sqliteException.Message;
-                                errorMessage = errorMessage.Replace("'", "");
-                                var match = Regex.Match(errorMessage, @"(?<errorCode>.*):(?<type>.*)constraint failed:(?<column>.*)");
-                                if (match.Success)
-                                {
-                                    var type = match.Groups["type"].Value;
-                                    var column = match.Groups["column"].Value;
-                                    type = type.Trim();
-                                    column = column.Trim();
+                        message = ""
+                    };
+                    int httpCode = 500;
+                    errResult.message = e.Message;
 
-                                    if (type == "NOT NULL")
-                                    {
-                                        errorMessage = "data " + column + " tidak boleh kosong";
-                                    }
-                                    else if (type == "UNIQUE")
-                                    {
-                                        errorMessage = "data " + column + " telah ada sebelumnya, mohon isi dengan nilai lainnya (tidak boleh double)";
-                                    }
+                    if (e is UnauthorizedAccessException)
+                    {
+                        httpCode = 403;
+                    }
+                    else if (e.InnerException != null && e.InnerException is SqliteException sqliteException) {
+                        if (sqliteException.SqliteErrorCode == 19) {
+                            httpCode = 400;
+                            errResult.message = sqliteException.Message;
+                            errResult.message = errResult.message.Replace("'", "");
+                            var match = Regex.Match(errResult.message, @"(?<errorCode>.*):(?<type>.*)constraint failed:(?<column>.*)");
+                            if (match.Success)
+                            {
+                                var type = match.Groups["type"].Value;
+                                var column = match.Groups["column"].Value;
+                                type = type.Trim();
+                                column = column.Trim();
+
+                                if (type == "NOT NULL")
+                                {
+                                    errResult.message = "data " + column + " tidak boleh kosong";
+                                }
+                                else if (type == "UNIQUE")
+                                {
+                                    errResult.message = "data " + column + " telah ada sebelumnya, mohon isi dengan nilai lainnya (tidak boleh double)";
                                 }
                             }
-                            else
-                            {
-                                httpCode = 500;
-                                errorMessage = sqliteException.Message;
-                            }
+                        }
+                        else
+                        {
+                            httpCode = 500;
+                            errResult.message = sqliteException.Message;
                         }
                     }
-
-                    errorMessage = errorMessage ?? e.Message;
-
-                    var errResult = new
-                    {
-                        message = errorMessage
-                    };
 
                     requestLog.response_data = errResult;
                     requestLog.exception = e.StackTrace;
                     requestLog.inner_exception = e.InnerException != null ? e.InnerException.StackTrace : "";
                     requestLog.exception_msg = e.Message;
 
-                    watch.Stop();
-                    requestLog.duration_ms = watch.ElapsedMilliseconds;
-
-                    System.Console.WriteLine("Exception when Handling URL " + JsonSerializer.Serialize(requestLog));
-
+                    requestLog.duration_ms = watch.ElapsedMilliseconds;                    
 
                     context.Response.StatusCode = httpCode;
                     context.Response.ContentType = "application/json";

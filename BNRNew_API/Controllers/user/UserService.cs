@@ -16,8 +16,10 @@ namespace BNRNew_API.Controllers
 
         public User? validateUser(string user,string password)
         {
-
-            return ctx.user.Where(e => e.UserName.ToLower() == user.ToLower() && e.Password.ToLower() == password.ToLower()).FirstOrDefaultAsync().Result;
+            var userdata = ctx.user.Where(e => e.UserName.ToLower() == user.ToLower() && e.Password.ToLower() == password.ToLower()).FirstOrDefaultAsync().Result;
+            if (userdata != null && !(userdata.Active ?? false))
+                throw new UnauthorizedAccessException("User tidak aktiv");
+            return userdata;
         }
 
         public void createUpdateUser(User user)
