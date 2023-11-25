@@ -23,12 +23,12 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpPost]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
-        public ActionResult<BaseDtoResponse> createGolongan([FromBody] CreateGolonganRequest request)
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public async Task<ActionResult<BaseDtoResponse>> createGolongan([FromBody] CreateGolonganRequest request)
         {
             var session = getSession();
 
-            this.service.createUpdateGolongan(new Golongan
+            await this.service.createUpdateGolongan(new Golongan
             {
                 golongan = request.golongan,
                 harga = request.harga,
@@ -43,12 +43,12 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpPut]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
-        public ActionResult<BaseDtoResponse> updateUser([FromBody] UpdateGolonganRequest request)
+        [Authorize( AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public async Task<ActionResult<BaseDtoResponse>> updateGolongan([FromBody] UpdateGolonganRequest request)
         {
             var session = getSession();
 
-            var data = service.getGolonganDetail(request.id);
+            var data = await service.getGolonganDetail(request.id);
             if(data == null)
                 return Ok(null);
 
@@ -59,23 +59,23 @@ namespace BNRNew_API.Controllers.auth
             data.UpdatedAt = DateTime.UtcNow;
             data.UpdatedBy  = session.id!.Value;
 
-            this.service.createUpdateGolongan(data);
+            await this.service.createUpdateGolongan(data);
             return Ok();
         }
 
         [HttpGet,Route("")]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
-        public ActionResult<List<Golongan>> getGolongans(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public async Task<ActionResult<List<Golongan>>> getGolongans(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(this.service.getGolongan(filter,page,pageSize));
+            return Ok(await this.service.getGolongan(filter,page,pageSize));
         }
 
 
         [HttpGet, Route("{id}")]
-        [Authorize(AppConstant.Role_SUPERADMIN)]
-        public ActionResult<Golongan> getGolonganDetail(long id)
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public async Task<ActionResult<Golongan>> getGolonganDetail(long id)
         {
-            return Ok(this.service.getGolonganDetail(
+            return Ok(await this.service.getGolonganDetail(
                 id
             ));
         }

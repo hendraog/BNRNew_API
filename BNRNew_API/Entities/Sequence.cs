@@ -6,9 +6,9 @@ namespace BNRNew_API.Entities
 {
 #pragma warning disable CS8618
     // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    [Table("golongan_plat")]
-    [Index("plat_no" ,Name = "golongan_plat_idx1", IsUnique = true)]
-    public class GolonganPlat
+    [Table("sequence")]
+    [Index("key" ,Name = "sequence_idx1", IsUnique = true)]
+    public class Sequence
     {
         [Key]
         [Required]
@@ -16,19 +16,19 @@ namespace BNRNew_API.Entities
         public long? id { get; set; }
 
         [Required]
-        public string plat_no { get; set; }
+        public SequenceKey key { get; set; }
 
         [Required]
-        public Golongan golongan { get; set; }
+        public int last_value { get; set; }
 
         [Required]
-        public long CreatedBy { get; set; }
+        public DateTime last_used { get; set; }
 
-        [Required]
-        public DateTime CreatedAt{ get; set; }
+    }
 
-        public long? UpdatedBy { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
+    public enum SequenceKey
+    {
+        TICKET = 1,
+        MANIFEST = 2
     }
 }

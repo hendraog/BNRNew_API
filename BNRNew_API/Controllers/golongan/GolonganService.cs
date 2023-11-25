@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BNRNew_API.Entities;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Data.Sqlite;
-using System.Text.RegularExpressions;
 
 namespace BNRNew_API.Controllers.golongan
 {
@@ -14,7 +12,7 @@ namespace BNRNew_API.Controllers.golongan
             this.ctx = ctx;
         }
 
-        public void createUpdateGolongan(Golongan golongan)
+        public async Task createUpdateGolongan(Golongan golongan)
         {
 
             if (golongan.id == null || golongan.id == 0)
@@ -22,11 +20,11 @@ namespace BNRNew_API.Controllers.golongan
             else
                 ctx.golongan.Update(golongan);
 
-            ctx.SaveChanges();
+            await ctx.SaveChangesAsync();
         }
 
     
-        public List<Golongan> getGolongan(string search, int page, int pageSize)
+        public async Task<List<Golongan>> getGolongan(string search, int page, int pageSize)
         {
             IQueryable<Golongan> q = ctx.golongan;
             if (!search.IsNullOrEmpty())
@@ -34,22 +32,27 @@ namespace BNRNew_API.Controllers.golongan
 
             q = q.Skip((page -1) * pageSize).Take(pageSize);
 
-            return q.ToListAsync().Result;
+            return await q.ToListAsync();
         }
 
-        public Golongan? getGolonganDetail(long id)
+        public async Task<Golongan> getGolonganDetail(long id)
         {
-            return ctx.golongan.Where(e => e.id == id).FirstOrDefaultAsync().Result; 
+            return await ctx.golongan.Where(e => e.id == id).FirstOrDefaultAsync(); 
         }
 
+        public async Task deleteById(long id)
+        {
+            var re = ctx.golongan.Where(e => e.id == id).FirstOrDefaultAsync().Result;
+            ctx.golongan.Remove(re);
+        }
     }
 
     public interface IGolonganService
     {
-        public void createUpdateGolongan(Golongan golongan);
-        public List<Golongan> getGolongan(string filter, int page, int pageSize);
-        public Golongan? getGolonganDetail(long id);
-
+        public Task createUpdateGolongan(Golongan golongan);
+        public Task<List<Golongan>> getGolongan(string filter, int page, int pageSize);
+        public Task<Golongan> getGolonganDetail(long id);
+        public Task deleteById(long id);
 
     }
 }

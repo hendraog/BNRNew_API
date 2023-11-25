@@ -151,12 +151,15 @@ namespace BNRNew_API.utils
                     {
                         message = ""
                     };
+
                     int httpCode = 500;
                     errResult.message = e.Message;
 
-                    if (e is UnauthorizedAccessException)
-                    {
+                    if (e is UnauthorizedAccessException) {
                         httpCode = 403;
+                    }else if (e is BadHttpRequestException)
+                    {
+                        httpCode = 400;
                     }
                     else if (e.InnerException != null && e.InnerException is SqliteException sqliteException) {
                         if (sqliteException.SqliteErrorCode == 19) {
@@ -172,13 +175,9 @@ namespace BNRNew_API.utils
                                 column = column.Trim();
 
                                 if (type == "NOT NULL")
-                                {
                                     errResult.message = "data " + column + " tidak boleh kosong";
-                                }
                                 else if (type == "UNIQUE")
-                                {
                                     errResult.message = "data " + column + " telah ada sebelumnya, mohon isi dengan nilai lainnya (tidak boleh double)";
-                                }
                             }
                         }
                         else
@@ -186,13 +185,13 @@ namespace BNRNew_API.utils
                             httpCode = 500;
                             errResult.message = sqliteException.Message;
                         }
+
+                        requestLog.exception = e.StackTrace;
+                        requestLog.inner_exception = e.InnerException != null ? e.InnerException.StackTrace : "";
+                        requestLog.exception_msg = errResult.message;
                     }
 
                     requestLog.response_data = errResult;
-                    requestLog.exception = e.StackTrace;
-                    requestLog.inner_exception = e.InnerException != null ? e.InnerException.StackTrace : "";
-                    requestLog.exception_msg = e.Message;
-
                     requestLog.duration_ms = watch.ElapsedMilliseconds;                    
 
                     context.Response.StatusCode = httpCode;

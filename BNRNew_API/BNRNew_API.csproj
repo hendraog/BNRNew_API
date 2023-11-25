@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\report\" />
-    <Folder Include="Controllers\ticket\" />
     <Folder Include="Migrations\" />
     <Folder Include="utils\custom_exception\" />
     <Folder Include="wwwroot\" />

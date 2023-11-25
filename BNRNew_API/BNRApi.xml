@@ -4,12 +4,45 @@
         <name>BNRNew_API</name>
     </assembly>
     <members>
+        <member name="M:BNRNew_API.Controllers.auth.TicketController.createTicket(BNRNew_API.ticket.request.CreateUpdateTicketRequest)">
+            <summary>
+            Untuk membuat data ticket baru
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.TicketController.updateTicket(BNRNew_API.ticket.request.CreateUpdateTicketRequest)">
+            <summary>
+            Untuk mengupdate data ticket
+            </summary>
+        </member>
         <member name="M:BNRNew_API.Controllers.auth.UserController.loginUser(BNRNew_API.Controllers.user.dto.LoginRequest)">
             <summary>
             Login User
             </summary>
-            <remarks>Awesomeness!</remarks>
-            <response code="200">Product created</response>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.createUser(BNRNew_API.Controllers.user.dto.CreateUserRequest)">
+            <summary>
+            Untuk melakukan create user
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.updateUser(BNRNew_API.Controllers.user.dto.UpdateUserRequest)">
+            <summary>
+            Untuk melakukan update data user
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.getUsersList(System.String,System.Int32,System.Int32)">
+            <summary>
+            Untuk mengambil data list user
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.getUserDetail(System.Int64)">
+            <summary>
+            Untuk mengambil data detail user
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.getUserProfile">
+            <summary>
+            ambil profile dari user berdasarkan token login
+            </summary>
         </member>
         <member name="T:BNRNew_API.Migrations.initial1">
             <inheritdoc />
@@ -33,6 +66,66 @@
             <inheritdoc />
         </member>
         <member name="M:BNRNew_API.Migrations.initial2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial3">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial4">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial4.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial4.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial4.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial5">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial5.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial5.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial5.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial6">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial6.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial6.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial6.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial7">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial7.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial7.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.initial7.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:BNRNew_API.utils.AuthorizeAttribute">
@@ -89,6 +182,13 @@
             <param name="validateIssuer">apakah token JWT perlu di validasi issuernya </param>
             <param name="skewTime">Nilai skewtime dari token JWT, Skewtime di gunakankan untuk mentolerir validasi pada lifetime dimana jika 2 server berbeda waktunya maka akan di tolerir sebanyak nilai menit yg ada di parameter ini </param>
             
+        </member>
+        <member name="M:BNRNew_API.utils.ObjectHelper.CopyProperties(System.Object,System.Object,System.Boolean,System.Boolean)">
+            <summary>
+            Extension for 'Object' that copies the properties to a destination object.
+            </summary>
+            <param name="source">The source.</param>
+            <param name="destination">The destination.</param>
         </member>
     </members>
 </doc>

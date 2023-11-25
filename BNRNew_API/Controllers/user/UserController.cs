@@ -62,8 +62,9 @@ namespace BNRNew_API.Controllers.auth
         public ActionResult<BaseDtoResponse> createUser([FromBody] CreateUserRequest request)
         {
             var session = getSession();
+            var roleLevel = getRoleLevel();
 
-            this.userService.createUpdateUser(new User
+            this.userService.createUpdateUser(roleLevel, new User
             {
                 UserName = request.UserName,
                 Password = request.Password,
@@ -76,12 +77,15 @@ namespace BNRNew_API.Controllers.auth
             return Ok();    
         }
 
-
+        /// <summary>
+        /// Untuk melakukan update data user
+        /// </summary>
         [HttpPut]
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<BaseDtoResponse> updateUser([FromBody] UpdateUserRequest request)
         {
             var session = getSession();
+            var roleLevel = getRoleLevel();
 
             var user = userService.GetUserDetail(request.id);
             if(user == null)
@@ -94,17 +98,24 @@ namespace BNRNew_API.Controllers.auth
             user.UpdatedAt = DateTime.UtcNow;   
             user.UpdatedBy  = session.id!.Value;
 
-            this.userService.createUpdateUser(user);
+            this.userService.createUpdateUser(roleLevel, user);
             return Ok();
         }
 
+        /// <summary>
+        /// Untuk mengambil data list user
+        /// </summary>
         [HttpGet,Route("")]
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
-        public ActionResult<GetUserResponse> getUsers(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public ActionResult<GetUserResponse> getUsersList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(this.userService.GetUsers(filter,page,pageSize));
         }
 
+
+        /// <summary>
+        /// Untuk mengambil data detail user
+        /// </summary>
 
         [HttpGet, Route("{userId}")]
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]

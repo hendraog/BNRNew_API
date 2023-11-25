@@ -19,19 +19,19 @@ namespace BNRNew_API.Entities
         public string golongan { get; set; }
 
         [Required]
-        public long harga { get; set; }
+        public double? harga { get; set; }
 
         [Required]
-        public int min_length { get; set; }
+        public double? min_length { get; set; }
 
         [Required]
-        public int max_length { get; set; }
+        public double? max_length { get; set; }
 
         [Required]
-        public long CreatedBy { get; set; }
+        public long? CreatedBy { get; set; }
 
         [Required]
-        public DateTime CreatedAt{ get; set; }
+        public DateTime? CreatedAt{ get; set; }
 
         public long? UpdatedBy { get; set; }
 

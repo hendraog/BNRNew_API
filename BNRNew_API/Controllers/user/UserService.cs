@@ -3,6 +3,7 @@ using BNRNew_API.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Data.Sqlite;
 using System.Text.RegularExpressions;
+using BNRNew_API.config;
 
 namespace BNRNew_API.Controllers
 {
@@ -22,8 +23,17 @@ namespace BNRNew_API.Controllers
             return userdata;
         }
 
-        public void createUpdateUser(User user)
+        public void createUpdateUser(int userRoleLevel, User user)
         {
+            var dataRoleLevel = AppConstant.getRoleLevel(user.Role);
+
+            if(dataRoleLevel == 0)
+                throw new BadHttpRequestException("Invalid role");
+
+            if (userRoleLevel<= dataRoleLevel)
+                throw new UnauthorizedAccessException("Anda tidah berhak menambahkan / merubah user dengan Role yg lebih tinggi atau sejajar dengan anda");
+
+
 
             if (user.id == null || user.id == 0)
                 ctx.user.Add(user);
@@ -33,7 +43,6 @@ namespace BNRNew_API.Controllers
             ctx.SaveChanges();
         }
 
-    
         public List<User> GetUsers(string filter, int page, int pageSize)
         {
             IQueryable<User> q = ctx.user;
@@ -53,7 +62,7 @@ namespace BNRNew_API.Controllers
 
     public interface IUserService
     {
-        public void createUpdateUser(User user);
+        public void createUpdateUser(int userRoleLevel, User user);
         public User? validateUser(string user,string password);
 
         public List<User> GetUsers(string filter, int page, int pageSize);

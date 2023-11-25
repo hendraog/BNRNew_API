@@ -7,6 +7,8 @@ using BNRNew_API.config;
 using BNRNew_API.utils;
 using BNRNew_API.Controllers.dto;
 using BNRNew_API.Controllers.golongan;
+using BNRNew_API.Controllers.golonganplat;
+using BNRNew_API.Controllers.ticket;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = ConfigHelper.loadConfig<AppConfig>(new ConfigurationBuilder(),"dev");
@@ -14,6 +16,9 @@ var config = ConfigHelper.loadConfig<AppConfig>(new ConfigurationBuilder(),"dev"
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGolonganService, GolonganService>();
+builder.Services.AddScoped<IGolonganPlatService, GolonganPlatService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<ISequenceService, SequenceService>();
 builder.Services.AddSingleton<AppConfig>(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
