@@ -64,7 +64,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet,Route("")]
-        //[Authorize(AppConstant.Role_SUPERADMIN)]
+        [Authorize(AppConstant.Role_SUPERADMIN)]
         public ActionResult<List<Golongan>> getGolongans(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(this.service.getGolongan(filter,page,pageSize));

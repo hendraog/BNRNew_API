@@ -35,6 +35,7 @@ namespace BNRNew_API.Entities
 
         public virtual DbSet<User> user { get; set; }
         public virtual DbSet<Golongan> golongan { get; set; }
+        public virtual DbSet<GolonganPlat> golonganPlat { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

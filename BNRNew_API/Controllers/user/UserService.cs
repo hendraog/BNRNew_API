@@ -47,7 +47,6 @@ namespace BNRNew_API.Controllers
         {
             return ctx.user.Where(e => e.id == userId).FirstOrDefaultAsync().Result; 
         }
-
     }
 
     public interface IUserService

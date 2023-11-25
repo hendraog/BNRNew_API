@@ -21,6 +21,13 @@ namespace BNRNew_API.Controllers.auth
             this.config = config;
         }
 
+        /// <summary>
+        /// Retrieves a specific product by unique id
+        /// </summary>
+        /// <remarks>Awesomeness!</remarks>
+        /// <response code="200">Product created</response>
+        /// <response code="400">Product has missing/invalid values</response>
+        /// <response code="500">Oops! Can't create your product right now</response>
         [Route("login")]
         [HttpPost]
         public ActionResult<LoginResponse> loginUser([FromBody] LoginRequest request)
@@ -91,7 +98,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet,Route("")]
-        //[Authorize(AppConstant.Role_SUPERADMIN)]
+        [Authorize(AppConstant.Role_SUPERADMIN)]
         public ActionResult<GetUserResponse> getUsers(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(this.userService.GetUsers(filter,page,pageSize));
@@ -107,6 +114,16 @@ namespace BNRNew_API.Controllers.auth
             ));
         }
 
+        [HttpGet, Route("profile")]
+        [Authorize()]
+        public ActionResult<User> getUserProfile()
+        {
+            var session = getSession();
+
+            return Ok(this.userService.GetUserDetail(
+                session.id!.Value
+            ));
+        }
 
     }
 }
