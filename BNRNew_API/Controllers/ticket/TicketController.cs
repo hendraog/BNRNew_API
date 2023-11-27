@@ -32,15 +32,15 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<BaseDtoResponse>> createTicket([FromBody] CreateUpdateTicketRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
             request.id = null; // proses insert tidak boleh ada id
 
             Ticket ticket = new Ticket();
             ticket.CreatedAt = DateTime.UtcNow;
-            ticket.CreatedBy = session.id!.Value;
+            ticket.CreatedBy = sessionUser.id!.Value;
             ObjectHelper.CopyProperties(request, ticket);
 
-            ticket.golongan = new Golongan() { id = request.golonganId };
+            ticket.golongan = request.golonganId;
             await this.service.create(ticket);
             
             return Ok();    
@@ -54,11 +54,11 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<BaseDtoResponse>> updateTicket([FromBody] CreateUpdateTicketRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
 
             Ticket ticket = new Ticket();
             ticket.UpdatedAt = DateTime.UtcNow;
-            ticket.UpdatedBy = session.id!.Value;
+            ticket.UpdatedBy = sessionUser.id!.Value;
             ObjectHelper.CopyProperties(request, ticket);
             await this.service.update(ticket);
             return Ok();
@@ -76,24 +76,15 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<Golongan>> getDetail(long id)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
             var data = await this.service.getTicketDetail(
                 id
             );
 
-            if (session.Role == AppConstant.Role_CASHIER && session.id != data.CreatedBy)
+            if (sessionUser.Role == AppConstant.Role_CASHIER && (sessionUser?.id??0) == data.CreatedBy)
                 throw new UnauthorizedAccessException("Role anda tidak berhak untuk mengakses data ini");
 
             return Ok(data);
         }
-
-        [HttpGet, Route("lokasi-pelabuhan")]
-        [Authorize()]
-        public async Task<ActionResult<List<String>>> getLokasiList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-        {
-            return Ok(AppConstant.LokasiPelabuhan);
-        }
-
-
     }
 }

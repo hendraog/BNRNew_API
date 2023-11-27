@@ -44,6 +44,16 @@
             ambil profile dari user berdasarkan token login
             </summary>
         </member>
+        <member name="M:BNRNew_API.Controllers.master.MasterController.getLokasiList">
+            <summary>
+            Untuk mengambil data lokasi pelabuhan
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.master.MasterController.getRoleList">
+            <summary>
+            Untuk mengambil data master role
+            </summary>
+        </member>
         <member name="T:BNRNew_API.Migrations.initial1">
             <inheritdoc />
         </member>
@@ -54,78 +64,6 @@
             <inheritdoc />
         </member>
         <member name="M:BNRNew_API.Migrations.initial1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BNRNew_API.Migrations.initial2">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BNRNew_API.Migrations.initial3">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BNRNew_API.Migrations.initial4">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial4.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial4.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial4.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BNRNew_API.Migrations.initial5">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial5.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial5.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial5.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BNRNew_API.Migrations.initial6">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial6.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial6.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial6.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BNRNew_API.Migrations.initial7">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial7.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial7.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BNRNew_API.Migrations.initial7.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:BNRNew_API.utils.AuthorizeAttribute">

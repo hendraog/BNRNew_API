@@ -61,7 +61,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<BaseDtoResponse> createUser([FromBody] CreateUserRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
             var roleLevel = getRoleLevel();
 
             this.userService.createUpdateUser(roleLevel, new User
@@ -71,7 +71,7 @@ namespace BNRNew_API.Controllers.auth
                 Role = request.Role,
                 Active = true,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = session.id!.Value
+                CreatedBy = sessionUser.id!.Value
             });
             
             return Ok();    
@@ -84,7 +84,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<BaseDtoResponse> updateUser([FromBody] UpdateUserRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
             var roleLevel = getRoleLevel();
 
             var user = userService.GetUserDetail(request.id);
@@ -96,7 +96,7 @@ namespace BNRNew_API.Controllers.auth
             user.Role = request.Role ?? user.Role;
             user.Active = request.active ?? user.Active;
             user.UpdatedAt = DateTime.UtcNow;   
-            user.UpdatedBy  = session.id!.Value;
+            user.UpdatedBy  = sessionUser.id!.Value;
 
             this.userService.createUpdateUser(roleLevel, user);
             return Ok();

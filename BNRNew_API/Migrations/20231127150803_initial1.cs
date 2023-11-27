@@ -6,35 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BNRNew_API.Migrations
 {
     /// <inheritdoc />
-    public partial class initial3 : Migration
+    public partial class initial1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<double>(
-                name: "min_length",
-                table: "golongan",
-                type: "REAL",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "INTEGER");
-
-            migrationBuilder.AlterColumn<double>(
-                name: "max_length",
-                table: "golongan",
-                type: "REAL",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "INTEGER");
-
-            migrationBuilder.AlterColumn<double>(
-                name: "harga",
-                table: "golongan",
-                type: "REAL",
-                nullable: false,
-                oldClrType: typeof(long),
-                oldType: "INTEGER");
-
             migrationBuilder.CreateTable(
                 name: "cargo_manifest",
                 columns: table => new
@@ -59,13 +35,15 @@ namespace BNRNew_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "golongan_plat",
+                name: "golongan",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    plat_no = table.Column<string>(type: "TEXT", nullable: false),
                     golongan = table.Column<string>(type: "TEXT", nullable: false),
+                    harga = table.Column<double>(type: "REAL", nullable: false),
+                    min_length = table.Column<double>(type: "REAL", nullable: false),
+                    max_length = table.Column<double>(type: "REAL", nullable: false),
                     CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
@@ -73,7 +51,85 @@ namespace BNRNew_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_golongan_plat", x => x.id);
+                    table.PrimaryKey("PK_golongan", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "sequence",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    key = table.Column<int>(type: "INTEGER", nullable: false),
+                    last_value = table.Column<int>(type: "INTEGER", nullable: false),
+                    last_used = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sequence", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ticket",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ticket_no = table.Column<string>(type: "TEXT", nullable: false),
+                    tanggal_masuk = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    tanggal_berlaku = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    lokasi_asal = table.Column<string>(type: "TEXT", nullable: false),
+                    lokasi_tujuan = table.Column<string>(type: "TEXT", nullable: false),
+                    golongan = table.Column<long>(type: "INTEGER", nullable: false),
+                    tuslah = table.Column<string>(type: "TEXT", nullable: false),
+                    jenis_muatan = table.Column<string>(type: "TEXT", nullable: false),
+                    berat = table.Column<double>(type: "REAL", nullable: false),
+                    volume = table.Column<double>(type: "REAL", nullable: false),
+                    keterangan = table.Column<string>(type: "TEXT", nullable: false),
+                    plat_no = table.Column<string>(type: "TEXT", nullable: false),
+                    nama_supir = table.Column<string>(type: "TEXT", nullable: false),
+                    jumlah_orang = table.Column<int>(type: "INTEGER", nullable: false),
+                    harga = table.Column<long>(type: "INTEGER", nullable: false),
+                    biaya_tuslah = table.Column<long>(type: "INTEGER", nullable: false),
+                    total_harga = table.Column<long>(type: "INTEGER", nullable: false),
+                    panjang_ori_kenderaan = table.Column<double>(type: "REAL", nullable: false),
+                    tinggi_kenderaan = table.Column<double>(type: "REAL", nullable: false),
+                    lebar_kenderaan = table.Column<double>(type: "REAL", nullable: false),
+                    panjang_kenderaan = table.Column<double>(type: "REAL", nullable: false),
+                    nama_pengurus = table.Column<string>(type: "TEXT", nullable: false),
+                    alamat_supir = table.Column<string>(type: "TEXT", nullable: false),
+                    asal_supir = table.Column<string>(type: "TEXT", nullable: false),
+                    tujuan_supir = table.Column<string>(type: "TEXT", nullable: false),
+                    cargoDetail = table.Column<long>(type: "INTEGER", nullable: true),
+                    printer_count = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ticket", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "user",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    Active = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +139,7 @@ namespace BNRNew_API.Migrations
                     id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     cargoManifestid = table.Column<long>(type: "INTEGER", nullable: false),
+                    ticket = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
@@ -100,38 +157,13 @@ namespace BNRNew_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ticket",
+                name: "golongan_plat",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ticket_no = table.Column<string>(type: "TEXT", nullable: false),
-                    tanggal_masuk = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    tanggal_berlaku = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    lokasi_asal = table.Column<int>(type: "INTEGER", nullable: false),
-                    lokasi_tujuan = table.Column<int>(type: "INTEGER", nullable: false),
-                    golonganid = table.Column<long>(type: "INTEGER", nullable: false),
-                    tuslah = table.Column<string>(type: "TEXT", nullable: false),
-                    jenis_muatan = table.Column<string>(type: "TEXT", nullable: false),
-                    berat = table.Column<double>(type: "REAL", nullable: false),
-                    volume = table.Column<double>(type: "REAL", nullable: false),
-                    keterangan = table.Column<string>(type: "TEXT", nullable: false),
                     plat_no = table.Column<string>(type: "TEXT", nullable: false),
-                    nama = table.Column<string>(type: "TEXT", nullable: false),
-                    jumlah_orang = table.Column<int>(type: "INTEGER", nullable: false),
-                    harga = table.Column<long>(type: "INTEGER", nullable: false),
-                    biaya_tuslah = table.Column<long>(type: "INTEGER", nullable: false),
-                    total_harga = table.Column<long>(type: "INTEGER", nullable: false),
-                    panjang_ori_kenderaan = table.Column<double>(type: "REAL", nullable: false),
-                    tinggi_kenderaan = table.Column<double>(type: "REAL", nullable: false),
-                    lebar_kenderaan = table.Column<double>(type: "REAL", nullable: false),
-                    panjang_kenderaan = table.Column<double>(type: "REAL", nullable: false),
-                    nama_pengurus = table.Column<string>(type: "TEXT", nullable: false),
-                    alamat_supir = table.Column<string>(type: "TEXT", nullable: false),
-                    asal_supir = table.Column<string>(type: "TEXT", nullable: false),
-                    tujuan_supir = table.Column<string>(type: "TEXT", nullable: false),
-                    CargoDetail = table.Column<long>(type: "INTEGER", nullable: true),
-                    printer_count = table.Column<int>(type: "INTEGER", nullable: false),
+                    golonganid = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
@@ -139,14 +171,9 @@ namespace BNRNew_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ticket", x => x.id);
+                    table.PrimaryKey("PK_golongan_plat", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ticket_cargo_detail_CargoDetail",
-                        column: x => x.CargoDetail,
-                        principalTable: "cargo_detail",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_ticket_golongan_golonganid",
+                        name: "FK_golongan_plat_golongan_golonganid",
                         column: x => x.golonganid,
                         principalTable: "golongan",
                         principalColumn: "id",
@@ -165,26 +192,38 @@ namespace BNRNew_API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "golongan_idx1",
+                table: "golongan",
+                column: "golongan",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "golongan_plat_idx1",
                 table: "golongan_plat",
                 column: "plat_no",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ticket_CargoDetail",
-                table: "ticket",
-                column: "CargoDetail",
-                unique: true);
+                name: "IX_golongan_plat_golonganid",
+                table: "golongan_plat",
+                column: "golonganid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ticket_golonganid",
-                table: "ticket",
-                column: "golonganid");
+                name: "sequence_idx1",
+                table: "sequence",
+                column: "key",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ticket_idx1",
                 table: "ticket",
                 column: "ticket_no",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "user_idx1",
+                table: "user",
+                column: "UserName",
                 unique: true);
         }
 
@@ -192,40 +231,25 @@ namespace BNRNew_API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "cargo_detail");
+
+            migrationBuilder.DropTable(
                 name: "golongan_plat");
+
+            migrationBuilder.DropTable(
+                name: "sequence");
 
             migrationBuilder.DropTable(
                 name: "ticket");
 
             migrationBuilder.DropTable(
-                name: "cargo_detail");
+                name: "user");
 
             migrationBuilder.DropTable(
                 name: "cargo_manifest");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "min_length",
-                table: "golongan",
-                type: "INTEGER",
-                nullable: false,
-                oldClrType: typeof(double),
-                oldType: "REAL");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "max_length",
-                table: "golongan",
-                type: "INTEGER",
-                nullable: false,
-                oldClrType: typeof(double),
-                oldType: "REAL");
-
-            migrationBuilder.AlterColumn<long>(
-                name: "harga",
-                table: "golongan",
-                type: "INTEGER",
-                nullable: false,
-                oldClrType: typeof(double),
-                oldType: "REAL");
+            migrationBuilder.DropTable(
+                name: "golongan");
         }
     }
 }

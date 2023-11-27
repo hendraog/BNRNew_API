@@ -40,6 +40,8 @@ builder.Services.AddDbContext<MyDBContext>(options =>
 {
     options.UseSqlite(@"Data Source=D:\test.db").EnableSensitiveDataLogging();
 });
+builder.Services.AddControllers(options =>
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

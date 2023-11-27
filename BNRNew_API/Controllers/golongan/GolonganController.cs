@@ -26,7 +26,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<BaseDtoResponse>> createGolongan([FromBody] CreateGolonganRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
 
             await this.service.createUpdateGolongan(new Golongan
             {
@@ -35,7 +35,7 @@ namespace BNRNew_API.Controllers.auth
                 min_length = request.min_length,
                 max_length = request.max_length,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = session.id!.Value
+                CreatedBy = sessionUser.id!.Value
             });
             
             return Ok();    
@@ -46,7 +46,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize( AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<BaseDtoResponse>> updateGolongan([FromBody] UpdateGolonganRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
 
             var data = await service.getGolonganDetail(request.id);
             if(data == null)
@@ -57,7 +57,7 @@ namespace BNRNew_API.Controllers.auth
             data.min_length = request.min_length;
             data.max_length = request.max_length;
             data.UpdatedAt = DateTime.UtcNow;
-            data.UpdatedBy  = session.id!.Value;
+            data.UpdatedBy  = sessionUser.id!.Value;
 
             await this.service.createUpdateGolongan(data);
             return Ok();

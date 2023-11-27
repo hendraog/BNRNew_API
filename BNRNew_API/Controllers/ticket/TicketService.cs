@@ -56,12 +56,11 @@ namespace BNRNew_API.Controllers.ticket
                 throw new BadHttpRequestException("Lokasi asal dan tujuan tidak boleh sama");
 
             //validasi golongan 
-            var dataGolongan = await golonganService.getGolonganDetail(ticket.golongan.id!.Value);
+            var dataGolongan = await golonganService.getGolonganDetail(ticket.golongan);
             if (dataGolongan == null)
                 throw new BadHttpRequestException("Golongan tidak valid");
 
             //validasi panjang kendaraan ke golongan
-            ticket.golongan = dataGolongan;
             if (ticket.panjang_kenderaan > dataGolongan.max_length || ticket.panjang_kenderaan < dataGolongan.min_length)
                 throw new BadHttpRequestException($"Panjang kendaraan harus di antara {dataGolongan.min_length:0.##} dan {dataGolongan.max_length:0.##} sesuai dengan golongan {dataGolongan.golongan}");
             
@@ -73,29 +72,30 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<List<Ticket>> getList(long? createdBy, string search, int page, int pageSize)
         {
-            IQueryable<Ticket> q = ctx.ticket.Select(x => new Ticket()
-            {
-                id = x.id,
-                ticket_no = x.ticket_no,
-                lokasi_asal = x.lokasi_asal,
-                lokasi_tujuan = x.lokasi_tujuan,
-                harga = x.harga,
-                total_harga = x.total_harga,
-                biaya_tuslah = x.biaya_tuslah,
-                tanggal_berlaku = x.tanggal_berlaku,
-                nama_supir = x.nama_supir,  
-                plat_no = x.plat_no,
-                golongan = new Golongan()
-                {
-                    golongan = x.golongan.golongan
-                }
-            });
+            var q = from x in ctx.ticket join y in ctx.golongan on x.golongan equals y.id join u in ctx.user on x.CreatedBy equals u.id
+                     select new  Ticket {
+                         id = x.id,
+                         ticket_no = x.ticket_no,
+                         lokasi_asal = x.lokasi_asal,
+                         lokasi_tujuan = x.lokasi_tujuan,
+                         harga = x.harga,
+                         total_harga = x.total_harga,
+                         biaya_tuslah = x.biaya_tuslah,
+                         tanggal_berlaku = x.tanggal_berlaku,
+                         nama_supir = x.nama_supir,
+                         plat_no = x.plat_no,
+                         golongan = x.golongan,
+                         golongan_name = y.golongan,
+                         CreatedAt = x.CreatedAt,
+                         CreatedBy = x.CreatedBy,
+                         CreatedByName = u.UserName
+                     };
 
             if (createdBy!=null)
                 q = q.Where(e => e.CreatedBy == createdBy);
 
             if (!search.IsNullOrEmpty())
-                q = q.Where(e => EF.Functions.Like(e.plat_no, $"%{search}%") || EF.Functions.Like(e.golongan.golongan, $"%{search}%") );
+                q = q.Where(e => (EF.Functions.Like(e.plat_no, $"%{search}%")) );
 
             q = q.Skip((page - 1) * pageSize).Take(pageSize);
 
@@ -104,14 +104,14 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<List<Ticket>>  getTicketByTujuanAndNotCargoDetail(string lokasi)
         {
-            IQueryable<Ticket> q = ctx.ticket.Include(e => e.golongan.golongan);
+            IQueryable<Ticket> q = ctx.ticket.Include(e => e.golongan);
             q = q.Where(e => e.lokasi_tujuan == lokasi && e.cargoDetail == null);
             return await q.ToListAsync();
         }
 
         public async Task<Ticket> getTicketDetail(long ticketId)
         {
-            return await ctx.ticket.Where(e => e.id == ticketId).Include(e => e.golongan.golongan).FirstOrDefaultAsync();
+            return await ctx.ticket.Where(e => e.id == ticketId).Include(e => e.golongan).FirstOrDefaultAsync();
         }
 
        

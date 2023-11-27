@@ -23,7 +23,8 @@ namespace BNRNew_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long>("CreatedBy")
@@ -36,6 +37,10 @@ namespace BNRNew_API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("cargoManifestid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("ticket")
+                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.HasKey("id");
@@ -51,7 +56,8 @@ namespace BNRNew_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long>("CreatedBy")
@@ -109,8 +115,7 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("CreatedBy")
-                        .IsRequired()
+                    b.Property<long>("CreatedBy")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -149,7 +154,8 @@ namespace BNRNew_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long>("CreatedBy")
@@ -207,15 +213,11 @@ namespace BNRNew_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("CargoDetail")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("CreatedAt")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("CreatedBy")
-                        .IsRequired()
+                    b.Property<long>("CreatedBy")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -240,7 +242,10 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("golonganid")
+                    b.Property<long?>("cargoDetail")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("golongan")
                         .HasColumnType("INTEGER");
 
                     b.Property<long?>("harga")
@@ -329,11 +334,6 @@ namespace BNRNew_API.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("CargoDetail")
-                        .IsUnique();
-
-                    b.HasIndex("golonganid");
-
                     b.HasIndex(new[] { "ticket_no" }, "ticket_idx1")
                         .IsUnique();
 
@@ -350,7 +350,8 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long>("CreatedBy")
@@ -402,29 +403,6 @@ namespace BNRNew_API.Migrations
                         .IsRequired();
 
                     b.Navigation("golongan");
-                });
-
-            modelBuilder.Entity("BNRNew_API.Entities.Ticket", b =>
-                {
-                    b.HasOne("BNRNew_API.Entities.CargoDetail", "cargoDetail")
-                        .WithOne("ticket")
-                        .HasForeignKey("BNRNew_API.Entities.Ticket", "CargoDetail");
-
-                    b.HasOne("BNRNew_API.Entities.Golongan", "golongan")
-                        .WithMany()
-                        .HasForeignKey("golonganid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("cargoDetail");
-
-                    b.Navigation("golongan");
-                });
-
-            modelBuilder.Entity("BNRNew_API.Entities.CargoDetail", b =>
-                {
-                    b.Navigation("ticket")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

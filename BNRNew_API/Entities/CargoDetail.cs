@@ -18,16 +18,18 @@ namespace BNRNew_API.Entities
         public CargoManifest cargoManifest { get; set; }
 
         [Required]
-        public Ticket ticket { get; set; }
+        public long? ticket { get; set; }
+        
 
         [Required]
         public long CreatedBy { get; set; }
 
         [Required]
-        public DateTime CreatedAt{ get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public long? UpdatedBy { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
     }
 }

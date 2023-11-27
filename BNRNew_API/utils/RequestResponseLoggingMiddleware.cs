@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -35,6 +36,8 @@ namespace BNRNew_API.utils
 
         public async Task Invoke(HttpContext context)
         {
+
+
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
 
@@ -63,6 +66,9 @@ namespace BNRNew_API.utils
 
             long? memberId = null;
             var jwtsecret = (string)context.Items["secret"];
+
+
+            //CallContext.SetData("jwtsecret", jwtsecret);
 
             try
             {

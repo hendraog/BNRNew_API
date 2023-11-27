@@ -27,7 +27,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<BaseDtoResponse>> create([FromBody] CreateGolonganPlatRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
 
             await this.service.createUpdate(new GolonganPlat()
             {
@@ -37,7 +37,7 @@ namespace BNRNew_API.Controllers.auth
                 },
                 plat_no = request.plat_no.Trim().ToLower(),
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = session.id!.Value
+                CreatedBy = sessionUser.id!.Value
             });
             
             return Ok();    
@@ -48,7 +48,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public async Task<ActionResult<BaseDtoResponse>> update([FromBody] CreateGolonganPlatRequest request)
         {
-            var session = getSession();
+            var sessionUser = getSessionUser();
 
             var data = await service.getDetail(request.id!.Value);
             if(data == null)
@@ -59,7 +59,7 @@ namespace BNRNew_API.Controllers.auth
             };
             data.plat_no = request.plat_no ?? data.plat_no;
             data.UpdatedAt = DateTime.UtcNow;
-            data.UpdatedBy  = session.id!.Value;
+            data.UpdatedBy  = sessionUser.id!.Value;
             await this.service.createUpdate(data);
             return Ok();
         }

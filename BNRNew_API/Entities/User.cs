@@ -22,21 +22,21 @@ namespace BNRNew_API.Entities
         public string Password { get; set; }
 
         [Required]
-        public long CreatedBy { get; set; }
-
-        [Required]
-        public DateTime CreatedAt{ get; set; }
-
-        public long? UpdatedBy { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
-        [Required]
         public bool? Active { get; set; }
 
         [Required]
         public string? Role { get; set; }
-      
+
+
+        [Required]
+        public long CreatedBy { get; set; }
+
+        [Required]
+        public DateTime? CreatedAt { get; set; }
+
+        public long? UpdatedBy { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
 
     }
 }

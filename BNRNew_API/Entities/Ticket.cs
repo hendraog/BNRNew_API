@@ -36,7 +36,7 @@ namespace BNRNew_API.Entities
         public string lokasi_tujuan { get; set; }
 
         [Required]
-        public Golongan golongan { get; set; }
+        public long golongan { get; set; }
 
         [Required]
         public string tuslah { get; set; }
@@ -96,21 +96,29 @@ namespace BNRNew_API.Entities
         [Required]
         public string tujuan_supir { get; set; }
 
-        [ForeignKey("CargoDetail")]
-        public CargoDetail? cargoDetail { get; set; }
+        public long? cargoDetail { get; set; }
 
         [Required]
         public int? printer_count { get; set; } = 0;
 
-        [Required]
-        public long? CreatedBy { get; set; }
 
         [Required]
-        public DateTime? CreatedAt{ get; set; }
+        public long CreatedBy { get; set; }
+
+        [Required]
+        public DateTime? CreatedAt { get; set; }
 
         public long? UpdatedBy { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+
+        [NotMapped]
+        public string CreatedByName { get; set; }
+
+
+        [NotMapped]
+        public string golongan_name { get; set; }
 
     }
 }
