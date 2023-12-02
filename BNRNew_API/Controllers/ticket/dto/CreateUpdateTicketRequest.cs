@@ -28,7 +28,7 @@ namespace BNRNew_API.ticket.request
 
         [Required]
         [Range(1, long.MaxValue)]
-        public long golonganId { get; set; }
+        public long golongan { get; set; }
 
         [Required]
         public string tuslah { get; set; }
@@ -64,10 +64,6 @@ namespace BNRNew_API.ticket.request
         [Required]
         [Range(0, long.MaxValue)]
         public long? biaya_tuslah { get; set; }
-
-        [Required]
-        [Range(0, long.MaxValue)]
-        public long? total_harga { get; set; }
 
         [Required]
         [Range(0, double.MaxValue)]

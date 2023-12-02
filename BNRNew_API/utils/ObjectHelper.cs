@@ -31,11 +31,11 @@ namespace BNRNew_API.utils
             //map the properties
             foreach (var props in results)
             {
-                if (!skipIfDestNotNull) {
+                /*if (!skipIfDestNotNull) {
                     var destVal = props.targetProperty.GetValue(destination, null);
                     if (destVal != null)
                         continue;
-                }
+                }*/
                 var sourceVal = props.sourceProperty.GetValue(source, null);
 
                 if (skipIfSourceNull && sourceVal == null)

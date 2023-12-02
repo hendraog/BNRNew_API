@@ -15,6 +15,11 @@ namespace BNRNew_API.Entities
     [Index("ticket_no", Name = "ticket_idx1", IsUnique = true)]
     public class Ticket
     {
+
+        public Ticket()
+        {
+        }
+
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -115,6 +120,11 @@ namespace BNRNew_API.Entities
 
         [NotMapped]
         public string CreatedByName { get; set; }
+
+        [NotMapped]
+        public string UpdatedByName { get; set; }
+
+
 
 
         [NotMapped]

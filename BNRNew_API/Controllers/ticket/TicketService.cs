@@ -6,6 +6,7 @@ using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golonganplat;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BNRNew_API.config;
+using System.Diagnostics.Tracing;
 
 namespace BNRNew_API.Controllers.ticket
 {
@@ -23,28 +24,29 @@ namespace BNRNew_API.Controllers.ticket
             this.sequenceService = sequenceService;
         }
 
-        public async Task create(Ticket ticket)
+        public async Task<Ticket> create(Ticket ticket)
         {
             ctx.Database.BeginTransaction();
 
-            await validateTicketData(ticket);
+            ticket =  await validateTicketData(ticket);
             ticket.ticket_no = await sequenceService.getSequence(SequenceKey.TICKET);
             await ctx.ticket.AddAsync(ticket);
             await ctx.SaveChangesAsync();
             ctx.Database.CommitTransaction();
-
+            return ticket;
         }
-        public async Task update(Ticket ticket)
+        public async Task<Ticket> update(Ticket ticket)
         {
             if(ticket.id == null)
                 throw new BadHttpRequestException("Id tidak boleh kosong");
 
-            await validateTicketData(ticket);
+            ticket =  await validateTicketData(ticket);
             ctx.ticket.Update(ticket);
             await ctx.SaveChangesAsync();
+            return ticket;
         }
 
-        public async Task validateTicketData(Ticket ticket)
+        public async Task<Ticket> validateTicketData(Ticket ticket)
         {
             if(!AppConstant.LokasiPelabuhan.Contains(ticket.lokasi_asal))
                 throw new BadHttpRequestException("Lokasi asal tidak valid");
@@ -68,6 +70,10 @@ namespace BNRNew_API.Controllers.ticket
             var golonganPlat = await golonganPlatService.getByPlatNo(ticket.plat_no);
             if (golonganPlat == null)
                 throw new BadHttpRequestException($"No plat {ticket.plat_no} tidak terdaftar di sistem, Silahkan request ke atasan anda untuk di daftarkan");
+
+            ticket.total_harga = ticket.harga + ticket.biaya_tuslah;
+
+            return ticket;
         }
 
         public async Task<List<Ticket>> getList(long? createdBy, string search, int page, int pageSize)
@@ -90,7 +96,7 @@ namespace BNRNew_API.Controllers.ticket
                          CreatedBy = x.CreatedBy,
                          CreatedByName = u.UserName
                      };
-
+                
             if (createdBy!=null)
                 q = q.Where(e => e.CreatedBy == createdBy);
 
@@ -111,16 +117,58 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<Ticket> getTicketDetail(long ticketId)
         {
-            return await ctx.ticket.Where(e => e.id == ticketId).Include(e => e.golongan).FirstOrDefaultAsync();
+            var q = from x in ctx.ticket
+                    join y in ctx.golongan on x.golongan equals y.id
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    //join z in ctx.user.DefaultIfEmpty() on x.UpdatedBy equals z.id
+                    where (x.id == ticketId)
+                    select new Ticket
+                    {
+                        id = x.id,
+                        ticket_no = x.ticket_no,
+                        tanggal_masuk = x.tanggal_masuk,
+                        tanggal_berlaku = x.tanggal_berlaku,
+                        lokasi_asal = x.lokasi_asal,
+                        lokasi_tujuan = x.lokasi_tujuan,
+                        harga = x.harga,
+                        total_harga = x.total_harga,
+                        biaya_tuslah = x.biaya_tuslah,
+
+                        tuslah = x.tuslah,
+                        jenis_muatan = x.jenis_muatan,
+                        berat = x.berat,
+                        volume = x.volume,
+                        keterangan = x.keterangan,
+                        nama_pengurus = x.nama_pengurus,
+                        jumlah_orang = x.jumlah_orang,
+                        panjang_kenderaan = x.panjang_kenderaan,
+                        panjang_ori_kenderaan = x.panjang_ori_kenderaan,
+                        tinggi_kenderaan = x.tinggi_kenderaan,
+                        lebar_kenderaan = x.lebar_kenderaan,
+                        alamat_supir = x.alamat_supir,
+                        asal_supir = x.asal_supir,
+                        tujuan_supir = x.tujuan_supir,
+                        nama_supir = x.nama_supir,
+                        plat_no = x.plat_no,
+                        golongan = x.golongan,
+                        golongan_name = y.golongan,
+                        CreatedAt = x.CreatedAt,
+                        CreatedBy = x.CreatedBy,
+                        CreatedByName = u.UserName,
+                        UpdatedBy = x.UpdatedBy,
+                        UpdatedAt = x.UpdatedAt,
+                        //UpdatedByName = z.UserName
+                    };
+
+            return await q.FirstOrDefaultAsync();
         }
 
-       
     }
 
     public interface ITicketService
     {
-        public Task create(Ticket ticket);
-        public Task update(Ticket ticket);
+        public Task<Ticket> create(Ticket ticket);
+        public Task<Ticket> update(Ticket ticket);
         public Task<List<Ticket>> getList(long? createdBy,string filter, int page, int pageSize);
         public Task<List<Ticket>> getTicketByTujuanAndNotCargoDetail(string lokasi);
         public Task<Ticket> getTicketDetail(long ticketId);

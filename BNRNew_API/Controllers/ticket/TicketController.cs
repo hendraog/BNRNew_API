@@ -39,11 +39,9 @@ namespace BNRNew_API.Controllers.auth
             ticket.CreatedAt = DateTime.UtcNow;
             ticket.CreatedBy = sessionUser.id!.Value;
             ObjectHelper.CopyProperties(request, ticket);
-
-            ticket.golongan = request.golonganId;
-            await this.service.create(ticket);
+            var ticketdata = await this.service.create(ticket);
             
-            return Ok();    
+            return Ok(ticketdata);    
         }
 
         /// <summary>
@@ -56,12 +54,16 @@ namespace BNRNew_API.Controllers.auth
         {
             var sessionUser = getSessionUser();
 
-            Ticket ticket = new Ticket();
+            Ticket ticket = await service.getTicketDetail(request!.id.Value);
+            if (ticket == null)
+                return Ok(null);
+
+
             ticket.UpdatedAt = DateTime.UtcNow;
             ticket.UpdatedBy = sessionUser.id!.Value;
             ObjectHelper.CopyProperties(request, ticket);
-            await this.service.update(ticket);
-            return Ok();
+            var ticketdata = await this.service.update(ticket);
+            return Ok(ticketdata);
         }
         
         [HttpGet,Route("")]
