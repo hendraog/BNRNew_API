@@ -11,10 +11,9 @@ namespace BNRNew_API.Entities
         public long? id { get; set; }
 
         [Required]
-        public string plat_no { get; set; }
 
-        [Required]
-        public long? golonganId { get; set; }
+        public string data { get; set; }
+
 
     }
 }

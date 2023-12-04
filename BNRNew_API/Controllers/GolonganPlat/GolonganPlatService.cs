@@ -17,30 +17,66 @@ namespace BNRNew_API.Controllers.golonganplat
             this.golonganService = golonganService;
         }
 
-        public async Task createUpdate(GolonganPlat data)
+        public async Task createUpdate(List<GolonganPlat> createData)
         {
-            data.plat_no = data.plat_no.Trim().ToLower();
-
-            data.golongan = await golonganService.getGolonganDetail(data.golongan.id!.Value);
-            if(data.golongan == null)
-                throw new BadHttpRequestException("Golongan tidak valid");
-
-            if (data.id == null || data.id == 0)
-                ctx.golonganPlat.Add(data);
-            else
-                ctx.golonganPlat.Update(data);
-
+            foreach(var item in createData)
+            {
+                ctx.golonganPlat.Add(item);
+            }
             await ctx.SaveChangesAsync();
         }
 
 
         public async Task<GolonganPlat> getByPlatNo(string platNo)
         {
-            return await ctx.golonganPlat.Where(x => x.plat_no.Equals(platNo)).Include(x => x.golongan).SingleOrDefaultAsync();
+            var q = from x in ctx.golonganPlat
+                    join y in ctx.golongan on x.golonganid equals y.id
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    select new GolonganPlat()
+                    {
+                        id = x.id,
+                        plat_no = x.plat_no,
+                        golonganid = x.golonganid,
+                        golongan_name = y.golongan,
+                        CreatedAt = x.CreatedAt,
+                        CreatedBy = x.CreatedBy,
+                        CreatedByName = u.UserName,
+                        UpdatedAt = x.UpdatedAt
+                    };
+
+            q = q.Where(e => e.plat_no == platNo);
+
+            return await q.SingleOrDefaultAsync();
         }
 
+        public async Task<List<GolonganPlat>> getListByPlatNo(List<string> platNos)
+        {
+            var q = from x in ctx.golonganPlat.Where(x => platNos.Contains(x.plat_no))
+                    select new GolonganPlat()
+                    {
+                        id = x.id,
+                        plat_no = x.plat_no,
+                        golonganid = x.golonganid
+                    };
+            return q.ToListAsync().Result;
+        }
+
+
         public async Task<List<GolonganPlat>> getList(string search, int page, int pageSize) {
-            IQueryable<GolonganPlat> q = ctx.golonganPlat.Include(x => x.golongan);
+            var q = from x in ctx.golonganPlat
+                    join y in ctx.golongan on x.golonganid equals y.id
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    select new GolonganPlat()
+                    {
+                        id = x.id,
+                        plat_no = x.plat_no,
+                        golonganid = x.golonganid,
+                        golongan_name = y.golongan,
+                        CreatedAt = x.CreatedAt,
+                        CreatedBy = x.CreatedBy,
+                        CreatedByName = u.UserName,
+                        UpdatedAt = x.UpdatedAt
+                    };
 
             if (!search.IsNullOrEmpty())
                 q = q.Where(e => EF.Functions.Like(e.plat_no , $"%{search}%"));
@@ -52,7 +88,7 @@ namespace BNRNew_API.Controllers.golonganplat
 
         public async Task<GolonganPlat> getDetail(long id)
         {
-            return await ctx.golonganPlat.Include(x => x.golongan).Where(e => e.id == id).FirstOrDefaultAsync();
+            return await ctx.golonganPlat.Include(x => x.golonganid).Where(e => e.id == id).FirstOrDefaultAsync();
         }
 
         public void deleteById(long id)
@@ -66,6 +102,7 @@ namespace BNRNew_API.Controllers.golonganplat
     {
         public Task createUpdate(GolonganPlat data);
         public Task<GolonganPlat> getByPlatNo(string platNo);
+        public Task<List<GolonganPlat>> getListByPlatNo(List<string> platNo);
         public Task<List<GolonganPlat>> getList(string filter, int page, int pageSize);
         public Task<GolonganPlat> getDetail(long id);
         public void deleteById(long id);

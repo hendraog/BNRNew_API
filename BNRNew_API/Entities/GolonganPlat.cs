@@ -19,8 +19,7 @@ namespace BNRNew_API.Entities
         public string plat_no { get; set; }
 
         [Required]
-        public Golongan golongan { get; set; }
-
+        public long golonganid { get; set; }
 
         [Required]
         public long CreatedBy { get; set; }
@@ -31,5 +30,16 @@ namespace BNRNew_API.Entities
         public long? UpdatedBy { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+
+        [NotMapped]
+        public string CreatedByName { get; set; }
+
+        [NotMapped]
+        public string UpdatedByName { get; set; }
+
+        [NotMapped]
+        public string golongan_name { get; set; }
+
     }
 }
