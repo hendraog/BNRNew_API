@@ -28,87 +28,149 @@ namespace BNRNew_API.Controllers.auth
 
         [HttpPost]
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
-        public async Task<ActionResult<BaseDtoResponse>> createUpdate([FromBody] CreateGolonganPlatRequest request)
+        public async Task<ActionResult<BaseDtoResponse>> createGolonganPlat([FromBody] CreateGolonganPlatRequest request)
+        {
+            var sessionUser = getSessionUser();
+
+            if (!Utils.validatePoliceNo(request.plat_no))
+                throw new BadHttpRequestException("Format plat harus BK 1234 BBD (1-2 Huruf pertama, 1-4 angka di tengah dan 1-3 huruf di belakang)");
+
+            await this.service.createDataSingle(new GolonganPlat
+            {
+                golonganid = request.golongan!.Value,
+                plat_no = request.plat_no,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = sessionUser.id!.Value
+            });
+
+            return Ok();
+        }
+
+
+        [HttpPut]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public async Task<ActionResult<BaseDtoResponse>> updateGolonganPlat([FromBody] CreateGolonganPlatRequest request)
+        {
+            var sessionUser = getSessionUser();
+
+            if(!Utils.validatePoliceNo(request.plat_no))
+                throw new BadHttpRequestException("Format plat harus BK 1234 BBD (1-2 Huruf pertama, 1-4 angka di tengah dan 1-3 huruf di belakang)");
+
+            var data = await service.getDetail(request.id!.Value);
+            if (data == null)
+                return Ok(null);
+
+            data.golonganid = request.golongan ?? data.golonganid;
+            data.plat_no= request.plat_no ?? data.plat_no;
+            data.UpdatedAt = DateTime.UtcNow;
+            data.UpdatedBy = sessionUser.id!.Value;
+
+            await this.service.updateDataSingle(data);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("bulk")]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public async Task<ActionResult<BaseDtoResponse>> createUpdateBulk([FromBody] CreateGolonganPlatBulkRequest request)
         {
             var sessionUser = getSessionUser();
 
             var allgolonganData = await golonganService.getGolongan("",1,1000);
 
-            var dataList = request.data.Split("\r\n");
+            var dataList = request.data.Trim().Split("\n");
 
             var limitRecord = 1000;
             Dictionary<string, string> platList = new Dictionary<string, string>();
             List<GolonganPlat> tobeUpdateData = new List<GolonganPlat>();
             List<GolonganPlat> tobeDeleteData = new List<GolonganPlat>();
             List<GolonganPlat> tobeAddData = new List<GolonganPlat>();
+            int totalProcessedData = 0;
 
             foreach (var dataItem in dataList)
             {
+                totalProcessedData++;
+
                 var dataItemSplit = dataItem.Split(';');
-                if(dataItemSplit[1].IsNullOrEmpty())
-                    platList.Add(dataItemSplit[0], "");
-                else
+                if (dataItemSplit.Length > 0)
                 {
-                    platList.Add(dataItemSplit[0], dataItemSplit[1]);
-                }
-
-
-                if (platList.Count > limitRecord)
-                {
-                    // proses data chunk
-                    var listDataexisting = await service.getListByPlatNo(platList.Keys.ToList());
-                    foreach(var platListKey in platList.Keys)
+                    if (dataItemSplit[1].IsNullOrEmpty())
+                        platList.Add(dataItemSplit[0], "");
+                    else
                     {
-                        //find data dari array plat di hasil query db bulk data plat
-                        var findData = listDataexisting.Find(e => e.plat_no.Equals(platListKey, StringComparison.OrdinalIgnoreCase));
-                        if(findData == null)
-                        {
-                            //data plat baru
-                            string golonganStr = "";
-                            platList.TryGetValue(platListKey,out golonganStr); //ambil data golongan dr dictionary
-
-                            var golongan = allgolonganData.Find(gol => gol.golongan.Equals(golonganStr));
-                            if(golongan != null)
-                            {
-                                tobeAddData.Add(new GolonganPlat()
-                                {
-                                    plat_no = platListKey,
-                                    golonganid = golongan.id.Value,
-                                    CreatedAt = DateTime.Now,
-                                    CreatedBy = sessionUser.id.Value
-                                });
-                            }
-                            else
-                            {
-                                //golongan tidak ketemu
-
-                            }
-                        }
-                        else
-                        {
-                            //update plat data
-                            string golonganStr = "";
-                            platList.TryGetValue(platListKey, out golonganStr); //ambil data golongan dr dictionary
-
-                            var golongan = allgolonganData.Find(gol => gol.golongan.Equals(golonganStr));
-                            if (golongan != null)
-                            {
-                                findData.golonganid = golongan.id.Value;
-                                findData.UpdatedBy = sessionUser.id.Value;
-                                findData.UpdatedAt = DateTime.UtcNow;
-                                tobeUpdateData.Add(findData);
-                            }
-                            else
-                            {
-                                //golongan tidak ketemu
-
-                            }
-
-                        }
+                        platList.Add(dataItemSplit[0], dataItemSplit[1]);
                     }
+
+                    if (platList.Count > limitRecord || totalProcessedData == dataList.Count())
+                    {
+                        // proses data chunk
+                        var listDataexisting = await service.getListByPlatNo(platList.Keys.ToList());
+                        foreach (var platListKey in platList.Keys)
+                        {
+                            //find data dari array plat di hasil query db bulk data plat
+                            var findData = listDataexisting.Find(e => e.plat_no.Equals(platListKey, StringComparison.OrdinalIgnoreCase));
+                            if (findData == null)
+                            {
+                                //data plat baru
+                                string golonganStr = "";
+                                platList.TryGetValue(platListKey, out golonganStr); //ambil data golongan dr dictionary
+
+                                var golongan = allgolonganData.Find(gol => gol.golongan.Equals(golonganStr));
+                                if (golongan != null)
+                                {
+                                    tobeAddData.Add(new GolonganPlat()
+                                    {
+                                        plat_no = platListKey,
+                                        golonganid = golongan.id.Value,
+                                        CreatedAt = DateTime.Now,
+                                        CreatedBy = sessionUser.id.Value
+                                    });
+                                }
+                                else
+                                {
+                                    //golongan tidak ketemu
+
+                                }
+                            }
+                            else
+                            {
+                                //update plat data
+                                string golonganStr = "";
+                                platList.TryGetValue(platListKey, out golonganStr); //ambil data golongan dr dictionary
+
+                                if (golonganStr == "")
+                                {
+                                    //golongan tidak ada, mau di hapus
+                                    tobeDeleteData.Add(findData);
+                                }
+                                else
+                                {
+                                    var golongan = allgolonganData.Find(gol => gol.golongan.Equals(golonganStr));
+                                    if (golongan != null)
+                                    {
+                                        findData.golonganid = golongan.id.Value;
+                                        findData.UpdatedBy = sessionUser.id.Value;
+                                        findData.UpdatedAt = DateTime.UtcNow;
+                                        tobeUpdateData.Add(findData);
+                                    }
+                                    else
+                                    {
+                                        //golongan tidak ketemu
+
+                                    }
+                                }
+
+
+                            }
+                        }
+                        platList.Clear();
+                    }
+
                 }
             }
 
+            await service.createData(tobeAddData);
+            await service.updateData(tobeUpdateData);
 
             return Ok();    
         }

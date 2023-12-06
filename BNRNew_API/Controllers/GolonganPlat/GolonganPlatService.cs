@@ -17,13 +17,32 @@ namespace BNRNew_API.Controllers.golonganplat
             this.golonganService = golonganService;
         }
 
-        public async Task createUpdate(List<GolonganPlat> createData)
+        public async Task createDataSingle(GolonganPlat data)
         {
-            foreach(var item in createData)
-            {
-                ctx.golonganPlat.Add(item);
-            }
+            ctx.golonganPlat.Add(data);
             await ctx.SaveChangesAsync();
+        }
+
+        public async Task updateDataSingle(GolonganPlat data)
+        {
+            ctx.golonganPlat.Update(data);
+            await ctx.SaveChangesAsync();
+        }
+
+        public async Task createData(List<GolonganPlat> data)
+        {
+            ctx.Database.BeginTransaction();
+            ctx.golonganPlat.AddRange(data);
+            await ctx.SaveChangesAsync();
+            ctx.Database.CommitTransaction();
+        }
+
+        public async Task updateData(List<GolonganPlat> data)
+        {
+            ctx.Database.BeginTransaction();
+            ctx.golonganPlat.UpdateRange(data);
+            await ctx.SaveChangesAsync();
+            ctx.Database.CommitTransaction();
         }
 
 
@@ -52,12 +71,7 @@ namespace BNRNew_API.Controllers.golonganplat
         public async Task<List<GolonganPlat>> getListByPlatNo(List<string> platNos)
         {
             var q = from x in ctx.golonganPlat.Where(x => platNos.Contains(x.plat_no))
-                    select new GolonganPlat()
-                    {
-                        id = x.id,
-                        plat_no = x.plat_no,
-                        golonganid = x.golonganid
-                    };
+                    select x;
             return q.ToListAsync().Result;
         }
 
@@ -100,7 +114,10 @@ namespace BNRNew_API.Controllers.golonganplat
 
     public interface IGolonganPlatService
     {
-        public Task createUpdate(GolonganPlat data);
+        public Task createDataSingle(GolonganPlat data);
+        public Task updateDataSingle(GolonganPlat data);
+        public Task createData(List<GolonganPlat> data);
+        public Task updateData(List<GolonganPlat> data);
         public Task<GolonganPlat> getByPlatNo(string platNo);
         public Task<List<GolonganPlat>> getListByPlatNo(List<string> platNo);
         public Task<List<GolonganPlat>> getList(string filter, int page, int pageSize);

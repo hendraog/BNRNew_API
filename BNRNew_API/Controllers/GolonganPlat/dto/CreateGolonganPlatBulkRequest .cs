@@ -6,19 +6,12 @@ namespace BNRNew_API.Entities
 {
 #pragma warning disable CS8618
     // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public class CreateGolonganPlatRequest
+    public class CreateGolonganPlatBulkRequest
     {
 
-        public long? id{ get; set; }
-
-
         [Required]
 
-        public string plat_no { get; set; }
-
-        [Required]
-
-        public long? golongan { get; set; }
+        public string data { get; set; }
 
 
     }

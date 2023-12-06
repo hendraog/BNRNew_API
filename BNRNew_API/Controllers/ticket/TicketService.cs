@@ -7,6 +7,7 @@ using BNRNew_API.Controllers.golonganplat;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BNRNew_API.config;
 using System.Diagnostics.Tracing;
+using BNRNew_API.utils;
 
 namespace BNRNew_API.Controllers.ticket
 {
@@ -48,7 +49,10 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<Ticket> validateTicketData(Ticket ticket)
         {
-            if(!AppConstant.LokasiPelabuhan.Contains(ticket.lokasi_asal))
+            if (!Utils.validatePoliceNo(ticket.plat_no))
+                throw new BadHttpRequestException("Format plat harus BK 1234 BBD (1-2 Huruf pertama, 1-4 angka di tengah dan 1-3 huruf di belakang)");
+
+            if (!AppConstant.LokasiPelabuhan.Contains(ticket.lokasi_asal))
                 throw new BadHttpRequestException("Lokasi asal tidak valid");
 
             if (!AppConstant.LokasiPelabuhan.Contains(ticket.lokasi_tujuan))

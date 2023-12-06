@@ -58,7 +58,6 @@ namespace BNRNew_API.Controllers.auth
             if (ticket == null)
                 return Ok(null);
 
-
             ticket.UpdatedAt = DateTime.UtcNow;
             ticket.UpdatedBy = sessionUser.id!.Value;
             ObjectHelper.CopyProperties(request, ticket);
