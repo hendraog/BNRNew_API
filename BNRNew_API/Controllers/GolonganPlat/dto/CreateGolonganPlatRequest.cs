@@ -18,7 +18,7 @@ namespace BNRNew_API.Entities
 
         [Required]
 
-        public long? golongan { get; set; }
+        public long? golonganid { get; set; }
 
 
     }

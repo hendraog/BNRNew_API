@@ -198,7 +198,9 @@ namespace BNRNew_API.utils
                     }
 
                     requestLog.response_data = errResult;
-                    requestLog.duration_ms = watch.ElapsedMilliseconds;                    
+                    requestLog.duration_ms = watch.ElapsedMilliseconds;
+                    Console.WriteLine(e);
+
 
                     context.Response.StatusCode = httpCode;
                     context.Response.ContentType = "application/json";

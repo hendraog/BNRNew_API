@@ -37,8 +37,8 @@ namespace BNRNew_API.Controllers.auth
 
             await this.service.createDataSingle(new GolonganPlat
             {
-                golonganid = request.golongan!.Value,
-                plat_no = request.plat_no,
+                golonganid = request.golonganid!.Value,
+                plat_no = request.plat_no.ToUpper(),
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = sessionUser.id!.Value
             });
@@ -60,10 +60,12 @@ namespace BNRNew_API.Controllers.auth
             if (data == null)
                 return Ok(null);
 
-            data.golonganid = request.golongan ?? data.golonganid;
+            data.golonganid = request.golonganid ?? data.golonganid;
             data.plat_no= request.plat_no ?? data.plat_no;
             data.UpdatedAt = DateTime.UtcNow;
             data.UpdatedBy = sessionUser.id!.Value;
+
+            data.plat_no = data.plat_no.ToUpper();
 
             await this.service.updateDataSingle(data);
             return Ok();
@@ -75,6 +77,7 @@ namespace BNRNew_API.Controllers.auth
         public async Task<ActionResult<BaseDtoResponse>> createUpdateBulk([FromBody] CreateGolonganPlatBulkRequest request)
         {
             var sessionUser = getSessionUser();
+            var res = new BaseDtoResponse();
 
             var allgolonganData = await golonganService.getGolongan("",1,1000);
 
@@ -172,7 +175,11 @@ namespace BNRNew_API.Controllers.auth
             await service.createData(tobeAddData);
             await service.updateData(tobeUpdateData);
 
-            return Ok();    
+            res.message = "Created Data => " + tobeAddData.Count() + "<Br/>";
+            res.message += "Updated Data => " + tobeUpdateData.Count();
+
+
+            return Ok(res);    
         }
 
         [HttpGet,Route("")]

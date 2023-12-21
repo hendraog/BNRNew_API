@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -15,7 +16,6 @@ namespace BNRNew_API.Entities
     [Index("ticket_no", Name = "ticket_idx1", IsUnique = true)]
     public class Ticket
     {
-
         public Ticket()
         {
         }
@@ -103,7 +103,7 @@ namespace BNRNew_API.Entities
 
         public long? cargoDetail { get; set; }
 
-        [Required]
+
         public int? printer_count { get; set; } = 0;
 
 

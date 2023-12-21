@@ -30,7 +30,7 @@ namespace BNRNew_API.Controllers
             if(dataRoleLevel == 0)
                 throw new BadHttpRequestException("Invalid role");
 
-            if (userRoleLevel<= dataRoleLevel)
+            if (userRoleLevel <= dataRoleLevel)
                 throw new UnauthorizedAccessException("Anda tidah berhak menambahkan / merubah user dengan Role yg lebih tinggi atau sejajar dengan anda");
 
 
@@ -38,7 +38,23 @@ namespace BNRNew_API.Controllers
             if (user.id == null || user.id == 0)
                 ctx.user.Add(user);
             else
+            
                 ctx.user.Update(user);
+
+            ctx.SaveChanges();
+        }
+
+        public void deleteUser(int userRoleLevel, User user)
+        {
+            var dataRoleLevel = AppConstant.getRoleLevel(user.Role);
+
+            if (dataRoleLevel == 0)
+                throw new BadHttpRequestException("Invalid role");
+
+            if (userRoleLevel <= dataRoleLevel)
+                throw new UnauthorizedAccessException("Anda tidah berhak menambahkan / merubah user dengan Role yg lebih tinggi atau sejajar dengan anda");
+
+            ctx.user.Remove(user);
 
             ctx.SaveChanges();
         }
@@ -63,10 +79,14 @@ namespace BNRNew_API.Controllers
     public interface IUserService
     {
         public void createUpdateUser(int userRoleLevel, User user);
+
+        public void deleteUser(int userRoleLevel, User user);
+
         public User? validateUser(string user,string password);
 
         public List<User> GetUsers(string filter, int page, int pageSize);
         public User? GetUserDetail(long userId);
+
 
 
     }

@@ -4,6 +4,16 @@
         <name>BNRNew_API</name>
     </assembly>
     <members>
+        <member name="M:BNRNew_API.Controllers.auth.CargoManifestController.create(BNRNew_API.Entities.CreateCargoManifestRequest)">
+            <summary>
+            Untuk membuat data ticket baru
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.CargoManifestController.updateCargo(BNRNew_API.Entities.CreateCargoManifestRequest)">
+            <summary>
+            Untuk mengupdate data ticket
+            </summary>
+        </member>
         <member name="M:BNRNew_API.Controllers.auth.TicketController.createTicket(BNRNew_API.ticket.request.CreateUpdateTicketRequest)">
             <summary>
             Untuk membuat data ticket baru
@@ -39,10 +49,22 @@
             Untuk mengambil data detail user
             </summary>
         </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.deleteUser(System.Int64)">
+            <summary>
+            Untuk melakukan update data user
+            </summary>
+        </member>
         <member name="M:BNRNew_API.Controllers.auth.UserController.getUserProfile">
             <summary>
             ambil profile dari user berdasarkan token login
             </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.ticket.ITicketService.getTicketByTujuanAndNotCargoDetail(System.String)">
+            <summary>
+            hanya mereturn ticketid dan ticketNo
+            </summary>
+            <param name="lokasi"></param>
+            <returns></returns>
         </member>
         <member name="M:BNRNew_API.Controllers.master.MasterController.getLokasiList">
             <summary>

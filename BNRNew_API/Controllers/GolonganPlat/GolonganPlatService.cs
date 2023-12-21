@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Data.Sqlite;
 using System.Text.RegularExpressions;
 using BNRNew_API.Controllers.golongan;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BNRNew_API.Controllers.golonganplat
 {
@@ -102,7 +103,24 @@ namespace BNRNew_API.Controllers.golonganplat
 
         public async Task<GolonganPlat> getDetail(long id)
         {
-            return await ctx.golonganPlat.Include(x => x.golonganid).Where(e => e.id == id).FirstOrDefaultAsync();
+            var q = from x in ctx.golonganPlat
+                    join y in ctx.golongan on x.golonganid equals y.id
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    select new GolonganPlat()
+                    {
+                        id = x.id,
+                        plat_no = x.plat_no,
+                        golonganid = x.golonganid,
+                        golongan_name = y.golongan,
+                        CreatedAt = x.CreatedAt,
+                        CreatedBy = x.CreatedBy,
+                        CreatedByName = u.UserName,
+                        UpdatedAt = x.UpdatedAt
+                    };
+
+            q = q.Where(e => e.id == id);
+
+            return await q.FirstOrDefaultAsync();
         }
 
         public void deleteById(long id)

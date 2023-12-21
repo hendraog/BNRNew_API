@@ -1,6 +1,8 @@
 ﻿using BNRNew_API.config;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Diagnostics;
 
 namespace BNRNew_API.Entities
 {
@@ -42,7 +44,11 @@ namespace BNRNew_API.Entities
         public virtual DbSet<CargoDetail> CargoDetails { get; set; }
         public virtual DbSet<Ticket> ticket { get; set; }
         public virtual DbSet<Sequence> sequence { get; set; }
-        
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CargoManifest>().HasMany(g => g.detailData);
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

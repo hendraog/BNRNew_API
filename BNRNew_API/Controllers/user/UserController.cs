@@ -4,6 +4,7 @@ using BNRNew_API.Entities;
 using BNRNew_API.config;
 using BNRNew_API.utils;
 using BNRNew_API.Controllers.dto;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -16,7 +17,7 @@ namespace BNRNew_API.Controllers.auth
         public IUserService userService;
         public AppConfig config;
 
-        public UserController(IUserService userService,AppConfig config)
+        public UserController(IUserService userService, AppConfig config)
         {
             this.userService = userService;
             this.config = config;
@@ -39,8 +40,8 @@ namespace BNRNew_API.Controllers.auth
                         UserName = result.UserName,
                         Role = result.Role
                     }, config.accessTokenExpired),
-                    refreshToken = JWTHelper.generateJwtToken(config.jwtSecretRefresh, new JWTModel { 
-                        id  = result.id,
+                    refreshToken = JWTHelper.generateJwtToken(config.jwtSecretRefresh, new JWTModel {
+                        id = result.id,
                         UserName = result.UserName
                     }, config.refreshTokenExpired),
                     data = result
@@ -73,8 +74,8 @@ namespace BNRNew_API.Controllers.auth
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = sessionUser.id!.Value
             });
-            
-            return Ok();    
+
+            return Ok();
         }
 
         /// <summary>
@@ -88,15 +89,17 @@ namespace BNRNew_API.Controllers.auth
             var roleLevel = getRoleLevel();
 
             var user = userService.GetUserDetail(request.id);
-            if(user == null)
-                return Ok(null);
 
-            user.UserName = request.UserName ??  user.UserName;
-            user.Password = request.Password ?? user.Password;
+            if (user == null)
+                return NotFound();
+
+
+            user.UserName = request.UserName ?? user.UserName;
+            user.Password = request.Password == null || request.Password.Trim().IsNullOrEmpty() ? user.Password : request.Password;
             user.Role = request.Role ?? user.Role;
             user.Active = request.active ?? user.Active;
-            user.UpdatedAt = DateTime.UtcNow;   
-            user.UpdatedBy  = sessionUser.id!.Value;
+            user.UpdatedAt = DateTime.UtcNow;
+            user.UpdatedBy = sessionUser.id!.Value;
 
             this.userService.createUpdateUser(roleLevel, user);
             return Ok();
@@ -105,11 +108,11 @@ namespace BNRNew_API.Controllers.auth
         /// <summary>
         /// Untuk mengambil data list user
         /// </summary>
-        [HttpGet,Route("")]
+        [HttpGet, Route("")]
         [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
         public ActionResult<GetUserResponse> getUsersList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(this.userService.GetUsers(filter,page,pageSize));
+            return Ok(this.userService.GetUsers(filter, page, pageSize));
         }
 
 
@@ -127,6 +130,25 @@ namespace BNRNew_API.Controllers.auth
         }
 
         /// <summary>
+        /// Untuk melakukan update data user
+        /// </summary>
+        [HttpDelete, Route("{userId}")]
+        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        public ActionResult<BaseDtoResponse> deleteUser(long userId)
+        {
+            var sessionUser = getSessionUser();
+            var roleLevel = getRoleLevel();
+
+            var user = userService.GetUserDetail(userId);
+
+            if (user == null)
+                return NotFound();
+
+            this.userService.deleteUser(roleLevel, user);
+            return Ok();
+        }
+
+        /// <summary>
         /// ambil profile dari user berdasarkan token login
         /// </summary>
 
@@ -140,6 +162,9 @@ namespace BNRNew_API.Controllers.auth
                 session.id!.Value
             ));
         }
+
+
+
 
     }
 }

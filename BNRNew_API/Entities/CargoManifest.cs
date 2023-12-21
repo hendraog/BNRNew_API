@@ -36,6 +36,9 @@ namespace BNRNew_API.Entities
         [Required]
         public string alamat { get; set; }
 
+        public ICollection<CargoDetail> detailData { get; set; }
+
+
 
 
         [Required]
@@ -47,6 +50,10 @@ namespace BNRNew_API.Entities
         public long? UpdatedBy { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+        [NotMapped]
+        public string CreatedByName { get; set; }
+
 
     }
 }

@@ -19,6 +19,7 @@ builder.Services.AddScoped<IGolonganService, GolonganService>();
 builder.Services.AddScoped<IGolonganPlatService, GolonganPlatService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ISequenceService, SequenceService>();
+builder.Services.AddScoped<ICargoManifestService, CargoManifestService>();
 builder.Services.AddSingleton<AppConfig>(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

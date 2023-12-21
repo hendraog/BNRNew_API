@@ -74,6 +74,12 @@ namespace BNRNew_API.Controllers.ticket
             var golonganPlat = await golonganPlatService.getByPlatNo(ticket.plat_no);
             if (golonganPlat == null)
                 throw new BadHttpRequestException($"No plat {ticket.plat_no} tidak terdaftar di sistem, Silahkan request ke atasan anda untuk di daftarkan");
+            else
+            {
+                if(golonganPlat.golonganid != ticket.golongan)
+                    throw new BadHttpRequestException($"No plat {ticket.plat_no} tidak sesuai dengan golongan yg di input");
+            }
+
 
             ticket.total_harga = ticket.harga + ticket.biaya_tuslah;
 
@@ -112,10 +118,33 @@ namespace BNRNew_API.Controllers.ticket
             return await q.ToListAsync();
         }
 
+
         public async Task<List<Ticket>>  getTicketByTujuanAndNotCargoDetail(string lokasi)
         {
-            IQueryable<Ticket> q = ctx.ticket.Include(e => e.golongan);
-            q = q.Where(e => e.lokasi_tujuan == lokasi && e.cargoDetail == null);
+            var q = from x in ctx.ticket 
+                    join y in ctx.CargoDetails on x.id equals y.ticket into ticGroup
+                    from child in ticGroup.DefaultIfEmpty()
+                    where x.lokasi_tujuan == lokasi && child == null
+                    select new Ticket()
+                    {
+                        id = x.id, ticket_no = x.ticket_no
+                    };
+            return await q.ToListAsync();
+        }
+
+        public async Task<List<Ticket>> getTicketListShort(List<long> ticketIds)
+        {
+            var q = from x in ctx.ticket
+                    join y in ctx.golongan on x.golongan equals y.id
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    //join z in ctx.user.DefaultIfEmpty() on x.UpdatedBy equals z.id
+                    where (ticketIds.Contains(x.id.Value))
+                    select new Ticket
+                    {
+                        id = x.id,
+                        ticket_no = x.ticket_no
+                    };
+
             return await q.ToListAsync();
         }
 
@@ -174,7 +203,15 @@ namespace BNRNew_API.Controllers.ticket
         public Task<Ticket> create(Ticket ticket);
         public Task<Ticket> update(Ticket ticket);
         public Task<List<Ticket>> getList(long? createdBy,string filter, int page, int pageSize);
-        public Task<List<Ticket>> getTicketByTujuanAndNotCargoDetail(string lokasi);
+
+
+        /// <summary>
+        /// hanya mereturn ticketid dan ticketNo
+        /// </summary>
+        /// <param name="lokasi"></param>
+        /// <returns></returns>
+        public Task<List<Ticket>> getTicketByTujuanAndNotCargoDetail(string lokasiTujuan);
+        public Task<List<Ticket>> getTicketListShort(List<long> ticketIds);
         public Task<Ticket> getTicketDetail(long ticketId);
 
     }
