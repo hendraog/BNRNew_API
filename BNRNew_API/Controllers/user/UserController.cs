@@ -163,6 +163,16 @@ namespace BNRNew_API.Controllers.auth
             ));
         }
 
+        [HttpPut, Route("change-password")]
+        [Authorize()]
+        public async Task<ActionResult<BaseDtoResponse>> changePassword([FromBody] ChangePasswordRequest request)
+        {
+            var result = new BaseDtoResponse();
+            var session = getSession();
+            var status = await this.userService.changePassword(session.id!.Value, request.oldPassword, request.newPassword);
+            result.message = status?"Sukses mengganti password":"Tidak berhasil mengganti password";
+            return Ok(result);
+        }
 
 
 

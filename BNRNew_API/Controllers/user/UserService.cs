@@ -74,6 +74,26 @@ namespace BNRNew_API.Controllers
         {
             return ctx.user.Where(e => e.id == userId).FirstOrDefaultAsync().Result; 
         }
+
+        public async Task<bool> changePassword(long userId, string oldPass, string newPass)
+        {
+            var q = from i in ctx.user where i.id.Equals(userId) select i;
+            var user = q.FirstOrDefault(); 
+            if(user == null)
+                throw new BadHttpRequestException("User not found");
+
+            if(!user.Password.Equals(oldPass))
+                throw new BadHttpRequestException("Password lama tidak sesuai");
+
+            user!.Password = newPass;
+
+            var res = ctx.user.Update(user);
+            await ctx.SaveChangesAsync();
+            if (res != null)
+                return true;
+
+            return false;
+        }
     }
 
     public interface IUserService
@@ -86,6 +106,8 @@ namespace BNRNew_API.Controllers
 
         public List<User> GetUsers(string filter, int page, int pageSize);
         public User? GetUserDetail(long userId);
+
+        public Task<bool> changePassword(long userId, string oldPass, string newPass);
 
 
 
