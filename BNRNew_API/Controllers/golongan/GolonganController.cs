@@ -5,6 +5,7 @@ using BNRNew_API.config;
 using BNRNew_API.utils;
 using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golongan.dto;
+using static BNRNew_API.config.AppConstant;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -23,7 +24,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpPost]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterGolonganManage)]
         public async Task<ActionResult<BaseDtoResponse>> createGolongan([FromBody] CreateGolonganRequest request)
         {
             var sessionUser = getSessionUser();
@@ -43,7 +44,7 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpPut]
-        [Authorize( AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterGolonganManage)]
         public async Task<ActionResult<BaseDtoResponse>> updateGolongan([FromBody] UpdateGolonganRequest request)
         {
             var sessionUser = getSessionUser();
@@ -64,7 +65,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet,Route("")]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterGolonganManage,Permission.MasterGolonganView, Permission.TicketCreate, Permission.TicketUpdate)]
         public async Task<ActionResult<List<Golongan>>> getGolongans(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await this.service.getGolongan(filter,page,pageSize));
@@ -72,7 +73,7 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpGet, Route("{id}")]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterGolonganManage, Permission.MasterGolonganView)]
         public async Task<ActionResult<Golongan>> getGolonganDetail(long id)
         {
             return Ok(await this.service.getGolonganDetail(

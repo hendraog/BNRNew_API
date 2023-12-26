@@ -5,6 +5,8 @@ using BNRNew_API.config;
 using BNRNew_API.utils;
 using BNRNew_API.Controllers.ticket;
 using BNRNew_API.ticket.request;
+using System.Security;
+using static BNRNew_API.config.AppConstant;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -29,7 +31,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpPost]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.TicketCreate)]
         public async Task<ActionResult<BaseDtoResponse>> createTicket([FromBody] CreateUpdateTicketRequest request)
         {
             var sessionUser = getSessionUser();
@@ -49,7 +51,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpPut]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.TicketUpdate)]
         public async Task<ActionResult<BaseDtoResponse>> updateTicket([FromBody] CreateUpdateTicketRequest request)
         {
             var sessionUser = getSessionUser();
@@ -66,7 +68,7 @@ namespace BNRNew_API.Controllers.auth
         }
         
         [HttpGet,Route("")]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.TicketCreate, Permission.TicketUpdate, Permission.TicketDelete, Permission.TicketView)]
         public async Task<ActionResult<List<Golongan>>> getTicketList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var session = getSession();
@@ -74,7 +76,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet, Route("{id}")]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.TicketCreate, Permission.TicketUpdate, Permission.TicketDelete, Permission.TicketView)]
         public async Task<ActionResult<Golongan>> getDetail(long id)
         {
             var sessionUser = getSessionUser();
@@ -82,7 +84,7 @@ namespace BNRNew_API.Controllers.auth
                 id
             );
 
-            if (sessionUser.Role == AppConstant.Role_CASHIER && (sessionUser?.id??0) == data.CreatedBy)
+            if (sessionUser.Role == AppConstant.Role_CASHIER && (sessionUser?.id??0) != data.CreatedBy)
                 throw new UnauthorizedAccessException("Role anda tidak berhak untuk mengakses data ini");
 
             return Ok(data);

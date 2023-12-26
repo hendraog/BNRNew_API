@@ -6,6 +6,7 @@ using BNRNew_API.utils;
 using BNRNew_API.Controllers.ticket;
 using BNRNew_API.ticket.request;
 using System.Linq;
+using static BNRNew_API.config.AppConstant;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -31,7 +32,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpPost]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.ManifestCreateUpdate)]
         public async Task<ActionResult<BaseDtoResponse>> create([FromBody] CreateCargoManifestRequest request)
         {
             var sessionUser = getSessionUser();
@@ -71,7 +72,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpPut]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.ManifestCreateUpdate)]
         public async Task<ActionResult<BaseDtoResponse>> updateCargo([FromBody] CreateCargoManifestRequest request)
         {
             var sessionUser = getSessionUser();
@@ -121,7 +122,7 @@ namespace BNRNew_API.Controllers.auth
         }
         
         [HttpGet,Route("")]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.ManifestCreateUpdate,Permission.ManifestView)]
         public async Task<ActionResult<List<Golongan>>> getCargoList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var session = getSession();
@@ -129,7 +130,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet, Route("{id}")]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.ManifestCreateUpdate, Permission.ManifestView)]
         public async Task<ActionResult<Golongan>> getDetail(long id)
         {
             var sessionUser = getSessionUser();
@@ -144,7 +145,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet, Route("ticket-list")]
-        [Authorize(AppConstant.Role_CASHIER, AppConstant.Role_SUPERVISOR, AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.ManifestCreateUpdate)]
         public async Task<ActionResult<Ticket>> getTicketList(string tujuan, long? cargoManifestId)
         {
             var sessionUser = getSessionUser();

@@ -10,7 +10,9 @@ namespace BNRNew_API.Controllers.dto
         public long? id { get; set; }
         public string UserName { get; set; }
 
-        [JWTRight]
         public string? Role { get; set; }
+
+        [JWTRight]
+        public string? permission { get; set; }
     }
 }

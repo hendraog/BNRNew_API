@@ -7,6 +7,7 @@ using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golongan.dto;
 using BNRNew_API.Controllers.golonganplat;
 using Microsoft.IdentityModel.Tokens;
+using static BNRNew_API.config.AppConstant;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -27,7 +28,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpPost]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterPlatManage)]
         public async Task<ActionResult<BaseDtoResponse>> createGolonganPlat([FromBody] CreateGolonganPlatRequest request)
         {
             var sessionUser = getSessionUser();
@@ -48,7 +49,7 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpPut]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterPlatManage)]
         public async Task<ActionResult<BaseDtoResponse>> updateGolonganPlat([FromBody] CreateGolonganPlatRequest request)
         {
             var sessionUser = getSessionUser();
@@ -73,7 +74,7 @@ namespace BNRNew_API.Controllers.auth
 
         [HttpPost]
         [Route("bulk")]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterPlatManage)]
         public async Task<ActionResult<BaseDtoResponse>> createUpdateBulk([FromBody] CreateGolonganPlatBulkRequest request)
         {
             var sessionUser = getSessionUser();
@@ -183,16 +184,15 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet,Route("")]
-        [Authorize()]
+        [Authorize(Permission.MasterPlatManage,Permission.MasterPlatView)]
         public async Task<ActionResult<List<GolonganPlat>>> getList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await this.service.getList(filter, page, pageSize);
             return Ok(result);
         }
 
-
         [HttpGet, Route("{id}")]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterPlatManage, Permission.MasterPlatView)]
         public async Task<ActionResult<GolonganPlat>> getDetail(long id)
         {
             return Ok(await this.service.getDetail(

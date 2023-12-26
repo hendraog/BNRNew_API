@@ -95,7 +95,7 @@ namespace BNRNew_API.utils
                                 {
                                     message = "Insufficient right"
                                 })
-                                { StatusCode = 401 };
+                                { StatusCode = 403 };
                                 context.Result = result;
                                 context.HttpContext.Items.Remove("session");
                                 return;

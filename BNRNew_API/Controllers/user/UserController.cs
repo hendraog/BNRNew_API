@@ -5,6 +5,7 @@ using BNRNew_API.config;
 using BNRNew_API.utils;
 using BNRNew_API.Controllers.dto;
 using Microsoft.IdentityModel.Tokens;
+using static BNRNew_API.config.AppConstant;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -38,7 +39,8 @@ namespace BNRNew_API.Controllers.auth
                     {
                         id = result.id,
                         UserName = result.UserName,
-                        Role = result.Role
+                        Role = result.Role,
+                        permission = Permission.getPermissionString(result.Role)
                     }, config.accessTokenExpired),
                     refreshToken = JWTHelper.generateJwtToken(config.jwtSecretRefresh, new JWTModel {
                         id = result.id,
@@ -59,7 +61,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpPost]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterUserManage)]
         public ActionResult<BaseDtoResponse> createUser([FromBody] CreateUserRequest request)
         {
             var sessionUser = getSessionUser();
@@ -82,7 +84,7 @@ namespace BNRNew_API.Controllers.auth
         /// Untuk melakukan update data user
         /// </summary>
         [HttpPut]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterUserManage)]
         public ActionResult<BaseDtoResponse> updateUser([FromBody] UpdateUserRequest request)
         {
             var sessionUser = getSessionUser();
@@ -109,7 +111,7 @@ namespace BNRNew_API.Controllers.auth
         /// Untuk mengambil data list user
         /// </summary>
         [HttpGet, Route("")]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterUserManage,Permission.MasterUserView)]
         public ActionResult<GetUserResponse> getUsersList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(this.userService.GetUsers(filter, page, pageSize));
@@ -121,7 +123,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpGet, Route("{userId}")]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterUserView)]
         public ActionResult<User> getUserDetail(long userId)
         {
             return Ok(this.userService.GetUserDetail(
@@ -133,7 +135,7 @@ namespace BNRNew_API.Controllers.auth
         /// Untuk melakukan update data user
         /// </summary>
         [HttpDelete, Route("{userId}")]
-        [Authorize(AppConstant.Role_SUPERADMIN, AppConstant.Role_BRANCHMANAGER, AppConstant.Role_ADMIN)]
+        [Authorize(Permission.MasterUserManage)]
         public ActionResult<BaseDtoResponse> deleteUser(long userId)
         {
             var sessionUser = getSessionUser();
