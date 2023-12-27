@@ -64,7 +64,7 @@ namespace BNRNew_API.Controllers.auth
 
             CargoManifest dataresult = await this.service.create(data);
             
-            return Ok();    
+            return Ok(dataresult);    
         }
 
         /// <summary>
