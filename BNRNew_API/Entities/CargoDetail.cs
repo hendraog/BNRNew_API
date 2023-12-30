@@ -39,5 +39,11 @@ namespace BNRNew_API.Entities
         [NotMapped]
         public string ticketNo { get; set; }
 
+        [NotMapped]
+        public string golonganName { get; set; }
+
+        [NotMapped]
+        public Ticket ticketData { get; set; }
+
     }
 }

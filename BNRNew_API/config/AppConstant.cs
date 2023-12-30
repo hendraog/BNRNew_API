@@ -43,6 +43,9 @@ namespace BNRNew_API.config
             public const string TicketView = "TicketView";
             public const string TicketCreate = "TicketCreate";
             public const string TicketUpdate = "TicketUpdate";
+            public const string TicketUpdateBeforePrint = "TicketUpdateBeforePrint";
+            public const string TicketPrint = "TicketPrint";
+
             public const string TicketDelete = "TicketDelete";
             public const string ManifestView = "ManifestView";
             public const string ManifestCreateUpdate = "ManifestCreateUpdate";
@@ -61,7 +64,7 @@ namespace BNRNew_API.config
                 { Role_ADMIN, new List<string>{Permission.MasterGolonganManage,Permission.MasterUserManage,Permission.MasterPlatManage,Permission.TicketDelete,Permission.ManifestView}},
                 { Role_BRANCHMANAGER, new List<string>{ Permission.MasterGolonganManage, Permission.MasterUserManage, Permission.MasterPlatManage, Permission.TicketView, Permission.ManifestCreateUpdate, Permission.TicketCreate, Permission.TicketUpdate}},
                 { Role_SUPERVISOR, new List<string>{Permission.ManifestCreateUpdate,Permission.TicketView} },
-                { Role_CASHIER, new List<string>{Permission.TicketCreate}},
+                { Role_CASHIER, new List<string>{Permission.TicketCreate, Permission.TicketUpdateBeforePrint}},
             };
 
 

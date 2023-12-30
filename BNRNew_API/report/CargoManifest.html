@@ -3,20 +3,85 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <style>
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 4mm
+        }
+        table {
+            border-collapse: collapse;
+        }
+
+        .contentcell {
+            padding: 4px;
+            vertical-align: top
+        }
+
+        .contentcellcenter {
+            padding: 4px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .labelbold {
+            font-weight:bold
+        }
+
+    </style>
 </head>
 <body>
-    <table border="0" width="100%">
+    <table style="width:100%">
+        <tr></tr>
+        <tr>
+            <td style="width:30%"></td>
+            <td style="text-align:center">
+                <div style="font-weight:bold;font-size:24px">
+                    Cargo Manifest
+                </div>
+                <hr />
+                <div>
+                    #trip#
+                </div>
+            </td>
+            <td style="width: 30%; text-align: right; vertical-align: top ">#manifestId#</td>
+        </tr>
+    </table>
+    <table style="border:0;width:100%;margin-bottom:10px;margin-top:20px">
+        <tr>
+            <td class="labelbold" style="width:18%">Nama Kapal:</td>
+            <td class="labelbold" style="width:15%">Bendera:</td>
+            <td class="labelbold" style="width:15%">Nahkoda:</td>
+            <td class="labelbold" style="width:13%">Tanggal/Waktu:</td>
+            <td class="labelbold" style="width:18%">Tujuan:</td>
+            <td class="labelbold" style="width:6%">Voy:</td>
+        </tr>
+        <tr>
+            <td>#namakapal#</td>
+            <td>#bendera#</td>
+            <td>#nahkoda#</td>
+            <td>#tgl_waktu#</td>
+            <td>#tujuan#</td>
+            <td>#voy#</td>
+        </tr>
+    </table>
+
+    <table border="1" width="100%">
         <thead>
-            <th>
-                <tr>
-                    <td>No</td>
-                    <td>ticket no</td>
-                    <td>Jlh Penumpang</td>
-                </tr>
-            </th>
+            <tr style="background:rgb(128, 128, 128);text-align:center;font-weight:bold;">
+                <td style="width:1cm">No</td>
+                <td style="width:2cm">No Ticket</td>
+                <td style="width:1cm">Jenis.<br/>Kend</td>
+                <td style="width:2cm">No. Kend</td>
+                <td style="width:4cm">Jenis Muatan</td>
+                <td style="width:1cm">Ton</td>
+                <td style="width:1cm">m3</td>
+                <td style="width:4cm">Nama Supir</td>
+                <td style="width:1cm">Jlh.P</td>
+                <td style="width:5cm">Alamat</td>
+                <td style="width:6cm">Keterangan</td>
+            </tr>
         </thead>
         #tablecontent#
     </table>
-    <label>body</label>
 </body>
 </html>

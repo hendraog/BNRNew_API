@@ -117,6 +117,7 @@ namespace BNRNew_API.Controllers.ticket
 
             var q2 = from x in ctx.CargoDetails
                      join y in ctx.ticket on x.ticket equals y.id
+                     join z in ctx.golongan on y.golongan equals z.id
                      where x.cargoManifestid == id
                      select new CargoDetail()
                      {
@@ -127,7 +128,9 @@ namespace BNRNew_API.Controllers.ticket
                          CreatedAt = x.CreatedAt,
                          UpdatedAt = x.UpdatedAt,
                          CreatedBy = x.CreatedBy,
-                         UpdatedBy = x.UpdatedBy
+                         UpdatedBy = x.UpdatedBy,
+                         golonganName = z.golongan,
+                         ticketData = y
                      };
 
             var result =  await q.FirstOrDefaultAsync();
@@ -136,6 +139,8 @@ namespace BNRNew_API.Controllers.ticket
 
             return result;
         }
+
+
 
         public async Task<List<CargoDetail>> getCargoDetailListByTicketId(List<long> ids, long? cargoManifestId)
         {

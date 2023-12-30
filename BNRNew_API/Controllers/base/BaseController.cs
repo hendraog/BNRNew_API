@@ -21,7 +21,8 @@ namespace BNRNew_API.Controllers
                 {
                     id = session.id,
                     UserName = session.UserName,
-                    Role = session.Role
+                    Role = session.Role,
+                    roleArray = session.Role!.Split(",").ToList()
                 };
             }
             return null ;

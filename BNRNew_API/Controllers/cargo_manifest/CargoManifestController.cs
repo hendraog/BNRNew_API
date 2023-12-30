@@ -8,6 +8,7 @@ using BNRNew_API.ticket.request;
 using System.Linq;
 using static BNRNew_API.config.AppConstant;
 using System.Text;
+using NReco.PdfGenerator;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -176,24 +177,119 @@ namespace BNRNew_API.Controllers.auth
             var counter = 1;
             foreach ( var item in data.detailData)
             {
-                tablehtml.Append("<tr><td>");
+                tablehtml.Append("<tr style='height:8mm'><td class='contentcellcenter'>");
                 tablehtml.Append(counter);
-                tablehtml.Append("</td><td>");
+                tablehtml.Append("</td><td class='contentcellcenter' style='font-size:3mm' >");
                 tablehtml.Append(item.ticketNo);
-                tablehtml.Append("</td><td>");
-                tablehtml.Append(1);
+                tablehtml.Append("</td><td class='contentcellcenter'>");
+                tablehtml.Append(item.golonganName);
+                tablehtml.Append("</td><td class='contentcellcenter'>");
+                tablehtml.Append(item.ticketData.plat_no);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.jenis_muatan);
+                tablehtml.Append("</td><td class='contentcellcenter'>");
+                tablehtml.Append(item.ticketData.berat);
+                tablehtml.Append("</td><td class='contentcellcenter'>");
+                tablehtml.Append(item.ticketData.volume);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.nama_supir);
+                tablehtml.Append("</td><td class='contentcellcenter'>");
+                tablehtml.Append(item.ticketData.jumlah_orang);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.alamat_supir);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.keterangan);
                 tablehtml.Append("</td></tr>");
             }
-            html = html.Replace("#tablecontent#", tablehtml.ToString());
-            var htmlContent = String.Format(html,
-            DateTime.Now);
 
-
-
+            html = html
+                    .Replace("#trip#", data.lokasi_asal + "/" + data.lokasi_tujuan)
+                    .Replace("#namakapal#", data.nama_kapal) 
+                    .Replace("#bendera#", "Indonesia")
+                    .Replace("#nahkoda#", data.nama_nahkoda)
+                    .Replace("#tgl_waktu#", data.tgl_manifest!.Value.ToString("dd/MM/yyyy HH:mm:ss"))
+                    .Replace("#tujuan#", data.lokasi_tujuan)
+                    .Replace("#voy#", data.manifest_no.Substring(0, 3))
+                    .Replace("#manifestId#", data.manifest_no)
+                    .Replace("#tablecontent#", tablehtml.ToString());
+            
             var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
+            htmlToPdf.Size = NReco.PdfGenerator.PageSize.A4;
+            htmlToPdf.Orientation = NReco.PdfGenerator.PageOrientation.Landscape;
+
+            htmlToPdf.Margins = new PageMargins()
+            {
+                Bottom = 5,
+                Top = 5,
+                Left = 5,
+                Right = 5
+            };
             var pdfBytes = htmlToPdf.GeneratePdf(html);
 
             return File(pdfBytes, "application/pdf");
         }
-     }
+
+
+        [HttpGet, Route("report/manifest-penumpang")]
+        //[Authorize(Permission.ManifestCreateUpdate)]
+        public async Task<ActionResult> getReportManifestPenumpang(long? cargoManifestId)
+        {
+
+            var data = await this.service.getDetail(
+               cargoManifestId!.Value
+           );
+            var html = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "report", "ManifestPenumpang.html"));
+
+            var tablehtml1 = new StringBuilder();
+            var tablehtml2 = new StringBuilder();
+
+            var counter = 1;
+            var tablehtml = tablehtml1;
+            foreach (var item in data.detailData)
+            {   
+                if(counter > (Math.Ceiling(data.detailData.Count / (double)2)))
+                    tablehtml = tablehtml2;
+
+                tablehtml.Append("<tr style='height:8mm'><td class='contentcellcenter'>");
+                tablehtml.Append(counter);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.nama_supir);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.alamat_supir);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.keterangan);
+                tablehtml.Append("</td></tr>");
+                counter++;
+            }
+
+            html = html
+                    .Replace("#trip#", data.lokasi_asal + "/" + data.lokasi_tujuan)
+                    .Replace("#asal#", data.lokasi_asal)
+                    .Replace("#namakapal#", data.nama_kapal)
+                    .Replace("#bendera#", "Indonesia")
+                    .Replace("#nahkoda#", data.nama_nahkoda)
+                    .Replace("#tgl_waktu#", data.tgl_manifest!.Value.ToString("dd/MM/yyyy HH:mm:ss"))
+                    .Replace("#tanggal#", data.tgl_manifest!.Value.ToString("dd/MM/yyyy"))
+                    .Replace("#tujuan#", data.lokasi_tujuan)
+                    .Replace("#voy#", data.manifest_no.Substring(0, 3))
+                    .Replace("#manifestId#", data.manifest_no)
+                    .Replace("#tablecontent#", tablehtml1.ToString())
+                    .Replace("#tablecontent2#", tablehtml2.ToString());
+
+            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
+            htmlToPdf.Size = NReco.PdfGenerator.PageSize.A4;
+            htmlToPdf.Orientation = NReco.PdfGenerator.PageOrientation.Landscape;
+
+            htmlToPdf.Margins = new PageMargins()
+            {
+                Bottom = 5,
+                Top = 5,
+                Left = 5,
+                Right = 5
+            };
+            var pdfBytes = htmlToPdf.GeneratePdf(html);
+
+            return File(pdfBytes, "application/pdf");
+        }
+    }
 }

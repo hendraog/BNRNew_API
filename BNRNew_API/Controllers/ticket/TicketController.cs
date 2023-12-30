@@ -51,14 +51,21 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpPut]
-        [Authorize(Permission.TicketUpdate)]
+        [Authorize(Permission.TicketUpdate, Permission.TicketUpdateBeforePrint)]
         public async Task<ActionResult<BaseDtoResponse>> updateTicket([FromBody] CreateUpdateTicketRequest request)
         {
             var sessionUser = getSessionUser();
 
-            Ticket ticket = await service.getTicketDetail(request!.id.Value);
+            Ticket ticket = await service.getTicket(request!.id.Value);
+
             if (ticket == null)
                 return Ok(null);
+
+            if (!sessionUser.roleArray.Contains(Permission.TicketUpdate))
+            {
+                if (ticket.printer_count > 0)
+                    throw new BadHttpRequestException($"Ticket pernah di print, tidak dapat lagi melakukan update setelah ticket di print");
+            }
 
             ticket.UpdatedAt = DateTime.UtcNow;
             ticket.UpdatedBy = sessionUser.id!.Value;
@@ -66,18 +73,37 @@ namespace BNRNew_API.Controllers.auth
             var ticketdata = await this.service.update(ticket);
             return Ok(ticketdata);
         }
-        
+
+        [HttpPut,Route("doprint")]
+        [Authorize()]
+        public async Task<ActionResult<BaseDtoResponse>> updatePrintCount([FromBody] PrintTicketRequest request)
+        {
+            var sessionUser = getSessionUser();
+
+            Ticket ticket = await service.getTicket(request!.id.Value);
+
+            if (ticket == null)
+                return Ok(null);
+
+            ticket.UpdatedAt = DateTime.UtcNow;
+            ticket.UpdatedBy = sessionUser.id!.Value;
+            ticket.printer_count = ticket.printer_count + 1;  
+            var ticketdata = await this.service.update(ticket);
+            return Ok(ticketdata);
+        }
+
         [HttpGet,Route("")]
         [Authorize(Permission.TicketCreate, Permission.TicketUpdate, Permission.TicketDelete, Permission.TicketView)]
         public async Task<ActionResult<List<Golongan>>> getTicketList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var session = getSession();
+
             return Ok(await this.service.getList(session.Role == AppConstant.Role_CASHIER?session.id:null, filter,page,pageSize));
         }
 
         [HttpGet, Route("{id}")]
         [Authorize(Permission.TicketCreate, Permission.TicketUpdate, Permission.TicketDelete, Permission.TicketView)]
-        public async Task<ActionResult<Golongan>> getDetail(long id)
+        public async Task<ActionResult<Ticket>> getDetail(long id)
         {
             var sessionUser = getSessionUser();
             var data = await this.service.getTicketDetail(

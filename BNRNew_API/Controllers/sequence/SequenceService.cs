@@ -36,28 +36,45 @@ namespace BNRNew_API.Controllers.golonganplat
             {
                 string s1 = $"{DateTime.UtcNow:yyyyMMdd}";
                 string s2 = $"{sequence.last_used:yyyyMMdd}";
+                string s3 = $"{DateTime.UtcNow:yyyy}";
+                string s4 = $"{sequence.last_used:yyyy}";
 
-                if (s1.Equals(s2))
-                    sequence.last_value = sequence.last_value + 1;
+                if(key == SequenceKey.TICKET)
+                {
+                    //reset pertahun
+                    if (s3.Equals(s4))
+                        sequence.last_value = sequence.last_value + 1;
+                    else
+                        sequence.last_value = 1;
+                }
                 else
-                    sequence.last_value = 1;
+                {
+                    //reset perhari
+                    if (s1.Equals(s2))
+                        sequence.last_value = sequence.last_value + 1;
+                    else
+                        sequence.last_value = 1;
 
+                }
                 sequence.last_used = DateTime.UtcNow;
                 ctx.sequence.Update(sequence);
                 await ctx.SaveChangesAsync();
             }
 
+
             if (key == SequenceKey.TICKET)
             {
                 var counter = sequence.last_value.ToString().PadLeft(6, '0');
-                return $"{DateTime.Now:yyyyMMdd}-{counter}";
+                return $"{DateTime.Now:MMyy}-{counter}";
             }
             else
             {
                 var counter = sequence.last_value.ToString().PadLeft(3, '0');
-                return $"CAR{counter}-{DateTime.Now:yyyyMMdd}";
+                return $"{counter}-{DateTime.Now:dd/MM/yy}";
             }
         }
+
+        
     }
 
     public interface ISequenceService

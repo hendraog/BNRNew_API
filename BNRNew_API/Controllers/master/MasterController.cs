@@ -28,7 +28,12 @@ namespace BNRNew_API.Controllers.master
         [Authorize()]
         public async Task<ActionResult<List<String>>> getLokasiList()
         {
-            return Ok(AppConstant.LokasiPelabuhan);
+            var location = AppConstant.LokasiPelabuhan;
+            List<string> data = new List<string>();
+            data.Add(config.location);
+            data.AddRange(AppConstant.LokasiPelabuhan.FindAll(x => !x.Equals(config.location, StringComparison.OrdinalIgnoreCase)));
+
+            return Ok(data);
         }
 
         /// <summary>
@@ -40,6 +45,5 @@ namespace BNRNew_API.Controllers.master
         {
             return Ok(AppConstant.RoleList);
         }
-
     }
 }

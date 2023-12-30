@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 4mm
+        }
+        table {
+            border-collapse: collapse;
+        }
+
+        .contentcell {
+            padding: 4px;
+            vertical-align: top
+        }
+
+        .contentcellcenter {
+            padding: 4px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .labelbold {
+            font-weight:bold
+        }
+
+    </style>
+</head>
+<body>
+    <table style="width:100%">
+        <tr></tr>
+        <tr>
+            <td style="width:30%"></td>
+            <td style="text-align:center">
+                <div style="font-weight:bold;font-size:20px">
+                    PERUSAHAAN PELAYARAN
+                    <hr />
+                </div>
+                <div style="font-size:18px">
+                    PT. BANDAR NIAGA RAYA
+                </div>
+                <div style="height:5px"></div>
+                <div style="font-size:16px">
+                    DAFTAR MANIFEST PENUMPANG
+                </div>
+            </td>
+            <td style="width: 30%; text-align: right; vertical-align: top ">#manifestId#</td>
+        </tr>
+    </table>
+
+    <table style="border:0;width:100%;margin-bottom:10px;margin-top:30px">
+        <tr style="margin-bottom:10px">
+            <td>
+                <div><label class="labelbold">Lokasi Asal</label> : #asal#</div>
+            </td>
+            <td>
+            </td>
+            <td>
+                <div><label class="labelbold">Lokasi Tujuan</label> : #tujuan#</div>
+            </td>
+        </tr>
+        <tr style="height:5px"></tr>
+        <tr>
+            <td>
+                <div><label class="labelbold">Nama Kapal</label> : #namakapal#</div>
+            </td>
+            <td>
+                <div><label class="labelbold">Nahkoda</label> : #nahkoda#</div>
+            </td>
+            <td>
+                <div><label class="labelbold">Tanggal/Waktu</label> : #tgl_waktu#</div>
+            </td>
+        </tr>
+    </table>
+
+    <table style="width:100%">
+        <tr>
+            <td style="vertical-align:top">
+                <table border="1" width="100%">
+                    <thead>
+                        <tr style="background:rgb(128, 128, 128);text-align:center;font-weight:bold;">
+                            <td style="width:1 cm">No</td>
+                            <td style="width:4 cm">Nama</td>
+                            <td style="width:5 cm">Alamat</td>
+                            <td style="width:5 cm">Keterangan</td>
+                        </tr>
+                    </thead>
+                    #tablecontent#
+                </table>
+            </td>
+            <td style="width:1cm"></td>
+            <td style="vertical-align:top">
+                <table border="1" width="100%">
+                    <thead>
+                        <tr style="background:rgb(128, 128, 128);text-align:center;font-weight:bold;">
+                            <td style="width:1 cm">No</td>
+                            <td style="width:4 cm">Nama</td>
+                            <td style="width:5 cm">Alamat</td>
+                            <td style="width:5 cm">Keterangan</td>
+                        </tr>
+                    </thead>
+                    #tablecontent2#
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table style="width: 100%; margin-top: 2cm; page-break-inside: avoid">
+        <tr>
+            <td style="width:1">
+            </td>
+            <td style="width:1;text-align:center">
+                <label style="font-weight:bold;">
+                    Mengetahui
+                </label>
+            </td>
+            <td style="width:1">
+            </td>
+        </tr>
+        <tr style="height:1cm"></tr>
+        <tr>
+            <td>#asal#, #tanggal#</td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr style="height:1cm">
+        </tr>
+
+        <tr>
+            <td style="font-weight: bold;text-align:center">Petugas Tiket</td>
+            <td style="font-weight: bold; text-align: center">Nahkoda/Mualim</td>
+            <td style="font-weight: bold; text-align: center">Ka. Operasional</td>
+        </tr>
+        
+        <tr style="height:2cm">
+        </tr>
+
+        <tr>
+            <td style="padding:2cm">
+                <hr />
+            </td>
+            <td style="padding:2cm">
+                <hr />
+            </td>
+            <td style="padding:2cm">
+                <hr />
+            </td>
+        </tr>
+
+    </table>
+
+
+
+</body>
+</html>

@@ -7,6 +7,7 @@
 
         public string jwtSecret { get; set; }
         public string jwtSecretRefresh { get; set; }
+        public string location { get; set; }
 
     }
 }

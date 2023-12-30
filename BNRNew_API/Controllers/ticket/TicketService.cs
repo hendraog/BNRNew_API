@@ -88,24 +88,28 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<List<Ticket>> getList(long? createdBy, string search, int page, int pageSize)
         {
-            var q = from x in ctx.ticket join y in ctx.golongan on x.golongan equals y.id join u in ctx.user on x.CreatedBy equals u.id
-                     select new  Ticket {
-                         id = x.id,
-                         ticket_no = x.ticket_no,
-                         lokasi_asal = x.lokasi_asal,
-                         lokasi_tujuan = x.lokasi_tujuan,
-                         harga = x.harga,
-                         total_harga = x.total_harga,
-                         biaya_tuslah = x.biaya_tuslah,
-                         tanggal_berlaku = x.tanggal_berlaku,
-                         nama_supir = x.nama_supir,
-                         plat_no = x.plat_no,
-                         golongan = x.golongan,
-                         golongan_name = y.golongan,
-                         CreatedAt = x.CreatedAt,
-                         CreatedBy = x.CreatedBy,
-                         CreatedByName = u.UserName
-                     };
+            var q = from x in ctx.ticket
+                    join y in ctx.golongan on x.golongan equals y.id
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    orderby x.CreatedAt descending
+                    select new Ticket
+                    {
+                        id = x.id,
+                        ticket_no = x.ticket_no,
+                        lokasi_asal = x.lokasi_asal,
+                        lokasi_tujuan = x.lokasi_tujuan,
+                        harga = x.harga,
+                        total_harga = x.total_harga,
+                        biaya_tuslah = x.biaya_tuslah,
+                        tanggal_berlaku = x.tanggal_berlaku,
+                        nama_supir = x.nama_supir,
+                        plat_no = x.plat_no,
+                        golongan = x.golongan,
+                        golongan_name = y.golongan,
+                        CreatedAt = x.CreatedAt,
+                        CreatedBy = x.CreatedBy,
+                        CreatedByName = u.UserName
+                    };
                 
             if (createdBy!=null)
                 q = q.Where(e => e.CreatedBy == createdBy);
@@ -121,13 +125,14 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<List<Ticket>>  getTicketByTujuanAndNotCargoDetail(string lokasi)
         {
-            var q = from x in ctx.ticket 
+            var q = from x in ctx.ticket
                     join y in ctx.CargoDetails on x.id equals y.ticket into ticGroup
                     from child in ticGroup.DefaultIfEmpty()
                     where x.lokasi_tujuan == lokasi && child == null
                     select new Ticket()
                     {
-                        id = x.id, ticket_no = x.ticket_no
+                        id = x.id,
+                        ticket_no = x.ticket_no
                     };
             return await q.ToListAsync();
         }
@@ -190,12 +195,19 @@ namespace BNRNew_API.Controllers.ticket
                         CreatedByName = u.UserName,
                         UpdatedBy = x.UpdatedBy,
                         UpdatedAt = x.UpdatedAt,
+                        printer_count = x.printer_count
                         //UpdatedByName = z.UserName
                     };
 
             return await q.FirstOrDefaultAsync();
         }
-
+        public async Task<Ticket> getTicket(long ticketId)
+        {
+            var q = from x in ctx.ticket
+                    where (x.id == ticketId)
+                    select x;
+            return await q.FirstOrDefaultAsync();
+        }
     }
 
     public interface ITicketService
@@ -213,6 +225,8 @@ namespace BNRNew_API.Controllers.ticket
         public Task<List<Ticket>> getTicketByTujuanAndNotCargoDetail(string lokasiTujuan);
         public Task<List<Ticket>> getTicketListShort(List<long> ticketIds);
         public Task<Ticket> getTicketDetail(long ticketId);
+
+        public Task<Ticket> getTicket(long ticketId);
 
     }
 }

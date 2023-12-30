@@ -38,5 +38,8 @@ namespace BNRNew_API.Entities
 
         public DateTime? UpdatedAt { get; set; }
 
+        [NotMapped]
+        public List<string> roleArray { get; set; }
+
     }
 }
