@@ -7,6 +7,7 @@ using BNRNew_API.Controllers.ticket;
 using BNRNew_API.ticket.request;
 using System.Linq;
 using static BNRNew_API.config.AppConstant;
+using System.Text;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -138,9 +139,6 @@ namespace BNRNew_API.Controllers.auth
                 id
             );
 
-            if (sessionUser.Role == AppConstant.Role_CASHIER && (sessionUser?.id??0) == data.CreatedBy)
-                throw new UnauthorizedAccessException("Role anda tidak berhak untuk mengakses data ini");
-
             return Ok(data);
         }
 
@@ -162,5 +160,40 @@ namespace BNRNew_API.Controllers.auth
             }
             return Ok(availableTicketList);
         }
-    }
+
+
+        [HttpGet, Route("report")]
+        //[Authorize(Permission.ManifestCreateUpdate)]
+        public async Task<ActionResult> getReport(long? cargoManifestId)
+        {
+
+            var data = await this.service.getDetail(
+               cargoManifestId!.Value
+           );
+            var html = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "report", "CargoManifest.html"));
+
+            var tablehtml = new StringBuilder();
+            var counter = 1;
+            foreach ( var item in data.detailData)
+            {
+                tablehtml.Append("<tr><td>");
+                tablehtml.Append(counter);
+                tablehtml.Append("</td><td>");
+                tablehtml.Append(item.ticketNo);
+                tablehtml.Append("</td><td>");
+                tablehtml.Append(1);
+                tablehtml.Append("</td></tr>");
+            }
+            html = html.Replace("#tablecontent#", tablehtml.ToString());
+            var htmlContent = String.Format(html,
+            DateTime.Now);
+
+
+
+            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
+            var pdfBytes = htmlToPdf.GeneratePdf(html);
+
+            return File(pdfBytes, "application/pdf");
+        }
+     }
 }
