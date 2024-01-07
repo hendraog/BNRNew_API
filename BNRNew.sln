@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BNRNew_API", "BNRNew_API\BN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BNRNew_API.tests", "BNRNew_API.tests\BNRNew_API.tests.csproj", "{BF62C883-83DA-4F14-BC02-D46D78012573}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintClient", "PrintClient\PrintClient.csproj", "{18EFD759-051E-4A94-8D63-B0C50BFBB1A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BF62C883-83DA-4F14-BC02-D46D78012573}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF62C883-83DA-4F14-BC02-D46D78012573}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF62C883-83DA-4F14-BC02-D46D78012573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18EFD759-051E-4A94-8D63-B0C50BFBB1A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18EFD759-051E-4A94-8D63-B0C50BFBB1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18EFD759-051E-4A94-8D63-B0C50BFBB1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18EFD759-051E-4A94-8D63-B0C50BFBB1A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -200,5 +200,13 @@ namespace BNRNew_API.Controllers.auth
             ));
         }
 
+
+        [HttpGet, Route("searchplat")]
+        [Authorize(Permission.MasterPlatManage, Permission.MasterPlatView,Permission.TicketCreate,Permission.TicketUpdate, Permission.TicketUpdateBeforePrint)]
+        public async Task<ActionResult<GolonganPlat>> getGolonganByPlat([FromQuery]string platno)
+        {
+            return Ok(await this.service.getByPlatNo(platno));
+        }
+
     }
 }

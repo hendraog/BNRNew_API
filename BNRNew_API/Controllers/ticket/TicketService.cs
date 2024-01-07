@@ -132,7 +132,8 @@ namespace BNRNew_API.Controllers.ticket
                     select new Ticket()
                     {
                         id = x.id,
-                        ticket_no = x.ticket_no
+                        ticket_no = x.ticket_no,
+                        nama_supir = x.nama_supir
                     };
             return await q.ToListAsync();
         }

@@ -64,7 +64,7 @@ namespace BNRNew_API.Controllers.golonganplat
                         UpdatedAt = x.UpdatedAt
                     };
 
-            q = q.Where(e => e.plat_no == platNo);
+            q = q.Where(e => e.plat_no == platNo.ToUpper());  
 
             return await q.SingleOrDefaultAsync();
         }

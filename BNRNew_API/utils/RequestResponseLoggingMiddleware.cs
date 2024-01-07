@@ -36,12 +36,15 @@ namespace BNRNew_API.utils
 
         public async Task Invoke(HttpContext context)
         {
-
-
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
 
             var token = context.Request.Headers["Authorization"].FirstOrDefault();
+
+            if (String.IsNullOrEmpty(token))
+            {
+                token = context.Request.Query["Authorization"].ToString();  
+            }
             context.Items.Add("token", token);
             context.Items.Add("secret", jwtSecret);
 

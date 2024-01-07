@@ -161,7 +161,9 @@ namespace BNRNew_API.Controllers.ticket
                     where x.cargoManifestid == cargoManifestId
                     select new CargoDetail() { 
                         ticket = x.ticket,
-                        ticketNo = y.ticket_no
+                        ticketNo = y.ticket_no,
+                        ticketData = y
+
                     };
             return await q.ToListAsync();
 

@@ -147,7 +147,7 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(Permission.ManifestCreateUpdate)]
         public async Task<ActionResult<Ticket>> getTicketList(string tujuan, long? cargoManifestId)
         {
-            var sessionUser = getSessionUser();
+                var sessionUser = getSessionUser();
             var availableTicketList = await this.ticketService.getTicketByTujuanAndNotCargoDetail(tujuan);
             if(cargoManifestId != null) { 
                 var existingCargoTicket = await this.service.getCargoDetailListByCargoManifest(cargoManifestId.Value);
@@ -155,7 +155,8 @@ namespace BNRNew_API.Controllers.auth
                     availableTicketList.AddRange(
                         existingCargoTicket.Select(x=> new Ticket() { 
                             id = x.ticket,
-                            ticket_no = x.ticketNo
+                            ticket_no = x.ticketData.ticket_no,
+                            nama_supir = x.ticketData.nama_supir
                         })
                     );
             }
@@ -163,8 +164,8 @@ namespace BNRNew_API.Controllers.auth
         }
 
 
-        [HttpGet, Route("report")]
-        //[Authorize(Permission.ManifestCreateUpdate)]
+        [HttpGet, Route("report/{cargoManifestId}")]
+        [Authorize(Permission.ManifestView, Permission.ManifestCreateUpdate)]
         public async Task<ActionResult> getReport(long? cargoManifestId)
         {
 
@@ -226,12 +227,12 @@ namespace BNRNew_API.Controllers.auth
             };
             var pdfBytes = htmlToPdf.GeneratePdf(html);
 
-            return File(pdfBytes, "application/pdf");
+            return File(pdfBytes, "application/pdf", "Manifest_" + cargoManifestId + "_" + data.lokasi_tujuan + ".pdf");
         }
 
 
-        [HttpGet, Route("report/manifest-penumpang")]
-        //[Authorize(Permission.ManifestCreateUpdate)]
+        [HttpGet, Route("report/manifest-penumpang/{cargoManifestId}")]
+        [Authorize(Permission.ManifestView, Permission.ManifestCreateUpdate)]
         public async Task<ActionResult> getReportManifestPenumpang(long? cargoManifestId)
         {
 
@@ -289,7 +290,7 @@ namespace BNRNew_API.Controllers.auth
             };
             var pdfBytes = htmlToPdf.GeneratePdf(html);
 
-            return File(pdfBytes, "application/pdf");
+            return File(pdfBytes, "application/pdf","Manifest_penumpang_" + cargoManifestId  + "_" + data.lokasi_tujuan + ".pdf");
         }
     }
 }

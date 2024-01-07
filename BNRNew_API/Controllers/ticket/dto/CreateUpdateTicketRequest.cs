@@ -44,7 +44,6 @@ namespace BNRNew_API.ticket.request
         [Range(0, Double.MaxValue)]
         public double? volume { get; set; }
 
-        [Required]
         public string keterangan { get; set; }
 
         [Required]

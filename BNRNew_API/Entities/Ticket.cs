@@ -125,10 +125,12 @@ namespace BNRNew_API.Entities
         public string UpdatedByName { get; set; }
 
 
-
-
         [NotMapped]
         public string golongan_name { get; set; }
+
+        [NotMapped]
+        public string print_payload { get; set; }
+
 
     }
 }

@@ -9,5 +9,6 @@
         public string jwtSecretRefresh { get; set; }
         public string location { get; set; }
 
+        public string printUrl { get; set; }
     }
 }
