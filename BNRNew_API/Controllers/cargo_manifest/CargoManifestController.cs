@@ -200,7 +200,14 @@ namespace BNRNew_API.Controllers.auth
                 tablehtml.Append(item.ticketData.alamat_supir);
                 tablehtml.Append("</td><td class='contentcell'>");
                 tablehtml.Append(item.ticketData.keterangan);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.panjang_kenderaan);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.panjang_ori_kenderaan);
+                tablehtml.Append("</td><td class='contentcell'>");
+                tablehtml.Append(item.ticketData.tinggi_kenderaan);
                 tablehtml.Append("</td></tr>");
+                counter++;
             }
 
             html = html

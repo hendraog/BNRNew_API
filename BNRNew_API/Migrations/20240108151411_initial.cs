@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BNRNew_API.Migrations
 {
     /// <inheritdoc />
-    public partial class initial1 : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,24 @@ namespace BNRNew_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_golongan", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "golongan_plat",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    plat_no = table.Column<string>(type: "TEXT", nullable: false),
+                    golonganid = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_golongan_plat", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,7 +119,7 @@ namespace BNRNew_API.Migrations
                     asal_supir = table.Column<string>(type: "TEXT", nullable: false),
                     tujuan_supir = table.Column<string>(type: "TEXT", nullable: false),
                     cargoDetail = table.Column<long>(type: "INTEGER", nullable: true),
-                    printer_count = table.Column<int>(type: "INTEGER", nullable: false),
+                    printer_count = table.Column<int>(type: "INTEGER", nullable: true),
                     CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
@@ -156,30 +174,6 @@ namespace BNRNew_API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "golongan_plat",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    plat_no = table.Column<string>(type: "TEXT", nullable: false),
-                    golonganid = table.Column<long>(type: "INTEGER", nullable: false),
-                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_golongan_plat", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_golongan_plat_golongan_golonganid",
-                        column: x => x.golonganid,
-                        principalTable: "golongan",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_cargo_detail_cargoManifestid",
                 table: "cargo_detail",
@@ -202,11 +196,6 @@ namespace BNRNew_API.Migrations
                 table: "golongan_plat",
                 column: "plat_no",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_golongan_plat_golonganid",
-                table: "golongan_plat",
-                column: "golonganid");
 
             migrationBuilder.CreateIndex(
                 name: "sequence_idx1",
@@ -234,6 +223,9 @@ namespace BNRNew_API.Migrations
                 name: "cargo_detail");
 
             migrationBuilder.DropTable(
+                name: "golongan");
+
+            migrationBuilder.DropTable(
                 name: "golongan_plat");
 
             migrationBuilder.DropTable(
@@ -247,9 +239,6 @@ namespace BNRNew_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "cargo_manifest");
-
-            migrationBuilder.DropTable(
-                name: "golongan");
         }
     }
 }

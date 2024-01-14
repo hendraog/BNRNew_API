@@ -1,42 +1,29 @@
 ﻿using BNRNew_API.config;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using static BNRNew_API.config.AppConstant;
 
-namespace BNRNew_API.Entities
+namespace BNRNew_API.ticket.request
 {
 #pragma warning disable CS8618
     // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    [Table("ticket")]
-    [Index("ticket_no", Name = "ticket_idx1", IsUnique = true)]
-    [Index("tally_no", Name = "ticket_idx2", IsUnique = true)]
-    public class Ticket
+
+    public class CreateTicketRequest
     {
-        public Ticket()
-        {
-        }
-
-        [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long? id { get; set; }
-
-        [Required]
-        public string ticket_no { get; set; }
-
-        [Required]
-        public string tally_no { get; set; }
 
         [Required]
         public DateTime? tanggal_masuk { get; set; }
 
         [Required]
         public DateTime? tanggal_berlaku { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Silahkan input tally no")]
+        public string tally_no { get; set; }
+
+
 
         [Required]
         public string lokasi_asal { get; set; }
@@ -45,6 +32,7 @@ namespace BNRNew_API.Entities
         public string lokasi_tujuan { get; set; }
 
         [Required]
+        [Range(1, long.MaxValue)]
         public long golongan { get; set; }
 
         [Required]
@@ -54,12 +42,13 @@ namespace BNRNew_API.Entities
         public string jenis_muatan { get; set; }
 
         [Required]
+        [Range(0, Double.MaxValue)]
         public double? berat { get; set; }
 
         [Required]
+        [Range(0, Double.MaxValue)]
         public double? volume { get; set; }
 
-        [Required]
         public string keterangan { get; set; }
 
         [Required]
@@ -69,27 +58,31 @@ namespace BNRNew_API.Entities
         public string nama_supir { get; set; }
 
         [Required]
+        [Range(0, 1000)]
         public int? jumlah_orang { get; set; }
 
         [Required]
+        [Range(0, long.MaxValue)]
         public long? harga { get; set; }
 
         [Required]
+        [Range(0, long.MaxValue)]
         public long? biaya_tuslah { get; set; }
 
         [Required]
-        public long? total_harga { get; set; }
-
-        [Required]
+        [Range(0, double.MaxValue)]
         public double? panjang_ori_kenderaan { get; set; }
 
         [Required]
+        [Range(0, double.MaxValue)]
         public double? tinggi_kenderaan { get; set; }
 
         [Required]
+        [Range(0, double.MaxValue)]
         public double? lebar_kenderaan { get; set; }
 
         [Required]
+        [Range(0, double.MaxValue)]
         public double? panjang_kenderaan { get; set; }
 
         //Data supir
@@ -104,40 +97,5 @@ namespace BNRNew_API.Entities
 
         [Required]
         public string tujuan_supir { get; set; }
-
-        public long? cargoDetail { get; set; }
-
-
-        public int? printer_count { get; set; } = 0;
-
-
-        [Required]
-        public long CreatedBy { get; set; }
-
-        [Required]
-        public DateTime? CreatedAt { get; set; }
-
-        public long? UpdatedBy { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
-
-        [NotMapped]
-        public string CreatedByName { get; set; }
-
-        [NotMapped]
-        public string UpdatedByName { get; set; }
-
-
-        [NotMapped]
-        public string golongan_name { get; set; }
-
-        [NotMapped]
-        public string print_payload { get; set; }
-
-        [NotMapped]
-        public string manifest_no { get; set; }
-
-
     }
 }

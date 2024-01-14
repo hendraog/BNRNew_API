@@ -10,21 +10,9 @@ namespace BNRNew_API.ticket.request
 #pragma warning disable CS8618
     // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    public class CreateUpdateTicketRequest
+    public class UpdateTicketRequest
     {
         public long? id { get; set; }
-
-        [Required]
-        public DateTime? tanggal_masuk { get; set; }
-
-        [Required]
-        public DateTime? tanggal_berlaku { get; set; }
-
-        [Required]
-        public string lokasi_asal { get; set; }
-
-        [Required]
-        public string lokasi_tujuan { get; set; }
 
         [Required]
         [Range(1, long.MaxValue)]

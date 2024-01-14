@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BNRNew_API.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20231127150803_initial1")]
-    partial class initial1
+    [Migration("20240108151411_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,8 @@ namespace BNRNew_API.Migrations
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("cargoManifestid")
+                    b.Property<long?>("cargoManifestid")
+                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.Property<long?>("ticket")
@@ -179,8 +180,6 @@ namespace BNRNew_API.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("golonganid");
-
                     b.HasIndex(new[] { "plat_no" }, "golongan_plat_idx1")
                         .IsUnique();
 
@@ -300,7 +299,6 @@ namespace BNRNew_API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("printer_count")
-                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("tanggal_berlaku")
@@ -389,7 +387,7 @@ namespace BNRNew_API.Migrations
             modelBuilder.Entity("BNRNew_API.Entities.CargoDetail", b =>
                 {
                     b.HasOne("BNRNew_API.Entities.CargoManifest", "cargoManifest")
-                        .WithMany()
+                        .WithMany("detailData")
                         .HasForeignKey("cargoManifestid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -397,15 +395,9 @@ namespace BNRNew_API.Migrations
                     b.Navigation("cargoManifest");
                 });
 
-            modelBuilder.Entity("BNRNew_API.Entities.GolonganPlat", b =>
+            modelBuilder.Entity("BNRNew_API.Entities.CargoManifest", b =>
                 {
-                    b.HasOne("BNRNew_API.Entities.Golongan", "golongan")
-                        .WithMany()
-                        .HasForeignKey("golonganid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("golongan");
+                    b.Navigation("detailData");
                 });
 #pragma warning restore 612, 618
         }

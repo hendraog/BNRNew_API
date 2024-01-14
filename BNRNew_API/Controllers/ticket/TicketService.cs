@@ -172,7 +172,7 @@ namespace BNRNew_API.Controllers.ticket
                         harga = x.harga,
                         total_harga = x.total_harga,
                         biaya_tuslah = x.biaya_tuslah,
-
+                        tally_no = x.tally_no,
                         tuslah = x.tuslah,
                         jenis_muatan = x.jenis_muatan,
                         berat = x.berat,
@@ -209,6 +209,42 @@ namespace BNRNew_API.Controllers.ticket
                     select x;
             return await q.FirstOrDefaultAsync();
         }
+
+        public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate == null)
+                startDate = DateTime.UtcNow.AddDays(31);
+
+            if (endDate == null)
+                endDate = DateTime.UtcNow;
+
+            var q = from x in ctx.ticket
+                    join u in ctx.user on x.CreatedBy equals u.id
+                    join g in ctx.golongan on x.golongan equals g.id
+                    join y in ctx.CargoDetails on x.id equals y.ticket into ticGroup from cargoDetailGroup in ticGroup.DefaultIfEmpty()
+                    join z in ctx.CargoManifests on cargoDetailGroup.cargoManifestid equals z.id into cargoManifestGroup
+                    from resManifest in cargoManifestGroup.DefaultIfEmpty()
+                    where x.tanggal_masuk >=  startDate && x.tanggal_masuk <= endDate 
+                    select new Ticket()
+                    {
+                        id = x.id,
+                        manifest_no = resManifest.manifest_no,
+                        ticket_no = x.ticket_no,
+                        nama_supir = x.nama_supir,
+                        CreatedByName = u.UserName,
+                        golongan_name = g.golongan,
+                        plat_no = x.plat_no,
+                        harga = x.harga,
+                        total_harga = x.total_harga,
+                        biaya_tuslah = x.biaya_tuslah,
+                        berat = x.berat,
+                        volume  =   x.volume,
+                        tanggal_masuk = x.tanggal_masuk,
+                        jenis_muatan = x.jenis_muatan,
+                        keterangan = x.keterangan
+                    };
+            return q.ToListAsync();
+        }
     }
 
     public interface ITicketService
@@ -216,7 +252,6 @@ namespace BNRNew_API.Controllers.ticket
         public Task<Ticket> create(Ticket ticket);
         public Task<Ticket> update(Ticket ticket);
         public Task<List<Ticket>> getList(long? createdBy,string filter, int page, int pageSize);
-
 
         /// <summary>
         /// hanya mereturn ticketid dan ticketNo
@@ -228,6 +263,9 @@ namespace BNRNew_API.Controllers.ticket
         public Task<Ticket> getTicketDetail(long ticketId);
 
         public Task<Ticket> getTicket(long ticketId);
+
+        public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate);
+
 
     }
 }

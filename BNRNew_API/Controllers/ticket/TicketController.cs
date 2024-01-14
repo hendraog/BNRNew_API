@@ -37,7 +37,7 @@ namespace BNRNew_API.Controllers.auth
 
         [HttpPost]
         [Authorize(Permission.TicketCreate)]
-        public async Task<ActionResult<BaseDtoResponse>> createTicket([FromBody] CreateUpdateTicketRequest request)
+        public async Task<ActionResult<BaseDtoResponse>> createTicket([FromBody] CreateTicketRequest request)
         {
             var sessionUser = getSessionUser();
             request.id = null; // proses insert tidak boleh ada id
@@ -57,7 +57,7 @@ namespace BNRNew_API.Controllers.auth
 
         [HttpPut]
         [Authorize(Permission.TicketUpdate, Permission.TicketUpdateBeforePrint)]
-        public async Task<ActionResult<BaseDtoResponse>> updateTicket([FromBody] CreateUpdateTicketRequest request)
+        public async Task<ActionResult<BaseDtoResponse>> updateTicket([FromBody] UpdateTicketRequest request)
         {
             var sessionUser = getSessionUser();
 
@@ -75,6 +75,7 @@ namespace BNRNew_API.Controllers.auth
             ticket.UpdatedAt = DateTime.UtcNow;
             ticket.UpdatedBy = sessionUser.id!.Value;
             ObjectHelper.CopyProperties(request, ticket);
+
             var ticketdata = await this.service.update(ticket);
             return Ok(ticketdata);
         }

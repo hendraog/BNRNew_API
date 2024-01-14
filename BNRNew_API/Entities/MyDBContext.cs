@@ -13,7 +13,7 @@ namespace BNRNew_API.Entities
             Database.Migrate();
         }
 
-        public MyDBContext(DbContextOptions<MyDBContext> options)
+        public  MyDBContext(DbContextOptions<MyDBContext> options)
             : base(options)
         {
             Database.Migrate();
