@@ -17,6 +17,8 @@ namespace BNRNew_API.Controllers
         {
             JWTModel session = getSession();
             if(session != null) {
+                object s = null;
+                s.ToString();
                 return new User()
                 {
                     id = session.id,

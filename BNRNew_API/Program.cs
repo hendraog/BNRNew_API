@@ -9,9 +9,30 @@ using BNRNew_API.Controllers.dto;
 using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golonganplat;
 using BNRNew_API.Controllers.ticket;
+using Microsoft.Extensions.FileProviders;
+using Serilog;
+using Serilog.Events;
+using NPOI.OpenXml4Net.OPC;
+using Microsoft.Extensions.Configuration;
+using NPOI.XWPF.UserModel;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
+
+
+
 var config = ConfigHelper.loadConfig<AppConfig>(new ConfigurationBuilder(),"dev");
+
+var configuration = new ConfigurationBuilder()
+           .AddJsonFile("appsettings.json")
+           .Build();
+
+Log.Logger = new LoggerConfiguration()
+          .ReadFrom.Configuration(configuration)
+          .CreateLogger();
+
+Log.Information("Starting up");
+
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -39,7 +60,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<MyDBContext>(options =>
 {
-    options.UseSqlite(@"Data Source=D:\test.db").EnableSensitiveDataLogging();
+    options.UseSqlite(@"Data Source=data.db").EnableSensitiveDataLogging();
 });
 builder.Services.AddControllers(options =>
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
@@ -76,9 +97,29 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 
+
 var app = builder.Build();
 
+
 app.UseCors(MyAllowSpecificOrigins);
+
+app.UseSerilogRequestLogging(options =>
+{
+    options.GetLevel = (ctx, elapsed, ex) =>
+    {
+        if (ex != null || ctx.Response.StatusCode > 499)
+            return LogEventLevel.Error;
+        
+        if (elapsed > TimeSpan.FromSeconds(3).TotalMilliseconds)
+            return LogEventLevel.Warning;
+
+        return LogEventLevel.Information;
+    };
+
+});
+
+
+
 
 // Configure the HTTP request pipeline.
 
@@ -106,8 +147,20 @@ app.UseMiddleware<RequestResponseLoggingMiddleware<JWTModel>>(config.jwtSecret);
 
 
 app.UseDefaultFiles(); // Enables default file mapping on the web root.
-app.UseStaticFiles(); // Marks files on the web root as servable.
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+    RequestPath = "/web"
+});
+
+app.UseRouting(); 
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapFallbackToFile("/index.html");
+});
 
 app.UseAuthorization();
 

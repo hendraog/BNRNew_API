@@ -36,10 +36,12 @@ namespace BNRNew_API.Controllers.auth
         /// Untuk membuat data ticket baru
         /// </summary>
 
-        [HttpPost]
+        [HttpPost,Route("report_cargo")]
         [Authorize(Permission.Report)]
         public async Task getReport([FromBody] LaporanCargoRequest request)
         {
+
+
             var sessionUser = getSessionUser();            
             var reportData = await ticketService.getReportCargo(request.start_date,request.end_date);
 
@@ -52,6 +54,24 @@ namespace BNRNew_API.Controllers.auth
             var boldFont = wb.CreateFont();
             boldFont.Boldweight = (short)FontBoldWeight.Bold;
 
+            var fontTitle = wb.CreateFont();
+            fontTitle.FontName = HSSFFont.FONT_ARIAL;
+            fontTitle.FontHeightInPoints = 17;
+            fontTitle.Boldweight = (short)FontBoldWeight.Bold;
+
+            var fontTitle1 = wb.CreateFont();
+            fontTitle1.FontName = HSSFFont.FONT_ARIAL;
+            fontTitle1.FontHeightInPoints = 14;
+            fontTitle1.Boldweight = (short)FontBoldWeight.Normal;
+
+
+
+            ICellStyle titleStyle = wb.CreateCellStyle();
+            titleStyle.SetFont(fontTitle);
+
+            ICellStyle titleStyle1 = wb.CreateCellStyle();
+            titleStyle1.SetFont(fontTitle1);
+
 
             ICellStyle headerStyle = wb.CreateCellStyle();
             headerStyle.SetFont(boldFont);
@@ -61,19 +81,26 @@ namespace BNRNew_API.Controllers.auth
             headerStyle.BorderBottom = BorderStyle.Thin;
             headerStyle.BorderTop = BorderStyle.Thin;
 
+            var cellStyle = wb.CreateCellStyle();
+            cellStyle.DataFormat = wb.CreateDataFormat().GetFormat("text");
+            IDataFormat dataFormatCustom = wb.CreateDataFormat();
+
+
             ISheet ws = wb.CreateSheet("Sheet1");
 
             IRow row = ws.CreateRow(0);
             ICell cell = row.CreateCell(0);
             cell.SetCellValue("LAPORAN (REPORT)");
+            cell.CellStyle = titleStyle;
 
             row = ws.CreateRow(1);
             cell = row.CreateCell(0);
             cell.SetCellValue("Penyeberangan (LCT)");
+            cell.CellStyle = titleStyle1;
 
             row = ws.CreateRow(3);
             cell = row.CreateCell(0);
-            cell.SetCellValue("Trip");
+            cell.SetCellValue("Trip " + config.location);
 
             row = ws.CreateRow(5);
             cell = row.CreateCell(0);
@@ -148,40 +175,76 @@ namespace BNRNew_API.Controllers.auth
             foreach(var item in reportData)
             {
                 row = ws.CreateRow(startFrom);
+
                 cell = row.CreateCell(0);
                 cell.SetCellValue(item.manifest_no);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(1);
                 cell.SetCellValue(item.ticket_no);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(2);
                 cell.SetCellValue(item.CreatedByName);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(3);
-                cell.SetCellValue(startFrom-4);
-                cell = row.CreateCell(4);
                 cell.SetCellValue(item.golongan_name);
+                cell.CellStyle = cellStyle;
+
+                cell = row.CreateCell(4);
+                cell.SetCellValue(startFrom - 4);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(5);
                 cell.SetCellValue(item.plat_no);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(6);
                 cell.SetCellValue(item.harga??0);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(7);
                 cell.SetCellValue(item.biaya_tuslah??0);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(8);
                 cell.SetCellValue(item.total_harga??0);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(9);
                 cell.SetCellValue(item.berat ?? 0);
-                cell = row.CreateCell(0);
+                cell.CellStyle = cellStyle;
+
+                cell = row.CreateCell(10);
                 cell.SetCellValue(item.volume ?? 0);
-                cell = row.CreateCell(1);
-                cell.SetCellValue(item.tanggal_masuk!.Value);
+                cell.CellStyle = cellStyle;
+
+
+                var date = TimeZoneInfo.ConvertTimeFromUtc(item.tanggal_masuk!.Value, TimeZoneInfo.Local);
                 cell = row.CreateCell(11);
-                cell.SetCellValue(item.jenis_muatan);
+                cell.SetCellValue(date);
+                cell.CellStyle.DataFormat = dataFormatCustom.GetFormat("yyyy/MM/dd");
+
                 cell = row.CreateCell(12);
-                cell.SetCellValue(item.keterangan);
+                cell.SetCellValue(item.jenis_muatan);
+                cell.CellStyle  = cellStyle;
+
                 cell = row.CreateCell(13);
-                cell.SetCellValue(item.panjang_kenderaan??0);
+                cell.SetCellValue(item.keterangan);
+                cell.CellStyle  = cellStyle;
+
                 cell = row.CreateCell(14);
-                cell.SetCellValue(item.panjang_ori_kenderaan??0);
+                cell.SetCellValue(item.panjang_kenderaan??0);
+                cell.CellStyle = cellStyle;
+
                 cell = row.CreateCell(15);
+                cell.SetCellValue(item.panjang_ori_kenderaan??0);
+                cell.CellStyle = cellStyle;
+
+                cell = row.CreateCell(16);
                 cell.SetCellValue(item.tinggi_kenderaan??0);
+                cell.CellStyle = cellStyle;
 
 
                 startFrom++;

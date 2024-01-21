@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BNRNew_API.Entities;
 using Microsoft.IdentityModel.Tokens;
-using static BNRNew_API.config.AppConstant;
 using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golonganplat;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using BNRNew_API.config;
-using System.Diagnostics.Tracing;
 using BNRNew_API.utils;
 
 namespace BNRNew_API.Controllers.ticket
@@ -212,19 +209,13 @@ namespace BNRNew_API.Controllers.ticket
 
         public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate)
         {
-            if (startDate == null)
-                startDate = DateTime.UtcNow.AddDays(31);
-
-            if (endDate == null)
-                endDate = DateTime.UtcNow;
-
             var q = from x in ctx.ticket
                     join u in ctx.user on x.CreatedBy equals u.id
                     join g in ctx.golongan on x.golongan equals g.id
                     join y in ctx.CargoDetails on x.id equals y.ticket into ticGroup from cargoDetailGroup in ticGroup.DefaultIfEmpty()
                     join z in ctx.CargoManifests on cargoDetailGroup.cargoManifestid equals z.id into cargoManifestGroup
                     from resManifest in cargoManifestGroup.DefaultIfEmpty()
-                    where x.tanggal_masuk >=  startDate && x.tanggal_masuk <= endDate 
+                    where x.tanggal_masuk.Value >=  startDate.Value && x.tanggal_masuk.Value <= endDate.Value
                     select new Ticket()
                     {
                         id = x.id,

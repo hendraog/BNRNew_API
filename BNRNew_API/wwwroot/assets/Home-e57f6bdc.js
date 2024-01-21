@@ -1,0 +1,2 @@
+import{_ as e,o as t,h as s,c as o,f as a,b as c}from"./index-af3d0b82.js";const n={class:"flex items-center justify-center w-screen h-screen"},_=c("label",{class:"text-white text-xl tracking-wider font-bold"},"PT. Bandar Niaga Raya",-1),r=[_],i={__name:"Home",setup(l){return t(()=>{s()}),(d,m)=>(a(),o("div",n,[...r]))}},f=e(i,[["__file","D:/sourcecode/my_api/bnr_app_ui/src/views/Home.vue"]]);export{f as default};
+//# sourceMappingURL=Home-e57f6bdc.js.map
