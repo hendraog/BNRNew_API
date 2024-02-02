@@ -14,12 +14,17 @@
             Untuk mengupdate data ticket
             </summary>
         </member>
-        <member name="M:BNRNew_API.Controllers.auth.TicketController.createTicket(BNRNew_API.ticket.request.CreateUpdateTicketRequest)">
+        <member name="M:BNRNew_API.Controllers.auth.ReportController.getReport(BNRNew_API.Controllers.report.dto.LaporanCargoRequest)">
             <summary>
             Untuk membuat data ticket baru
             </summary>
         </member>
-        <member name="M:BNRNew_API.Controllers.auth.TicketController.updateTicket(BNRNew_API.ticket.request.CreateUpdateTicketRequest)">
+        <member name="M:BNRNew_API.Controllers.auth.TicketController.createTicket(BNRNew_API.ticket.request.CreateTicketRequest)">
+            <summary>
+            Untuk membuat data ticket baru
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.auth.TicketController.updateTicket(BNRNew_API.ticket.request.UpdateTicketRequest)">
             <summary>
             Untuk mengupdate data ticket
             </summary>
@@ -76,16 +81,33 @@
             Untuk mengambil data master role
             </summary>
         </member>
-        <member name="T:BNRNew_API.Migrations.initial1">
+        <member name="M:BNRNew_API.Controllers.master.MasterController.getIp">
+            <summary>
+            Untuk mengambil data master role
+            </summary>
+        </member>
+        <member name="T:BNRNew_API.Migrations.initial">
             <inheritdoc />
         </member>
-        <member name="M:BNRNew_API.Migrations.initial1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BNRNew_API.Migrations.initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BNRNew_API.Migrations.initial1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BNRNew_API.Migrations.initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BNRNew_API.Migrations.initial1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:BNRNew_API.Migrations.initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.migrate2">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.migrate2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.migrate2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.migrate2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:BNRNew_API.utils.AuthorizeAttribute">

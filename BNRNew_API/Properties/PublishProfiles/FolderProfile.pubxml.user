@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>D:\sourcecode\my_api\my_api\my_api\bin\Release\net6.0\publish\</_PublishTargetUrl>
-    <History>True|2023-10-04T15:51:08.7741916Z;True|2023-10-03T21:45:25.6291267+07:00;</History>
+    <_PublishTargetUrl>D:\sourcecode\my_api\BNRNew\BNRNew_API\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2024-01-28T13:58:04.7846759Z;True|2024-01-25T21:15:55.4422193+07:00;True|2024-01-24T23:36:31.8800228+07:00;True|2024-01-24T22:54:45.0758169+07:00;True|2024-01-21T21:56:57.1866386+07:00;True|2023-10-04T22:51:08.7741916+07:00;True|2023-10-03T21:45:25.6291267+07:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

@@ -1,10 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using BNRNew_API.Controllers.user.dto;
-using BNRNew_API.Entities;
 using BNRNew_API.config;
 using BNRNew_API.utils;
-using BNRNew_API.Controllers.ticket;
-using BNRNew_API.ticket.request;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BNRNew_API.Controllers.master
 {
@@ -20,7 +17,7 @@ namespace BNRNew_API.Controllers.master
             this.config = config;
         }
 
-        
+
         /// <summary>
         /// Untuk mengambil data lokasi pelabuhan
         /// </summary>
@@ -45,5 +42,18 @@ namespace BNRNew_API.Controllers.master
         {
             return Ok(AppConstant.RoleList);
         }
+
+        /// <summary>
+        /// Untuk mengambil data master role
+        /// </summary>
+        [HttpGet, Route("serverip")]
+        public async Task<ActionResult<String>> getIp()
+        {
+            var feature = HttpContext.Features.Get<IHttpConnectionFeature>();
+            var LocalIPAddr = feature?.LocalIpAddress?.ToString();
+
+            return Ok(LocalIPAddr);
+        }
+
     }
 }
