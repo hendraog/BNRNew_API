@@ -12,6 +12,7 @@ using ESC_POS_USB_NET.Enums;
 using PrintClient;
 using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql.Replication.PgOutput.Messages;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -91,6 +92,10 @@ namespace BNRNew_API.Controllers.auth
             if (ticket == null)
                 return Ok(null);
 
+            //Untuk enkripsi
+            string publicKeyPem = System.IO.File.ReadAllText(AppConstant.ENCRYPTION_PUBLIC_FILE_PATH);
+            var qrContent = Convert.ToBase64String(RSAEncryptionTools.EncryptRSA(ticket.ticket_no + "|" + ticket.plat_no + "|" + ticket.nama_supir, publicKeyPem))
+
             List<PrintData> printData = new List<PrintData>();
             printData.Add(new PrintData("data", "PT. Pelayaran Bandar Niaga Raya", "center"));
             printData.Add(new PrintData("data", "U/Pengendara", "center"));
@@ -105,7 +110,7 @@ namespace BNRNew_API.Controllers.auth
             printData.Add(new PrintData("data", "---------------------------------------------", "right"));
             printData.Add(new PrintData("data", "Total: " + ticket.total_harga!.Value.ToString("#,##0"), "right"));
             printData.Add(new PrintData("newline"));
-            printData.Add(new PrintData("qr",ticket.ticket_no+"|"+ticket.plat_no + "|" + ticket.nama_supir, "center"));
+            printData.Add(new PrintData("qr", qrContent, "center"));
             printData.Add(new PrintData("data", "TICKET BERLAKU HINGGA " + ticket.tanggal_berlaku.Value.ToString("dd-MM-yyyy"), "center"));
             printData.Add(new PrintData("newline"));
             printData.Add(new PrintData("data", "Harga ticket termasuk Asuransi", "center"));
@@ -132,7 +137,7 @@ namespace BNRNew_API.Controllers.auth
             printData.Add(new PrintData("data", "---------------------------------------------", "right"));
             printData.Add(new PrintData("data", "Total: " + ticket.total_harga!.Value.ToString("#,##0"), "right"));
             printData.Add(new PrintData("newline"));
-            printData.Add(new PrintData("qr", ticket.ticket_no + "|" + ticket.plat_no + "|" + ticket.nama_supir, "center"));
+            printData.Add(new PrintData("qr", qrContent, "center"));
             printData.Add(new PrintData("data", "TICKET BERLAKU HINGGA " + ticket.tanggal_berlaku.Value.ToString("dd-MM-yyyy"), "center"));
             printData.Add(new PrintData("newline"));
             printData.Add(new PrintData("data", "Harga ticket termasuk Asuransi", "center"));
@@ -160,7 +165,7 @@ namespace BNRNew_API.Controllers.auth
             printData.Add(new PrintData("data", "---------------------------------------------", "right"));
             printData.Add(new PrintData("data", "Total: " + ticket.total_harga!.Value.ToString("#,##0"), "right"));
             printData.Add(new PrintData("newline"));
-            printData.Add(new PrintData("qr", ticket.ticket_no + "|" + ticket.plat_no + "|" + ticket.nama_supir, "center"));
+            printData.Add(new PrintData("qr", qrContent, "center"));
             printData.Add(new PrintData("data", "TICKET BERLAKU HINGGA " + ticket.tanggal_berlaku.Value.ToString("dd-MM-yyyy"), "center"));
             printData.Add(new PrintData("newline"));
             printData.Add(new PrintData("data", "Harga ticket termasuk Asuransi", "center"));

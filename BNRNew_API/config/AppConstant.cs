@@ -87,5 +87,8 @@ namespace BNRNew_API.config
             }
         }
 
+
+        public static string ENCRYPTION_PUBLIC_FILE_PATH = "keys\\public.pem";
+        public static string ENCRYPTION_PRIVATE_FILE_PATH = "keys\\private.pem";
     }
 }
