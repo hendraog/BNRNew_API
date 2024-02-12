@@ -15,6 +15,7 @@ namespace BNRNew_API.Entities
     [Table("ticket")]
     [Index("ticket_no", Name = "ticket_idx1", IsUnique = true)]
     [Index("tally_no", Name = "ticket_idx2", IsUnique = true)]
+    [Index("ticket_no", "plat_no","nama_supir", "tally_no", Name = "ticket_idx3")]
     public class Ticket
     {
         public Ticket()
@@ -43,6 +44,11 @@ namespace BNRNew_API.Entities
 
         [Required]
         public string lokasi_tujuan { get; set; }
+
+
+        [ForeignKey(nameof(golongan))]
+        [Required]
+        public Golongan golonganData { get; set; }
 
         [Required]
         public long golongan { get; set; }
@@ -108,11 +114,22 @@ namespace BNRNew_API.Entities
         public long? cargoDetail { get; set; }
 
 
+        [ForeignKey(nameof(cargoDetail))]
+        public CargoDetail? cargoDetailData { get; set; }
+
+
+
         public int? printer_count { get; set; } = 0;
 
 
         [Required]
         public long CreatedBy { get; set; }
+
+
+        [ForeignKey(nameof(CreatedBy))]
+        public User? CreatedByData { get; set; }
+
+
 
         [Required]
         public DateTime? CreatedAt { get; set; }

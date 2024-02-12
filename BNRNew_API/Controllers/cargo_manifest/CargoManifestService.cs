@@ -116,13 +116,13 @@ namespace BNRNew_API.Controllers.ticket
                      };
 
             var q2 = from x in ctx.CargoDetails
-                     join y in ctx.ticket on x.ticket equals y.id
+                     join y in ctx.ticket on x.ticketId equals y.id
                      join z in ctx.golongan on y.golongan equals z.id
                      where x.cargoManifestid == id
                      select new CargoDetail()
                      {
                          id = x.id,
-                         ticket = x.ticket,
+                         ticketId = x.ticketId,
                          ticketNo = y.ticket_no,
                          cargoManifestid = x.cargoManifestid,
                          CreatedAt = x.CreatedAt,
@@ -145,7 +145,7 @@ namespace BNRNew_API.Controllers.ticket
         public async Task<List<CargoDetail>> getCargoDetailListByTicketId(List<long> ids, long? cargoManifestId)
         {
             var q = from x in ctx.CargoDetails
-                    where (ids.Contains(x.ticket!.Value))
+                    where (ids.Contains(x.ticketId!.Value))
                     select x;
 
             if (cargoManifestId != null)
@@ -157,10 +157,10 @@ namespace BNRNew_API.Controllers.ticket
         public async Task<List<CargoDetail>> getCargoDetailListByCargoManifest(long cargoManifestId)
         {
             var q = from x in ctx.CargoDetails
-                    join y in ctx.ticket on x.ticket equals y.id
+                    join y in ctx.ticket on x.ticketId equals y.id
                     where x.cargoManifestid == cargoManifestId
                     select new CargoDetail() { 
-                        ticket = x.ticket,
+                        ticketId = x.ticketId,
                         ticketNo = y.ticket_no,
                         ticketData = y
 

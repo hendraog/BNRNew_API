@@ -36,10 +36,18 @@ namespace BNRNew_API.Entities
 
         public long? UpdatedBy { get; set; }
 
+
         public DateTime? UpdatedAt { get; set; }
 
         [NotMapped]
         public List<string> roleArray { get; set; }
 
+        public List<Ticket> tickets { get; set; }
+
+        public List<CargoManifest> cargoManifests { get; set; }
+
+        public List<Golongan> golongans { get; set; }
+
+        public List<GolonganPlat> golonganPlats { get; set; }
     }
 }

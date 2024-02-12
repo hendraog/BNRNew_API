@@ -24,8 +24,12 @@ namespace BNRNew_API.Entities
         public long? cargoManifestid { get; set; }
 
         [Required]
-        public long? ticket { get; set; }
-        
+        public long? ticketId { get; set; }
+
+        //[NotMapped]
+        [ForeignKey(nameof(ticketId))]
+        public Ticket ticketData { get; set; }
+
         [Required]
         public long CreatedBy { get; set; }
 
@@ -42,8 +46,6 @@ namespace BNRNew_API.Entities
         [NotMapped]
         public string golonganName { get; set; }
 
-        [NotMapped]
-        public Ticket ticketData { get; set; }
-
+       
     }
 }

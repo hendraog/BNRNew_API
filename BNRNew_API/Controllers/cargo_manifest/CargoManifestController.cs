@@ -42,7 +42,7 @@ namespace BNRNew_API.Controllers.auth
             
             var ticketList = await ticketService.getTicketListShort(request.ticketList);
             var cargoDetailList = await service.getCargoDetailListByTicketId(request.ticketList,null);
-            var existdata = ticketList.IntersectBy(cargoDetailList.Select(x=>x.ticket), e => e.id).ToList();
+            var existdata = ticketList.IntersectBy(cargoDetailList.Select(x=>x.ticketId), e => e.id).ToList();
 
             if (existdata.Count > 0) { 
                 //ticket telah ada
@@ -58,7 +58,7 @@ namespace BNRNew_API.Controllers.auth
             data.detailData = request.ticketList.FindAll(e => ticketList.Count(x=> x.id == e)>0).Select(ticketId => 
                 new CargoDetail()
                 {
-                    ticket = ticketId,
+                    ticketId = ticketId,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = sessionUser.id!.Value
                 }
@@ -86,16 +86,16 @@ namespace BNRNew_API.Controllers.auth
             ObjectHelper.CopyProperties(request, data);
 
             //ticket yg di di delete 
-            var deleteTicketList = data.detailData.Where(x => !request.ticketList.Any(i => i == x.ticket)).ToList();
+            var deleteTicketList = data.detailData.Where(x => !request.ticketList.Any(i => i == x.ticketId)).ToList();
             //ticket yg ditambah
-            var addTicketList = request.ticketList.Where(x => !data.detailData.Any(i => x == i.ticket)).ToList();
+            var addTicketList = request.ticketList.Where(x => !data.detailData.Any(i => x == i.ticketId)).ToList();
 
             var addTicketListDetaildata = await ticketService.getTicketListShort(addTicketList);
 
             //data ticket yg ada di manifest lain
             var existingTicketOnOtherManifest = await service.getCargoDetailListByTicketId(addTicketList, request.id);
 
-            var existdata = addTicketListDetaildata.IntersectBy(existingTicketOnOtherManifest.Select(x => x.ticket), e => e.id).ToList();
+            var existdata = addTicketListDetaildata.IntersectBy(existingTicketOnOtherManifest.Select(x => x.ticketId), e => e.id).ToList();
             if (existdata.Count > 0)
             {
                 //ticket tambahan tetapi telah ada di manifest lain
@@ -107,7 +107,7 @@ namespace BNRNew_API.Controllers.auth
             addTicketListDetaildata.ForEach(x => {
                 data.detailData.Add(new CargoDetail()
                 {
-                    ticket = x.id,
+                    ticketId = x.id,
                     cargoManifestid = data.id,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = sessionUser.id!.Value
@@ -154,7 +154,7 @@ namespace BNRNew_API.Controllers.auth
                 if(existingCargoTicket!=null)
                     availableTicketList.AddRange(
                         existingCargoTicket.Select(x=> new Ticket() { 
-                            id = x.ticket,
+                            id = x.ticketId,
                             ticket_no = x.ticketData.ticket_no,
                             nama_supir = x.ticketData.nama_supir
                         })
@@ -165,7 +165,7 @@ namespace BNRNew_API.Controllers.auth
 
 
         [HttpGet, Route("report/{cargoManifestId}")]
-        [Authorize(Permission.ManifestView, Permission.ManifestCreateUpdate)]
+        [Authorize( Permission.ManifestCreateUpdate, Permission.ManifestView)]
         public async Task<ActionResult> getReport(long? cargoManifestId)
         {
 

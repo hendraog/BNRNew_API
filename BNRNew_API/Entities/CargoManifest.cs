@@ -39,10 +39,12 @@ namespace BNRNew_API.Entities
         public ICollection<CargoDetail> detailData { get; set; }
 
 
-
-
         [Required]
         public long CreatedBy { get; set; }
+
+
+        [ForeignKey(nameof(CreatedBy))]
+        public User? CreatedByData { get; set; }
 
         [Required]
         public DateTime? CreatedAt { get; set; }

@@ -122,11 +122,23 @@ namespace BNRNew_API.Controllers.golonganplat
 
             return await q.FirstOrDefaultAsync();
         }
-
-        public void deleteById(long id)
+        public async Task deleteById(long id)
         {
-            var re = ctx.golonganPlat.Where(e => e.id == id).FirstOrDefaultAsync().Result;
-            ctx.golonganPlat.Remove(re);
+            var re =await ctx.golonganPlat.Where(e => e.id == id).FirstOrDefaultAsync();
+            if(re != null)
+            {
+                ctx.golonganPlat.Remove(re);
+                ctx.SaveChanges();
+
+            }
+        }
+
+        public int getGolonganPlatCountByGolongan(long golongan)
+        {
+            var q = (from x in ctx.golonganPlat
+                     where x.golonganid == golongan
+                     select x).Count();
+            return q;
         }
     }
 
@@ -140,6 +152,7 @@ namespace BNRNew_API.Controllers.golonganplat
         public Task<List<GolonganPlat>> getListByPlatNo(List<string> platNo);
         public Task<List<GolonganPlat>> getList(string filter, int page, int pageSize);
         public Task<GolonganPlat> getDetail(long id);
-        public void deleteById(long id);
+        public Task deleteById(long id);
+        public int getGolonganPlatCountByGolongan(long golongan);
     }
 }

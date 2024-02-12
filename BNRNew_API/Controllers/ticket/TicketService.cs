@@ -92,6 +92,7 @@ namespace BNRNew_API.Controllers.ticket
                     select new Ticket
                     {
                         id = x.id,
+                        tally_no = x.tally_no,
                         ticket_no = x.ticket_no,
                         lokasi_asal = x.lokasi_asal,
                         lokasi_tujuan = x.lokasi_tujuan,
@@ -112,7 +113,10 @@ namespace BNRNew_API.Controllers.ticket
                 q = q.Where(e => e.CreatedBy == createdBy);
 
             if (!search.IsNullOrEmpty())
-                q = q.Where(e => (EF.Functions.Like(e.plat_no, $"%{search}%")) );
+            {
+                // 
+                q = q.Where(e => (EF.Functions.Like(e.ticket_no, $"%{search}%")) || (EF.Functions.Like(e.plat_no, $"%{search}%")) || (EF.Functions.Like(e.nama_supir, $"%{search}%"))  || (EF.Functions.Like(e.tally_no, $"%{search}%")) );
+            }
 
             q = q.Skip((page - 1) * pageSize).Take(pageSize);
 
@@ -123,7 +127,7 @@ namespace BNRNew_API.Controllers.ticket
         public async Task<List<Ticket>>  getTicketByTujuanAndNotCargoDetail(string lokasi)
         {
             var q = from x in ctx.ticket
-                    join y in ctx.CargoDetails on x.id equals y.ticket into ticGroup
+                    join y in ctx.CargoDetails on x.id equals y.ticketId into ticGroup
                     from child in ticGroup.DefaultIfEmpty()
                     where x.lokasi_tujuan == lokasi && child == null
                     select new Ticket()
@@ -212,7 +216,7 @@ namespace BNRNew_API.Controllers.ticket
             var q = from x in ctx.ticket
                     join u in ctx.user on x.CreatedBy equals u.id
                     join g in ctx.golongan on x.golongan equals g.id
-                    join y in ctx.CargoDetails on x.id equals y.ticket into ticGroup from cargoDetailGroup in ticGroup.DefaultIfEmpty()
+                    join y in ctx.CargoDetails on x.id equals y.ticketId into ticGroup from cargoDetailGroup in ticGroup.DefaultIfEmpty()
                     join z in ctx.CargoManifests on cargoDetailGroup.cargoManifestid equals z.id into cargoManifestGroup
                     from resManifest in cargoManifestGroup.DefaultIfEmpty()
                     where x.tanggal_masuk.Value >=  startDate.Value && x.tanggal_masuk.Value <= endDate.Value
@@ -236,6 +240,16 @@ namespace BNRNew_API.Controllers.ticket
                     };
             return q.ToListAsync();
         }
+
+        public int getTicketCountByGolongan(long golongan)
+        {
+            var q = (from x in ctx.ticket
+                 where x.golongan == golongan
+                 select x).Count();
+            return q;
+
+
+        }
     }
 
     public interface ITicketService
@@ -257,6 +271,7 @@ namespace BNRNew_API.Controllers.ticket
 
         public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate);
 
+        public int getTicketCountByGolongan(long golongan);
 
     }
 }

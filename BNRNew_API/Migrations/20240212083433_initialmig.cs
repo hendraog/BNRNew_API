@@ -6,11 +6,46 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BNRNew_API.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initialmig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "sequence",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    key = table.Column<int>(type: "INTEGER", nullable: false),
+                    last_value = table.Column<int>(type: "INTEGER", nullable: false),
+                    last_used = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sequence", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "user",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    Active = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "cargo_manifest",
                 columns: table => new
@@ -32,6 +67,12 @@ namespace BNRNew_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_cargo_manifest", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_cargo_manifest_user_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,6 +93,12 @@ namespace BNRNew_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_golongan", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_golongan_user_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,21 +117,18 @@ namespace BNRNew_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_golongan_plat", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "sequence",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    key = table.Column<int>(type: "INTEGER", nullable: false),
-                    last_value = table.Column<int>(type: "INTEGER", nullable: false),
-                    last_used = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_sequence", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_golongan_plat_golongan_golonganid",
+                        column: x => x.golonganid,
+                        principalTable: "golongan",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_golongan_plat_user_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,6 +138,7 @@ namespace BNRNew_API.Migrations
                     id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ticket_no = table.Column<string>(type: "TEXT", nullable: false),
+                    tally_no = table.Column<string>(type: "TEXT", nullable: false),
                     tanggal_masuk = table.Column<DateTime>(type: "TEXT", nullable: false),
                     tanggal_berlaku = table.Column<DateTime>(type: "TEXT", nullable: false),
                     lokasi_asal = table.Column<string>(type: "TEXT", nullable: false),
@@ -128,26 +173,18 @@ namespace BNRNew_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ticket", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "user",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    Active = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Role = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_user", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_ticket_golongan_golongan",
+                        column: x => x.golongan,
+                        principalTable: "golongan",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ticket_user_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +194,7 @@ namespace BNRNew_API.Migrations
                     id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     cargoManifestid = table.Column<long>(type: "INTEGER", nullable: false),
-                    ticket = table.Column<long>(type: "INTEGER", nullable: false),
+                    ticketId = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedBy = table.Column<long>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
@@ -171,13 +208,30 @@ namespace BNRNew_API.Migrations
                         column: x => x.cargoManifestid,
                         principalTable: "cargo_manifest",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_cargo_detail_ticket_ticketId",
+                        column: x => x.ticketId,
+                        principalTable: "ticket",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_cargo_detail_cargoManifestid",
                 table: "cargo_detail",
                 column: "cargoManifestid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cargo_detail_ticketId",
+                table: "cargo_detail",
+                column: "ticketId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cargo_manifest_CreatedBy",
+                table: "cargo_manifest",
+                column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
                 name: "manifest_idx1",
@@ -192,10 +246,25 @@ namespace BNRNew_API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_golongan_CreatedBy",
+                table: "golongan",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
                 name: "golongan_plat_idx1",
                 table: "golongan_plat",
                 column: "plat_no",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_golongan_plat_CreatedBy",
+                table: "golongan_plat",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_golongan_plat_golonganid",
+                table: "golongan_plat",
+                column: "golonganid");
 
             migrationBuilder.CreateIndex(
                 name: "sequence_idx1",
@@ -204,10 +273,31 @@ namespace BNRNew_API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ticket_CreatedBy",
+                table: "ticket",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ticket_golongan",
+                table: "ticket",
+                column: "golongan");
+
+            migrationBuilder.CreateIndex(
                 name: "ticket_idx1",
                 table: "ticket",
                 column: "ticket_no",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ticket_idx2",
+                table: "ticket",
+                column: "tally_no",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ticket_idx3",
+                table: "ticket",
+                columns: new[] { "ticket_no", "plat_no", "nama_supir", "tally_no" });
 
             migrationBuilder.CreateIndex(
                 name: "user_idx1",
@@ -223,22 +313,22 @@ namespace BNRNew_API.Migrations
                 name: "cargo_detail");
 
             migrationBuilder.DropTable(
-                name: "golongan");
-
-            migrationBuilder.DropTable(
                 name: "golongan_plat");
 
             migrationBuilder.DropTable(
                 name: "sequence");
 
             migrationBuilder.DropTable(
+                name: "cargo_manifest");
+
+            migrationBuilder.DropTable(
                 name: "ticket");
 
             migrationBuilder.DropTable(
-                name: "user");
+                name: "golongan");
 
             migrationBuilder.DropTable(
-                name: "cargo_manifest");
+                name: "user");
         }
     }
 }

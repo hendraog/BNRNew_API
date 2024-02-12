@@ -15,6 +15,7 @@ using Serilog.Events;
 using NPOI.OpenXml4Net.OPC;
 using Microsoft.Extensions.Configuration;
 using NPOI.XWPF.UserModel;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
@@ -100,7 +101,10 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.IgnoreNullValues = true;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
 });
+
 
 
 

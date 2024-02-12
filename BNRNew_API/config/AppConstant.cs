@@ -60,9 +60,9 @@ namespace BNRNew_API.config
 
 
             static Dictionary<string, List<string>> permissionMapping = new Dictionary<string, List<string>>() {
-                { Role_SUPERADMIN, new List<string>(){Permission.TicketCreate} },
+                { Role_SUPERADMIN, new List<string>(){} },
                 { Role_ADMIN, new List<string>{Permission.MasterGolonganManage,Permission.MasterUserManage,Permission.MasterPlatManage,Permission.TicketDelete,Permission.ManifestView}},
-                { Role_BRANCHMANAGER, new List<string>{ Permission.MasterGolonganManage, Permission.MasterUserManage, Permission.MasterPlatManage, Permission.TicketView, Permission.ManifestCreateUpdate, Permission.TicketCreate, Permission.TicketUpdate}},
+                { Role_BRANCHMANAGER, new List<string>{ Permission.MasterGolonganManage, Permission.MasterUserView, Permission.MasterPlatManage, Permission.TicketView, Permission.ManifestCreateUpdate, Permission.TicketCreate, Permission.TicketUpdate}},
                 { Role_SUPERVISOR, new List<string>{Permission.ManifestCreateUpdate,Permission.TicketView} },
                 { Role_CASHIER, new List<string>{Permission.TicketCreate, Permission.TicketUpdateBeforePrint}},
             };

@@ -183,6 +183,16 @@ namespace BNRNew_API.Controllers.auth
             return Ok(res);    
         }
 
+        [HttpDelete, Route("{id}")]
+        [Authorize(Permission.MasterPlatManage)]
+        public async Task<ActionResult<BaseDtoResponse>> deleteGolongan(long id)
+        {
+            var result = new BaseDtoResponse();
+
+            await this.service.deleteById(id);
+            return Ok(result);
+        }
+
         [HttpGet,Route("")]
         [Authorize(Permission.MasterPlatManage,Permission.MasterPlatView)]
         public async Task<ActionResult<List<GolonganPlat>>> getList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)

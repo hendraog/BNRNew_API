@@ -6,6 +6,9 @@ using BNRNew_API.utils;
 using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golongan.dto;
 using static BNRNew_API.config.AppConstant;
+using BNRNew_API.Controllers.ticket;
+using BNRNew_API.Controllers.golonganplat;
+using Microsoft.AspNetCore.Server.IIS.Core;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -15,11 +18,17 @@ namespace BNRNew_API.Controllers.auth
     {
 
         public IGolonganService service;
+        public ITicketService ticketService;
+        public IGolonganPlatService golonganPlatService;
+
         public AppConfig config;
 
-        public GolonganController(IGolonganService service, AppConfig config)
+        public GolonganController(IGolonganService service, IGolonganPlatService golonganPlatService, ITicketService ticketService, AppConfig config)
         {
             this.service = service;
+            this.ticketService  = ticketService;
+            this.golonganPlatService = golonganPlatService;
+            this.ticketService = ticketService;
             this.config = config;
         }
 
@@ -40,6 +49,27 @@ namespace BNRNew_API.Controllers.auth
             });
             
             return Ok();    
+        }
+
+        /// <summary>
+        /// Untuk melakukan delete data Golongan
+        /// </summary>
+        [HttpDelete, Route("{id}")]
+        [Authorize(Permission.MasterGolonganManage)]
+        public async Task<ActionResult<BaseDtoResponse>> deleteGolongan (long id)
+        {
+            var result  = new BaseDtoResponse();
+
+            /*var countTicket = ticketService.getTicketCountByGolongan(golongan);
+            if(countTicket > 0)
+                throw new BadHttpRequestException("Golongan telah di gunakan pada ticket, tidak dapat di delete");
+
+            var platcount = golonganPlatService.getGolonganPlatCountByGolongan(golongan);
+            if (platcount > 0)
+                throw new BadHttpRequestException("Golongan telah di gunakan untuk input plat Kendaraan, tidak dapat di delete");
+            */
+            await this.service.deleteById(id);
+            return Ok(result);
         }
 
 
@@ -65,7 +95,7 @@ namespace BNRNew_API.Controllers.auth
         }
 
         [HttpGet,Route("")]
-        [Authorize(Permission.MasterGolonganManage,Permission.MasterGolonganView, Permission.TicketCreate, Permission.TicketUpdate)]
+        [Authorize(Permission.MasterGolonganManage,Permission.MasterGolonganView, Permission.TicketView, Permission.TicketCreate, Permission.TicketUpdate)]
         public async Task<ActionResult<List<Golongan>>> getGolongans(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await this.service.getGolongan(filter,page,pageSize));

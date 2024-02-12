@@ -30,11 +30,22 @@ namespace BNRNew_API.Entities
         [Required]
         public long CreatedBy { get; set; }
 
+        [ForeignKey(nameof(CreatedBy))]
+        public User? CreatedByData { get; set; }
+
+
         [Required]
         public DateTime? CreatedAt { get; set; }
 
         public long? UpdatedBy { get; set; }
 
+
         public DateTime? UpdatedAt { get; set; }
+
+        public List<Ticket> tickets { get; set; }
+
+        public List<GolonganPlat> golonganPlat { get; set; }
+
+
     }
 }

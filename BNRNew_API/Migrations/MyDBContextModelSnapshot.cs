@@ -15,7 +15,7 @@ namespace BNRNew_API.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
 
             modelBuilder.Entity("BNRNew_API.Entities.CargoDetail", b =>
                 {
@@ -40,13 +40,16 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("ticket")
+                    b.Property<long?>("ticketId")
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.HasKey("id");
 
                     b.HasIndex("cargoManifestid");
+
+                    b.HasIndex("ticketId")
+                        .IsUnique();
 
                     b.ToTable("cargo_detail");
                 });
@@ -100,6 +103,8 @@ namespace BNRNew_API.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex(new[] { "manifest_no" }, "manifest_idx1")
                         .IsUnique();
 
@@ -143,6 +148,8 @@ namespace BNRNew_API.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex(new[] { "golongan" }, "golongan_idx1")
                         .IsUnique();
 
@@ -176,6 +183,10 @@ namespace BNRNew_API.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("golonganid");
 
                     b.HasIndex(new[] { "plat_no" }, "golongan_plat_idx1")
                         .IsUnique();
@@ -336,11 +347,17 @@ namespace BNRNew_API.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("golongan");
+
                     b.HasIndex(new[] { "ticket_no" }, "ticket_idx1")
                         .IsUnique();
 
                     b.HasIndex(new[] { "tally_no" }, "ticket_idx2")
                         .IsUnique();
+
+                    b.HasIndex(new[] { "ticket_no", "plat_no", "nama_supir", "tally_no" }, "ticket_idx3");
 
                     b.ToTable("ticket");
                 });
@@ -393,15 +410,106 @@ namespace BNRNew_API.Migrations
                     b.HasOne("BNRNew_API.Entities.CargoManifest", "cargoManifest")
                         .WithMany("detailData")
                         .HasForeignKey("cargoManifestid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BNRNew_API.Entities.Ticket", "ticketData")
+                        .WithOne("cargoDetailData")
+                        .HasForeignKey("BNRNew_API.Entities.CargoDetail", "ticketId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("cargoManifest");
+
+                    b.Navigation("ticketData");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.CargoManifest", b =>
+                {
+                    b.HasOne("BNRNew_API.Entities.User", "CreatedByData")
+                        .WithMany("cargoManifests")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByData");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.Golongan", b =>
+                {
+                    b.HasOne("BNRNew_API.Entities.User", "CreatedByData")
+                        .WithMany("golongans")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByData");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.GolonganPlat", b =>
+                {
+                    b.HasOne("BNRNew_API.Entities.User", "CreatedByData")
+                        .WithMany("golonganPlats")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BNRNew_API.Entities.Golongan", "golongan")
+                        .WithMany("golonganPlat")
+                        .HasForeignKey("golonganid")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByData");
+
+                    b.Navigation("golongan");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.Ticket", b =>
+                {
+                    b.HasOne("BNRNew_API.Entities.User", "CreatedByData")
+                        .WithMany("tickets")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BNRNew_API.Entities.Golongan", "golonganData")
+                        .WithMany("tickets")
+                        .HasForeignKey("golongan")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByData");
+
+                    b.Navigation("golonganData");
                 });
 
             modelBuilder.Entity("BNRNew_API.Entities.CargoManifest", b =>
                 {
                     b.Navigation("detailData");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.Golongan", b =>
+                {
+                    b.Navigation("golonganPlat");
+
+                    b.Navigation("tickets");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.Ticket", b =>
+                {
+                    b.Navigation("cargoDetailData");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.User", b =>
+                {
+                    b.Navigation("cargoManifests");
+
+                    b.Navigation("golonganPlats");
+
+                    b.Navigation("golongans");
+
+                    b.Navigation("tickets");
                 });
 #pragma warning restore 612, 618
         }

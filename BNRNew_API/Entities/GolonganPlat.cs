@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,8 +22,19 @@ namespace BNRNew_API.Entities
         [Required]
         public long golonganid { get; set; }
 
+
+        [ForeignKey(nameof(golonganid))]
+        [Required]
+        public Golongan golongan { get; set; }
+
+
         [Required]
         public long CreatedBy { get; set; }
+
+
+        [ForeignKey(nameof(CreatedBy))]
+
+        public User? CreatedByData { get; set; }
 
         [Required]
         public DateTime? CreatedAt { get; set; }
@@ -30,7 +42,6 @@ namespace BNRNew_API.Entities
         public long? UpdatedBy { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
-
 
         [NotMapped]
         public string CreatedByName { get; set; }
@@ -40,6 +51,8 @@ namespace BNRNew_API.Entities
 
         [NotMapped]
         public string golongan_name { get; set; }
+
+
 
     }
 }

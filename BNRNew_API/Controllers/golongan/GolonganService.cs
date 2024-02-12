@@ -42,8 +42,12 @@ namespace BNRNew_API.Controllers.golongan
 
         public async Task deleteById(long id)
         {
-            var re = ctx.golongan.Where(e => e.id == id).FirstOrDefaultAsync().Result;
-            ctx.golongan.Remove(re);
+            var re =await ctx.golongan.Where(e => e.id == id).FirstOrDefaultAsync();
+            if(re != null)
+            {
+                ctx.golongan.Remove(re);
+                ctx.SaveChanges();
+            }
         }
     }
 

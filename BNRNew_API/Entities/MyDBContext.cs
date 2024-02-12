@@ -47,7 +47,27 @@ namespace BNRNew_API.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CargoManifest>().HasMany(g => g.detailData);
+
+            modelBuilder.Entity<CargoManifest>().HasMany(g => g.detailData).WithOne(e => e.cargoManifest).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<CargoManifest>().HasOne(g => g.CreatedByData).WithMany(e => e.cargoManifests).OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<CargoManifest>().HasOne(e => e.UpdatedByData).WithMany(e => e.cargoManifests).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CargoDetail>().HasOne(g => g.ticketData).WithOne(e => e.cargoDetailData).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>().HasOne(e=> e.golonganData).WithMany(e => e.tickets).HasForeignKey(e => e.golongan).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Ticket>().HasOne(e => e.cargoDetailData).WithOne(e => e.ticketData).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Ticket>().HasOne(e => e.CreatedByData).WithMany(e => e.tickets).OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Ticket>().HasOne(e => e.UpdatedByData).WithMany(e => e.tickets).OnDelete(DeleteBehavior.Restrict);
+
+           
+            modelBuilder.Entity<Golongan>().HasMany(e => e.tickets).WithOne(e => e.golonganData).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Golongan>().HasMany(e => e.golonganPlat).WithOne(e => e.golongan).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Golongan>().HasOne(e => e.CreatedByData).WithMany(e => e.golongans).OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Golongan>().HasOne(e => e.UpdatedByData).WithMany(e => e.golongans).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GolonganPlat>().HasOne(e => e.golongan).WithMany(e => e.golonganPlat).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<GolonganPlat>().HasOne(e => e.CreatedByData).WithMany(e => e.golonganPlats).OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<GolonganPlat>().HasOne(e => e.UpdatedByData).WithMany(e => e.golonganPlats).OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

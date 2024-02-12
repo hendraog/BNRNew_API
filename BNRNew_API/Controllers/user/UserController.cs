@@ -114,7 +114,8 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(Permission.MasterUserManage,Permission.MasterUserView)]
         public ActionResult<GetUserResponse> getUsersList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(this.userService.GetUsers(filter, page, pageSize));
+            var res = this.userService.GetUsers(filter, page, pageSize);
+            return Ok(res);
         }
 
 
@@ -123,7 +124,7 @@ namespace BNRNew_API.Controllers.auth
         /// </summary>
 
         [HttpGet, Route("{userId}")]
-        [Authorize(Permission.MasterUserView)]
+        [Authorize(Permission.MasterUserManage, Permission.MasterUserView)]
         public ActionResult<User> getUserDetail(long userId)
         {
             return Ok(this.userService.GetUserDetail(
@@ -140,6 +141,9 @@ namespace BNRNew_API.Controllers.auth
         {
             var sessionUser = getSessionUser();
             var roleLevel = getRoleLevel();
+
+
+            //todo check ticket
 
             var user = userService.GetUserDetail(userId);
 

@@ -1,2 +1,7 @@
 bin
 obj
+/BNRNew_API/logs
+/BNRNew_API/data.db
+/BNRNew_API/bin
+/BNRNew_API/obj
+/BNRNew_API/*.db

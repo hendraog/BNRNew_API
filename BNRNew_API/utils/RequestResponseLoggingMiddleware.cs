@@ -188,6 +188,12 @@ namespace BNRNew_API.utils
                                 else if (type == "UNIQUE")
                                     errResult.message = "data " + column + " telah ada sebelumnya, mohon isi dengan nilai lainnya (tidak boleh double)";
                             }
+                            else
+                            {
+                                var match1 = Regex.Match(errResult.message, @"(?<errorCode>.*): FOREIGN KEY constraint failed");
+                                if (match1.Success)
+                                    errResult.message = "Data tidak dapat di hapus karena telah di gunakan sebagai referensi di tempat lain";
+                            }
                         }
                         else
                         {
