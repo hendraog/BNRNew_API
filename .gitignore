@@ -1,8 +1,11 @@
-bin
-obj
 /BNRNew_API/logs
 /BNRNew_API/data.db
 /BNRNew_API/bin
 /BNRNew_API/obj
 /BNRNew_API/*.db
+/BNRNew_API/*.db*
+/PrintClient/bin
+/PrintClient/obj
+/BNRNew_API.tests/bin
+/BNRNew_API.tests/obj
 /.vs
