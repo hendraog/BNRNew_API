@@ -43,6 +43,7 @@ namespace BNRNew_API.Entities
         public virtual DbSet<CargoManifest> CargoManifests { get; set; }
         public virtual DbSet<CargoDetail> CargoDetails { get; set; }
         public virtual DbSet<Ticket> ticket { get; set; }
+        public virtual DbSet<Kapal> kapal { get; set; }
         public virtual DbSet<Sequence> sequence { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

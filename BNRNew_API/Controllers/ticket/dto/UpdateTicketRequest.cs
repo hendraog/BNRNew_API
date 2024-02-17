@@ -34,8 +34,18 @@ namespace BNRNew_API.ticket.request
 
         public string keterangan { get; set; }
 
+        private string _plat_no;
+
         [Required]
-        public string plat_no { get; set; }
+        public string plat_no
+        {
+            get
+            {
+                return _plat_no.ToUpper();
+            }
+            set { _plat_no = value?.ToUpper(); }
+        }
+
 
         [Required]
         public string nama_supir { get; set; }

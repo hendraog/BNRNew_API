@@ -43,6 +43,8 @@ namespace BNRNew_API.Controllers.master
             return Ok(AppConstant.RoleList);
         }
 
+
+
         /// <summary>
         /// Untuk mengambil data master role
         /// </summary>

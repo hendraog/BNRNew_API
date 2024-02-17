@@ -44,6 +44,8 @@ namespace BNRNew_API.Controllers.ticket
             return ticket;
         }
 
+       
+
         public async Task<Ticket> validateTicketData(Ticket ticket)
         {
             if (!Utils.validatePoliceNo(ticket.plat_no))
@@ -104,6 +106,7 @@ namespace BNRNew_API.Controllers.ticket
                         plat_no = x.plat_no,
                         golongan = x.golongan,
                         golongan_name = y.golongan,
+                        status = x.status,
                         CreatedAt = x.CreatedAt,
                         CreatedBy = x.CreatedBy,
                         CreatedByName = u.UserName
@@ -129,12 +132,13 @@ namespace BNRNew_API.Controllers.ticket
             var q = from x in ctx.ticket
                     join y in ctx.CargoDetails on x.id equals y.ticketId into ticGroup
                     from child in ticGroup.DefaultIfEmpty()
-                    where x.lokasi_tujuan == lokasi && child == null
+                    where x.lokasi_tujuan == lokasi && child == null && x.status == AppConstant.STATUS_VALID
                     select new Ticket()
                     {
                         id = x.id,
                         ticket_no = x.ticket_no,
-                        nama_supir = x.nama_supir
+                        nama_supir = x.nama_supir,
+                        plat_no= x.plat_no
                     };
             return await q.ToListAsync();
         }
@@ -203,6 +207,7 @@ namespace BNRNew_API.Controllers.ticket
 
             return await q.FirstOrDefaultAsync();
         }
+       
         public async Task<Ticket> getTicket(long ticketId)
         {
             var q = from x in ctx.ticket
@@ -247,8 +252,17 @@ namespace BNRNew_API.Controllers.ticket
                  where x.golongan == golongan
                  select x).Count();
             return q;
+        }
 
-
+        public async Task<bool> cancelTicket(long ticketId)
+        {
+            var result = await ctx.ticket.Where(u => u.id == ticketId).
+                ExecuteUpdateAsync(b => b.SetProperty(
+                    p => p.status, AppConstant.STATUS_CANCEL
+                )
+            );
+            ctx.SaveChanges();
+            return result == 1;
         }
     }
 
@@ -256,6 +270,7 @@ namespace BNRNew_API.Controllers.ticket
     {
         public Task<Ticket> create(Ticket ticket);
         public Task<Ticket> update(Ticket ticket);
+
         public Task<List<Ticket>> getList(long? createdBy,string filter, int page, int pageSize);
 
         /// <summary>
@@ -272,6 +287,9 @@ namespace BNRNew_API.Controllers.ticket
         public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate);
 
         public int getTicketCountByGolongan(long golongan);
+
+        public Task<bool> cancelTicket(long ticketId);
+
 
     }
 }

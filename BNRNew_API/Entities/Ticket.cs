@@ -70,7 +70,7 @@ namespace BNRNew_API.Entities
 
         [Required]
         public string plat_no { get; set; }
-
+        
         [Required]
         public string nama_supir { get; set; }
 
@@ -113,6 +113,8 @@ namespace BNRNew_API.Entities
 
         public long? cargoDetail { get; set; }
 
+        [Required]
+        public string status { get; set; }
 
         [ForeignKey(nameof(cargoDetail))]
         public CargoDetail? cargoDetailData { get; set; }

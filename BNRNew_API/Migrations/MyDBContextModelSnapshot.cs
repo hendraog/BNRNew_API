@@ -89,6 +89,12 @@ namespace BNRNew_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("manifest_penumpang_print_count")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("manifest_print_count")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("nama_kapal")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -192,6 +198,43 @@ namespace BNRNew_API.Migrations
                         .IsUnique();
 
                     b.ToTable("golongan_plat");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.Kapal", b =>
+                {
+                    b.Property<long?>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("kode_kapal")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("nama_kapal")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex(new[] { "nama_kapal" }, "kapal_idx1")
+                        .IsUnique();
+
+                    b.ToTable("kapal");
                 });
 
             modelBuilder.Entity("BNRNew_API.Entities.Sequence", b =>
@@ -308,6 +351,10 @@ namespace BNRNew_API.Migrations
 
                     b.Property<int?>("printer_count")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("tally_no")
                         .IsRequired()
@@ -463,6 +510,17 @@ namespace BNRNew_API.Migrations
                     b.Navigation("CreatedByData");
 
                     b.Navigation("golongan");
+                });
+
+            modelBuilder.Entity("BNRNew_API.Entities.Kapal", b =>
+                {
+                    b.HasOne("BNRNew_API.Entities.User", "CreatedByData")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByData");
                 });
 
             modelBuilder.Entity("BNRNew_API.Entities.Ticket", b =>

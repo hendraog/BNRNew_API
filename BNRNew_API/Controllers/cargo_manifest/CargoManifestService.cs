@@ -3,6 +3,7 @@ using BNRNew_API.Entities;
 using Microsoft.IdentityModel.Tokens;
 using BNRNew_API.Controllers.golonganplat;
 using BNRNew_API.config;
+using NPOI.OpenXmlFormats.Spreadsheet;
 
 namespace BNRNew_API.Controllers.ticket
 {
@@ -110,6 +111,8 @@ namespace BNRNew_API.Controllers.ticket
                          alamat = x.alamat,
                          nama_kapal = x.nama_kapal,
                          nama_nahkoda = x.nama_nahkoda, 
+                         manifest_penumpang_print_count = x.manifest_penumpang_print_count,
+                         manifest_print_count = x.manifest_print_count,
                          CreatedAt = x.CreatedAt,
                          CreatedBy = x.CreatedBy,
                          CreatedByName = u.UserName
@@ -166,7 +169,49 @@ namespace BNRNew_API.Controllers.ticket
 
                     };
             return await q.ToListAsync();
+        }
 
+        public async Task<CargoDetail> getCargoDetailByTicketId(long ticketId)
+        {
+            var q = from x in ctx.CargoDetails.Include(x => x.cargoManifest)
+                    where x.ticketId.Equals(ticketId)
+                    select x;
+
+            return await q.FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> updateManifestReportPrintCount(long id)
+        {
+            var countManifest = from u in ctx.CargoManifests
+                                where u.id == id
+                                select u.manifest_print_count;
+
+            var manifest_print_count = countManifest.FirstOrDefault();
+
+            var result = await ctx.CargoManifests.Where(u => u.id == id).
+                ExecuteUpdateAsync(b => b.SetProperty(
+                    p => p.manifest_print_count, manifest_print_count + 1
+                )
+            );
+            ctx.SaveChanges();
+            return result == 1;
+        }
+
+        public async Task<bool> updateManifestReportPenumpangPrintCount(long id)
+        {
+            var countManifest = from u in ctx.CargoManifests
+                                where u.id == id
+                                select u.manifest_penumpang_print_count;
+
+            var manifest_penumpang_print_count = countManifest.FirstOrDefault();
+
+            var result = await ctx.CargoManifests.Where(u => u.id == id).
+                ExecuteUpdateAsync(b => b.SetProperty(
+                    p => p.manifest_penumpang_print_count, manifest_penumpang_print_count + 1
+                )
+            );
+            ctx.SaveChanges();
+            return result == 1;
         }
     }
 
@@ -176,11 +221,11 @@ namespace BNRNew_API.Controllers.ticket
         public Task<CargoManifest> update(CargoManifest ticket, List<CargoDetail> listRemoveCargo);
         public Task<List<CargoManifest>> getList(long? createdBy,string filter, int page, int pageSize);
         public Task<CargoManifest> getDetail(long id);
-
         public Task<List<CargoDetail>> getCargoDetailListByTicketId(List<long> ids, long? cargoManifestId);
-
-
         public Task<List<CargoDetail>> getCargoDetailListByCargoManifest(long cargoManifestId);
+        public Task<CargoDetail> getCargoDetailByTicketId(long ticketId);
+        public Task<bool> updateManifestReportPrintCount(long id);
+        public Task<bool> updateManifestReportPenumpangPrintCount(long id);
 
     }
 }

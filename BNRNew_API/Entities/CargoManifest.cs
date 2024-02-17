@@ -36,8 +36,15 @@ namespace BNRNew_API.Entities
         [Required]
         public string alamat { get; set; }
 
-        public ICollection<CargoDetail> detailData { get; set; }
 
+        [Required]
+        public int manifest_print_count { get; set; }
+
+        [Required]
+        public int manifest_penumpang_print_count { get; set; }
+
+
+        public ICollection<CargoDetail> detailData { get; set; }
 
         [Required]
         public long CreatedBy { get; set; }

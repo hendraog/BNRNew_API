@@ -4,6 +4,11 @@ namespace BNRNew_API.config
 {
     public class AppConstant
     {
+        //status ticket
+        public const string STATUS_CANCEL = "CANCEL";
+        public const string STATUS_VALID = "ACTIVE";
+
+
         //##########################################################
         //Role
         public const string Role_SUPERADMIN = "SUPERADMIN";
@@ -11,6 +16,7 @@ namespace BNRNew_API.config
         public const string Role_BRANCHMANAGER = "BRANCHMANAGER";
         public const string Role_CASHIER = "CASHIER";
         public const string Role_SUPERVISOR = "SUPERVISOR";
+        public const string Role_NAHKODA = "NAHKODA";
 
         public static List<string> RoleList =
         new List<string>{
@@ -26,6 +32,7 @@ namespace BNRNew_API.config
                 case AppConstant.Role_BRANCHMANAGER: return 3;
                 case AppConstant.Role_ADMIN: return 4;
                 case AppConstant.Role_SUPERADMIN: return 5;
+                case AppConstant.Role_NAHKODA: return 0; //tidak boleh login
                 default: return 0;
             }
         }
@@ -43,6 +50,7 @@ namespace BNRNew_API.config
             public const string TicketView = "TicketView";
             public const string TicketCreate = "TicketCreate";
             public const string TicketUpdate = "TicketUpdate";
+            public const string TicketCancel = "TicketCancel";
             public const string TicketUpdateBeforePrint = "TicketUpdateBeforePrint";
             public const string TicketPrint = "TicketPrint";
 
@@ -56,15 +64,18 @@ namespace BNRNew_API.config
             public const string MasterPlatManage = "MasterPlatManage";
             public const string MasterUserView = "MasterUserView";
             public const string MasterUserManage = "MasterUserManage";
+            public const string MasterKapalManage = "MasterKapalManage";
+            public const string MasterKapalView = "MasterKapalView";
             public const string Report = "Report";
 
 
             static Dictionary<string, List<string>> permissionMapping = new Dictionary<string, List<string>>() {
                 { Role_SUPERADMIN, new List<string>(){} },
-                { Role_ADMIN, new List<string>{Permission.MasterGolonganManage,Permission.MasterUserManage,Permission.MasterPlatManage,Permission.TicketDelete,Permission.ManifestView}},
-                { Role_BRANCHMANAGER, new List<string>{ Permission.MasterGolonganManage, Permission.MasterUserView, Permission.MasterPlatManage, Permission.TicketView, Permission.ManifestCreateUpdate, Permission.TicketCreate, Permission.TicketUpdate}},
-                { Role_SUPERVISOR, new List<string>{Permission.ManifestCreateUpdate,Permission.TicketView} },
+                { Role_ADMIN, new List<string>{}},
+                { Role_BRANCHMANAGER, new List<string>{ Permission.MasterKapalManage, Permission.MasterGolonganManage, Permission.MasterUserView, Permission.MasterPlatManage, Permission.TicketView, Permission.ManifestCreateUpdate, Permission.TicketCreate, Permission.TicketUpdate}},
+                { Role_SUPERVISOR, new List<string>{ Permission.MasterKapalView, Permission.MasterPlatView, Permission.MasterGolonganView,  Permission.ManifestCreateUpdate, Permission.TicketView} },
                 { Role_CASHIER, new List<string>{Permission.TicketCreate, Permission.TicketUpdateBeforePrint}},
+                { Role_NAHKODA, new List<string>(){Permission.Report} },
             };
 
 

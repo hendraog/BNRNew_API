@@ -83,6 +83,10 @@ namespace BNRNew_API.Controllers.auth
             if(data == null)
                 throw new BadHttpRequestException($"Data tidak di temukan");
 
+            
+            if((data.manifest_penumpang_print_count> 0 || data.manifest_print_count > 0)  && AppConstant.getRoleLevel(sessionUser.Role!) < AppConstant.getRoleLevel(AppConstant.Role_BRANCHMANAGER))
+                return BadRequest(new BaseDtoResponse() { message = "Data tidak dapat lagi di update, Hanya level Branch Manager ke atas yg dapat melakukan update" });
+
             ObjectHelper.CopyProperties(request, data);
 
             //ticket yg di di delete 
@@ -156,7 +160,8 @@ namespace BNRNew_API.Controllers.auth
                         existingCargoTicket.Select(x=> new Ticket() { 
                             id = x.ticketId,
                             ticket_no = x.ticketData.ticket_no,
-                            nama_supir = x.ticketData.nama_supir
+                            nama_supir = x.ticketData.nama_supir,
+                            plat_no = x.ticketData.plat_no
                         })
                     );
             }
@@ -234,7 +239,12 @@ namespace BNRNew_API.Controllers.auth
             };
             var pdfBytes = htmlToPdf.GeneratePdf(html);
 
-            return File(pdfBytes, "application/pdf", "Manifest_" + cargoManifestId + "_" + data.lokasi_tujuan + ".pdf");
+            var updateRes = await service.updateManifestReportPrintCount(cargoManifestId!.Value);
+            if (updateRes)
+                return File(pdfBytes, "application/pdf", "Manifest_" + cargoManifestId + "_" + data.lokasi_tujuan + ".pdf");
+            else
+                return BadRequest(new BaseDtoResponse() { message = "Gagal mengupdate counter print, Silahkan hubungi admin" });
+
         }
 
 
@@ -245,7 +255,7 @@ namespace BNRNew_API.Controllers.auth
 
             var data = await this.service.getDetail(
                cargoManifestId!.Value
-           );
+            );
             var html = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "report", "ManifestPenumpang.html"));
 
             var tablehtml1 = new StringBuilder();
@@ -297,7 +307,11 @@ namespace BNRNew_API.Controllers.auth
             };
             var pdfBytes = htmlToPdf.GeneratePdf(html);
 
-            return File(pdfBytes, "application/pdf","Manifest_penumpang_" + cargoManifestId  + "_" + data.lokasi_tujuan + ".pdf");
+            var updateRes = await service.updateManifestReportPenumpangPrintCount(cargoManifestId!.Value);
+            if (updateRes)
+                return File(pdfBytes, "application/pdf", "Manifest_penumpang_" + cargoManifestId + "_" + data.lokasi_tujuan + ".pdf");
+            else
+                return BadRequest(new BaseDtoResponse() { message = "Gagal mengupdate counter print, Silahkan hubungi admin"});
         }
     }
 }

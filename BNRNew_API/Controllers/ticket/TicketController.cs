@@ -22,13 +22,14 @@ namespace BNRNew_API.Controllers.auth
     {
 
         public ITicketService service;
+        public ICargoManifestService cargoService;
 
         public AppConfig config;
 
-        public TicketController(ITicketService service, AppConfig config)
+        public TicketController(ITicketService service, ICargoManifestService cargoService, AppConfig config)
         {
             this.service = service;
-            
+            this.cargoService = cargoService;
             this.config = config;
         }
 
@@ -46,10 +47,37 @@ namespace BNRNew_API.Controllers.auth
             Ticket ticket = new Ticket();
             ticket.CreatedAt = DateTime.UtcNow;
             ticket.CreatedBy = sessionUser.id!.Value;
+            ticket.status = AppConstant.STATUS_VALID;
             ObjectHelper.CopyProperties(request, ticket);
             var ticketdata = await this.service.create(ticket);
-            
-            return Ok(ticketdata);    
+
+            return Ok(ticketdata);
+        }
+
+
+        [HttpPost, Route("cancel/{ticketId}")]
+        [Authorize(Permission.TicketCancel)]
+        public async Task<ActionResult<BaseDtoResponse>> cancelTicket(long ticketId)
+        {
+            //var sessionUser = getSessionUser();
+            var ticketdata = await this.service.getTicketDetail(ticketId);
+
+            if (ticketdata.tanggal_berlaku?.CompareTo(DateTime.Now) > 0){
+                return BadRequest(new BaseDtoResponse() { message = "Ticket masih berlaku, tidak dapat di cancel." });
+            }
+
+            var cargoDetailData = await cargoService.getCargoDetailByTicketId(ticketId);
+            if (cargoDetailData != null)
+                return BadRequest(new BaseDtoResponse() { message = "Ticket telah di proses pada cargo manifest " + cargoDetailData.cargoManifest.manifest_no });
+
+
+            var cancelSuccess = await this.service.cancelTicket(ticketId);
+            if (cancelSuccess) {
+                ticketdata.status = AppConstant.STATUS_CANCEL;
+                return Ok(ticketdata);
+            }
+
+            return BadRequest("Tidak berhasil mengcancel ticket, silahkan refresh halaman dan mencoba kembali");
         }
 
         /// <summary>
@@ -94,7 +122,7 @@ namespace BNRNew_API.Controllers.auth
 
             //Untuk enkripsi
             string publicKeyPem = System.IO.File.ReadAllText(AppConstant.ENCRYPTION_PUBLIC_FILE_PATH);
-            var qrContent = Convert.ToBase64String(RSAEncryptionTools.EncryptRSA(ticket.ticket_no + "|" + ticket.plat_no + "|" + ticket.nama_supir, publicKeyPem))
+            var qrContent = Convert.ToBase64String(RSAEncryptionTools.EncryptRSA(ticket.ticket_no + "|" + ticket.plat_no + "|" + ticket.nama_supir, publicKeyPem));
 
             List<PrintData> printData = new List<PrintData>();
             printData.Add(new PrintData("data", "PT. Pelayaran Bandar Niaga Raya", "center"));

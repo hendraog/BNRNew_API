@@ -19,6 +19,11 @@
             Untuk melakukan delete data Golongan
             </summary>
         </member>
+        <member name="M:BNRNew_API.Controllers.auth.KapalController.delete(System.Int64)">
+            <summary>
+            Untuk melakukan delete data kapal
+            </summary>
+        </member>
         <member name="M:BNRNew_API.Controllers.auth.ReportController.getReport(BNRNew_API.Controllers.report.dto.LaporanCargoRequest)">
             <summary>
             Untuk membuat data ticket baru
@@ -91,16 +96,28 @@
             Untuk mengambil data master role
             </summary>
         </member>
-        <member name="T:BNRNew_API.Migrations.initialmig">
+        <member name="T:BNRNew_API.Migrations.initial">
             <inheritdoc />
         </member>
-        <member name="M:BNRNew_API.Migrations.initialmig.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BNRNew_API.Migrations.initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BNRNew_API.Migrations.initialmig.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BNRNew_API.Migrations.initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BNRNew_API.Migrations.initialmig.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:BNRNew_API.Migrations.initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.addcol1">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.addcol1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.addcol1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.addcol1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:BNRNew_API.utils.AuthorizeAttribute">

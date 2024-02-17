@@ -52,6 +52,13 @@ namespace BNRNew_API.Entities
         [NotMapped]
         public string golongan_name { get; set; }
 
+        [NotMapped]
+        public string reason { get; set; }
+
+
+        [NotMapped]
+        public string golongan_name_before { get; set; }
+
 
 
     }
