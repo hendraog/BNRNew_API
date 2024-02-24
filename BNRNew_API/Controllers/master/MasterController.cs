@@ -44,6 +44,20 @@ namespace BNRNew_API.Controllers.master
         }
 
 
+        /// <summary>
+        /// Untuk mengambil data status ticket
+        /// </summary>
+        [HttpGet, Route("ticket-status")]
+        [Authorize()]
+        public async Task<ActionResult<List<String>>> getTicketStatusList()
+        {
+
+            return Ok(AppConstant.statusTicketList);
+        }
+
+
+
+
 
         /// <summary>
         /// Untuk mengambil data master role

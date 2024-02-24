@@ -29,7 +29,7 @@ namespace BNRNew_API.Entities
 
 
         [Required]
-        public long CreatedBy { get; set; }
+        public long? CreatedBy { get; set; }
 
         [Required]
         public DateTime? CreatedAt { get; set; }

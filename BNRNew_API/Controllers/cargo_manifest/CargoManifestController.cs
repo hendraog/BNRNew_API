@@ -9,6 +9,7 @@ using System.Linq;
 using static BNRNew_API.config.AppConstant;
 using System.Text;
 using NReco.PdfGenerator;
+using NPOI.Util;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -48,6 +49,13 @@ namespace BNRNew_API.Controllers.auth
                 //ticket telah ada
                 string ticketNos = string.Join(", ", existdata.Select(item => item.ticket_no));
                 throw new BadHttpRequestException($"No Ticket {ticketNos} Telah ada sebelumnya");
+            }
+
+            string[] duplicatePlat = ticketList.GroupBy(x => x.plat_no).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+            if (duplicatePlat.Length > 0)
+            {
+                
+                return BadRequest(new BaseDtoResponse() { message = "No Plat yg di input pada cargo manifest terdapat Duplikat "  + String.Join(", ", duplicatePlat) });
             }
 
             CargoManifest data = new CargoManifest();
@@ -107,6 +115,16 @@ namespace BNRNew_API.Controllers.auth
                 throw new BadHttpRequestException($"No Ticket {existingTicketNo} Telah ada sebelumnya");
             }
 
+            var ticketList = await ticketService.getTicketListShort(request.ticketList);
+
+            string[] duplicatePlat = ticketList.GroupBy(x => x.plat_no).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+            if (duplicatePlat.Length > 0)
+            {
+
+                return BadRequest(new BaseDtoResponse() { message = "No Plat yg di input pada cargo manifest terdapat Duplikat " + String.Join(", ", duplicatePlat) });
+            }
+
+
             deleteTicketList.ForEach(x => data.detailData.Remove(x));
             addTicketListDetaildata.ForEach(x => {
                 data.detailData.Add(new CargoDetail()
@@ -132,7 +150,7 @@ namespace BNRNew_API.Controllers.auth
         public async Task<ActionResult<List<Golongan>>> getCargoList(string? filter = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var session = getSession();
-            return Ok(await this.service.getList(session.Role == AppConstant.Role_CASHIER?session.id:null, filter,page,pageSize));
+            return Ok(await this.service.getList(filter,page,pageSize));
         }
 
         [HttpGet, Route("{id}")]
@@ -161,7 +179,8 @@ namespace BNRNew_API.Controllers.auth
                             id = x.ticketId,
                             ticket_no = x.ticketData.ticket_no,
                             nama_supir = x.ticketData.nama_supir,
-                            plat_no = x.ticketData.plat_no
+                            plat_no = x.ticketData.plat_no,
+                            golongan_name = x.golonganName
                         })
                     );
             }
@@ -313,5 +332,7 @@ namespace BNRNew_API.Controllers.auth
             else
                 return BadRequest(new BaseDtoResponse() { message = "Gagal mengupdate counter print, Silahkan hubungi admin"});
         }
+    
+        
     }
 }

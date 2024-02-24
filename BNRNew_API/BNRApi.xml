@@ -74,6 +74,11 @@
             ambil profile dari user berdasarkan token login
             </summary>
         </member>
+        <member name="M:BNRNew_API.Controllers.auth.UserController.getCashierUser(System.String)">
+            <summary>
+            Untuk mengambil data list user kasir
+            </summary>
+        </member>
         <member name="M:BNRNew_API.Controllers.ticket.ITicketService.getTicketByTujuanAndNotCargoDetail(System.String)">
             <summary>
             hanya mereturn ticketid dan ticketNo
@@ -89,6 +94,11 @@
         <member name="M:BNRNew_API.Controllers.master.MasterController.getRoleList">
             <summary>
             Untuk mengambil data master role
+            </summary>
+        </member>
+        <member name="M:BNRNew_API.Controllers.master.MasterController.getTicketStatusList">
+            <summary>
+            Untuk mengambil data status ticket
             </summary>
         </member>
         <member name="M:BNRNew_API.Controllers.master.MasterController.getIp">
@@ -118,6 +128,30 @@
             <inheritdoc />
         </member>
         <member name="M:BNRNew_API.Migrations.addcol1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.add_nik">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nik.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nik.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nik.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.add_nullablenik">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nullablenik.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nullablenik.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nullablenik.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:BNRNew_API.utils.AuthorizeAttribute">

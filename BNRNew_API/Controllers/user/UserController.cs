@@ -180,7 +180,16 @@ namespace BNRNew_API.Controllers.auth
             return Ok(result);
         }
 
-
+        /// <summary>
+        /// Untuk mengambil data list user kasir
+        /// </summary>
+        [HttpGet, Route("withrole/{role}")]
+        [Authorize(Permission.Report)]
+        public async Task<ActionResult<GetUserResponse>> getCashierUser(string role)
+        {
+            var res = await this.userService.GetUserByRole(role);
+            return Ok(res);
+        }
 
     }
 }

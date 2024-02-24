@@ -95,6 +95,17 @@ namespace BNRNew_API.Controllers
 
             return false;
         }
+        public async Task<List<User>> GetUserByRole(string role)
+        {
+            var q = from x in ctx.user
+                    where x.Role == role
+                    select new User {
+                        id = x.id,
+                        UserName =  x.UserName
+                    };
+
+            return  q.ToList();
+        }
     }
 
     public interface IUserService
@@ -106,11 +117,12 @@ namespace BNRNew_API.Controllers
         public User? validateUser(string user,string password);
 
         public List<User> GetUsers(string filter, int page, int pageSize);
+
         public User? GetUserDetail(long userId);
 
         public Task<bool> changePassword(long userId, string oldPass, string newPass);
 
-
+        public Task<List<User>> GetUserByRole(string role);
 
     }
 }

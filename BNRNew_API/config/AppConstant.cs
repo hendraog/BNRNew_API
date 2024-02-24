@@ -23,6 +23,16 @@ namespace BNRNew_API.config
             Role_SUPERADMIN, Role_ADMIN, Role_BRANCHMANAGER, Role_CASHIER, Role_SUPERVISOR
         };
 
+        public const string StatusTicket_VALID = "VALID";
+        public const string StatusTicket_CANCEL = "CANCEL";
+
+
+        public static List<string> statusTicketList =
+        new List<string>{
+            StatusTicket_VALID, StatusTicket_CANCEL
+        };
+
+
         public static int getRoleLevel(string role)
         {
             switch (role)

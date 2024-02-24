@@ -12,6 +12,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
+using NPOI.SS.Util;
 
 namespace BNRNew_API.Controllers.auth
 {
@@ -40,10 +41,8 @@ namespace BNRNew_API.Controllers.auth
         [Authorize(Permission.Report)]
         public async Task getReport([FromBody] LaporanCargoRequest request)
         {
-
-
             var sessionUser = getSessionUser();            
-            var reportData = await ticketService.getReportCargo(request.start_date,request.end_date);
+            var reportData = await ticketService.getReportCargo(request.start_date,request.end_date, request.status, request.cashier,request.manifest_no);
 
             Response.StatusCode = 200;
             Response.ContentType = "application/vnd.ms-excel";
@@ -81,9 +80,10 @@ namespace BNRNew_API.Controllers.auth
             headerStyle.BorderBottom = BorderStyle.Thin;
             headerStyle.BorderTop = BorderStyle.Thin;
 
-            var cellStyle = wb.CreateCellStyle();
-            cellStyle.DataFormat = wb.CreateDataFormat().GetFormat("text");
-            IDataFormat dataFormatCustom = wb.CreateDataFormat();
+            ICellStyle footerStyle = wb.CreateCellStyle();
+            footerStyle.SetFont(boldFont);
+            footerStyle.BorderTop = BorderStyle.Thin;
+
 
 
             ISheet ws = wb.CreateSheet("Sheet1");
@@ -93,173 +93,109 @@ namespace BNRNew_API.Controllers.auth
             cell.SetCellValue("LAPORAN (REPORT)");
             cell.CellStyle = titleStyle;
 
+            CellRangeAddress regionMerge = new CellRangeAddress(0, 0, 0, 5);
+            ws.AddMergedRegion(regionMerge);
+
+
             row = ws.CreateRow(1);
             cell = row.CreateCell(0);
             cell.SetCellValue("Penyeberangan (LCT)");
             cell.CellStyle = titleStyle1;
 
+            CellRangeAddress regionMerge1 = new CellRangeAddress(1, 1, 0, 5);
+            ws.AddMergedRegion(regionMerge1);
+
+
             row = ws.CreateRow(3);
             cell = row.CreateCell(0);
             cell.SetCellValue("Trip " + config.location);
 
-            row = ws.CreateRow(5);
-            cell = row.CreateCell(0);
-            cell.SetCellValue("No Manifest");
-            cell.CellStyle = headerStyle;
+            CellRangeAddress regionMerge2 = new CellRangeAddress(3, 3, 0, 5);
+            ws.AddMergedRegion(regionMerge2);
 
-            cell = row.CreateCell(1);
-            cell.SetCellValue("No Ticket");
-            cell.CellStyle = headerStyle;
 
-            cell = row.CreateCell(2);
-            cell.SetCellValue("Kasir");
-            cell.CellStyle = headerStyle;
+            row = NPoiUtils.createRow(wb, ws, 5, boldFont, "No Manifest", "No Ticket", "Kasir", "Gol", "No", "No Kend", 
+                "Hrg Dasar", "Hrg Tuslah", "Hrg Total", "Berat (Kg)", "Volume(m3)", "Tanggal/Waktu", "Jenis Muatan", 
+                "Keterangan", "Panjang", "Panjang Ori","lebar", "Tinggi", "Jlh Orang");
 
-            cell = row.CreateCell(3);
-            cell.SetCellValue("Gol");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(4);
-            cell.SetCellValue("No");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(5);
-            cell.SetCellValue("No Kend");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(6);
-            cell.SetCellValue("Hrg Dasar");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(7);
-            cell.SetCellValue("Hrg Tuslah");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(8);
-            cell.SetCellValue("Hrg Total");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(9);
-            cell.SetCellValue("Berat (Kg)");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(10);
-            cell.SetCellValue("Volume(m3)");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(11);
-            cell.SetCellValue("Tanggal/Waktu");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(12);
-            cell.SetCellValue("Jenis Muatan");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(13);
-            cell.SetCellValue("Keterangan");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(14);
-            cell.SetCellValue("Panjang");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(15);
-            cell.SetCellValue("Panjang Ori");
-            cell.CellStyle = headerStyle;
-
-            cell = row.CreateCell(16);
-            cell.SetCellValue("Tinggi");
-            cell.CellStyle = headerStyle;
 
             var startFrom = 6;
-            foreach(var item in reportData)
+            double totalVolume = 0.0;
+            double totalBerat = 0.0;
+
+            double totalHarga = 0.0;
+            double totalTuslah = 0.0;
+            double totalHargaDasar = 0.0;
+            int totalPenumpang = 0;
+
+            foreach (var item in reportData)
             {
-                row = ws.CreateRow(startFrom);
+                totalVolume += item.volume??0.0;
+                totalBerat += item.berat ?? 0.0;
+                totalHarga += item.total_harga ?? 0.0;
+                totalTuslah += item.biaya_tuslah ?? 0.0;
+                totalHargaDasar += item.harga ?? 0.0;
+                totalPenumpang += item.jumlah_orang??0;
 
-                cell = row.CreateCell(0);
-                cell.SetCellValue(item.manifest_no);
-                cell.CellStyle = cellStyle;
+                var tanggal_masuk = TimeZoneInfo.ConvertTimeFromUtc(item.tanggal_masuk!.Value, TimeZoneInfo.Local);
 
-                cell = row.CreateCell(1);
-                cell.SetCellValue(item.ticket_no);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(2);
-                cell.SetCellValue(item.CreatedByName);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(3);
-                cell.SetCellValue(item.golongan_name);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(4);
-                cell.SetCellValue(startFrom - 4);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(5);
-                cell.SetCellValue(item.plat_no);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(6);
-                cell.SetCellValue(item.harga??0);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(7);
-                cell.SetCellValue(item.biaya_tuslah??0);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(8);
-                cell.SetCellValue(item.total_harga??0);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(9);
-                cell.SetCellValue(item.berat ?? 0);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(10);
-                cell.SetCellValue(item.volume ?? 0);
-                cell.CellStyle = cellStyle;
-
-
-                var date = TimeZoneInfo.ConvertTimeFromUtc(item.tanggal_masuk!.Value, TimeZoneInfo.Local);
-                cell = row.CreateCell(11);
-                cell.SetCellValue(date);
-                cell.CellStyle.DataFormat = dataFormatCustom.GetFormat("yyyy/MM/dd");
-
-                cell = row.CreateCell(12);
-                cell.SetCellValue(item.jenis_muatan);
-                cell.CellStyle  = cellStyle;
-
-                cell = row.CreateCell(13);
-                cell.SetCellValue(item.keterangan);
-                cell.CellStyle  = cellStyle;
-
-                cell = row.CreateCell(14);
-                cell.SetCellValue(item.panjang_kenderaan??0);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(15);
-                cell.SetCellValue(item.panjang_ori_kenderaan??0);
-                cell.CellStyle = cellStyle;
-
-                cell = row.CreateCell(16);
-                cell.SetCellValue(item.tinggi_kenderaan??0);
-                cell.CellStyle = cellStyle;
-
-
+                row = NPoiUtils.createRow(wb, ws, startFrom, null, item.manifest_no,
+                    item.ticket_no,
+                    item.CreatedByName,
+                    item.golongan_name,
+                    startFrom - 5,
+                    item.plat_no,
+                    item.harga ?? 0,
+                    item.biaya_tuslah ?? 0,
+                    item.total_harga ?? 0,
+                    item.berat ?? 0,
+                    item.volume ?? 0,
+                    tanggal_masuk,
+                    item.jenis_muatan,
+                    item.keterangan,
+                    item.panjang_kenderaan ?? 0,
+                    item.panjang_ori_kenderaan ?? 0,
+                    item.tinggi_kenderaan ?? 0,
+                    item.lebar_kenderaan ?? 0,
+                    item.jumlah_orang ?? 0) ;
                 startFrom++;
             }
+            //## ISI Total
+
+            NPoiUtils.createRow(wb, ws, startFrom, boldFont,
+                "",
+                "Total ",
+                "",
+                "",
+                "",
+                "",
+                totalHargaDasar,
+                totalTuslah,
+                totalHarga,
+                totalBerat,
+                totalVolume,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                totalPenumpang);
+
+            CellRangeAddress region = new CellRangeAddress(5, 5, 0, 18);
+            RegionUtil.SetBorderTop((int)BorderStyle.Thin, region, ws, wb);
+            RegionUtil.SetBorderBottom((int)BorderStyle.Thin, region, ws, wb);
+
+            CellRangeAddress region1 = new CellRangeAddress(startFrom, startFrom, 0, 18);
+            RegionUtil.SetBorderTop((int)BorderStyle.Thin, region1, ws, wb);
+
 
             for (int i = 0; i <= 15; i++)
             {
                 ws.AutoSizeColumn(i);
                 GC.Collect();
             }
-
-            //MemoryStream stream = new();
-            //wb.Write(stream);
-            //byte[] output = stream.ToArray();
-            //return File(output, "application/vnd.ms-excel", "re.xls");
 
             var outputStream = this.Response.Body;
             wb.Write(outputStream);

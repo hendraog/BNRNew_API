@@ -119,9 +119,16 @@ namespace BNRNew_API.Entities
         [ForeignKey(nameof(cargoDetail))]
         public CargoDetail? cargoDetailData { get; set; }
 
+        public int? printer_count { get; set; }
 
+        public int? usia_penumpang1 { get; set; }
 
-        public int? printer_count { get; set; } = 0;
+        public int? usia_penumpang2 { get; set; }
+
+        public string? nik_penumpang1 { get; set; }
+
+        public string? nik_penumpang2 { get; set; }
+
 
 
         [Required]

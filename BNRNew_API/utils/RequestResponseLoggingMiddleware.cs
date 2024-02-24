@@ -151,7 +151,7 @@ namespace BNRNew_API.utils
                         requestLog.response_data = obj;
                         requestLog.duration_ms = watch.ElapsedMilliseconds;
                     }
-                    System.Console.WriteLine(JsonSerializer.Serialize(requestLog) + "\r\n");
+                    System.Console.WriteLine("\r\n" + JsonSerializer.Serialize(requestLog) + "\r\n");
                 }
                 catch (Exception e)
                 {

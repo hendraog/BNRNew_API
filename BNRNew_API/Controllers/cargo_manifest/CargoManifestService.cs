@@ -66,9 +66,9 @@ namespace BNRNew_API.Controllers.ticket
             return data;
         }
 
-        public async Task<List<CargoManifest>> getList(long? createdBy, string search, int page, int pageSize)
+        public async Task<List<CargoManifest>> getList(string search, int page, int pageSize)
         {
-            var q = from x in ctx.CargoManifests  join u in ctx.user on x.CreatedBy equals u.id
+            var q =  from x in ctx.CargoManifests  join u in ctx.user on x.CreatedBy equals u.id
                      select new CargoManifest
                      {
                          id = x.id,
@@ -84,9 +84,6 @@ namespace BNRNew_API.Controllers.ticket
                          CreatedBy = x.CreatedBy,
                          CreatedByName = u.UserName
                      };
-                
-            if (createdBy!=null)
-                q = q.Where(e => e.CreatedBy == createdBy);
 
             if (!search.IsNullOrEmpty())
                 q = q.Where(e => (EF.Functions.Like(e.manifest_no, $"%{search}%")) );
@@ -147,7 +144,7 @@ namespace BNRNew_API.Controllers.ticket
 
         public async Task<List<CargoDetail>> getCargoDetailListByTicketId(List<long> ids, long? cargoManifestId)
         {
-            var q = from x in ctx.CargoDetails
+            var q = from x in ctx.CargoDetails.Include(y => y.ticketData)
                     where (ids.Contains(x.ticketId!.Value))
                     select x;
 
@@ -161,12 +158,13 @@ namespace BNRNew_API.Controllers.ticket
         {
             var q = from x in ctx.CargoDetails
                     join y in ctx.ticket on x.ticketId equals y.id
+                    join z in ctx.golongan on y.golongan equals z.id
                     where x.cargoManifestid == cargoManifestId
                     select new CargoDetail() { 
                         ticketId = x.ticketId,
                         ticketNo = y.ticket_no,
-                        ticketData = y
-
+                        ticketData = y,
+                        golonganName = z.golongan
                     };
             return await q.ToListAsync();
         }
@@ -219,7 +217,7 @@ namespace BNRNew_API.Controllers.ticket
     {
         public Task<CargoManifest> create(CargoManifest ticket);
         public Task<CargoManifest> update(CargoManifest ticket, List<CargoDetail> listRemoveCargo);
-        public Task<List<CargoManifest>> getList(long? createdBy,string filter, int page, int pageSize);
+        public Task<List<CargoManifest>> getList(string filter, int page, int pageSize);
         public Task<CargoManifest> getDetail(long id);
         public Task<List<CargoDetail>> getCargoDetailListByTicketId(List<long> ids, long? cargoManifestId);
         public Task<List<CargoDetail>> getCargoDetailListByCargoManifest(long cargoManifestId);

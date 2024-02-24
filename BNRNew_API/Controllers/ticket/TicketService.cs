@@ -5,6 +5,8 @@ using BNRNew_API.Controllers.golongan;
 using BNRNew_API.Controllers.golonganplat;
 using BNRNew_API.config;
 using BNRNew_API.utils;
+using NPOI.SS.Formula.Functions;
+using static NPOI.HSSF.Record.PageBreakRecord;
 
 namespace BNRNew_API.Controllers.ticket
 {
@@ -59,6 +61,9 @@ namespace BNRNew_API.Controllers.ticket
 
             if(ticket.lokasi_tujuan.Equals(ticket.lokasi_asal))
                 throw new BadHttpRequestException("Lokasi asal dan tujuan tidak boleh sama");
+
+            if((ticket.tinggi_kenderaan> 4.5 || ticket.panjang_kenderaan > 18.5 || ticket.lebar_kenderaan > 3.2) && (ticket.biaya_tuslah??0) == 0  )
+                throw new BadHttpRequestException("Biaya Tuslah tidak boleh kosong");
 
             //validasi golongan 
             var dataGolongan = await golonganService.getGolonganDetail(ticket.golongan);
@@ -132,13 +137,15 @@ namespace BNRNew_API.Controllers.ticket
             var q = from x in ctx.ticket
                     join y in ctx.CargoDetails on x.id equals y.ticketId into ticGroup
                     from child in ticGroup.DefaultIfEmpty()
+                    join z in ctx.golongan on x.golongan equals z.id
                     where x.lokasi_tujuan == lokasi && child == null && x.status == AppConstant.STATUS_VALID
                     select new Ticket()
                     {
                         id = x.id,
                         ticket_no = x.ticket_no,
                         nama_supir = x.nama_supir,
-                        plat_no= x.plat_no
+                        plat_no= x.plat_no,
+                        golongan_name = z.golongan
                     };
             return await q.ToListAsync();
         }
@@ -153,7 +160,8 @@ namespace BNRNew_API.Controllers.ticket
                     select new Ticket
                     {
                         id = x.id,
-                        ticket_no = x.ticket_no
+                        ticket_no = x.ticket_no,
+                        plat_no = x.plat_no
                     };
 
             return await q.ToListAsync();
@@ -216,15 +224,23 @@ namespace BNRNew_API.Controllers.ticket
             return await q.FirstOrDefaultAsync();
         }
 
-        public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate)
+        public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate, string status, long? cashier, string manifest_no)
         {
+            var _startDate = DateTime.Now.AddDays(30);
+            if (startDate != null)
+                _startDate = startDate.Value;
+
+            var _endDate = DateTime.Now;
+            if (endDate != null)
+                _endDate = endDate.Value;
+
             var q = from x in ctx.ticket
                     join u in ctx.user on x.CreatedBy equals u.id
                     join g in ctx.golongan on x.golongan equals g.id
                     join y in ctx.CargoDetails on x.id equals y.ticketId into ticGroup from cargoDetailGroup in ticGroup.DefaultIfEmpty()
                     join z in ctx.CargoManifests on cargoDetailGroup.cargoManifestid equals z.id into cargoManifestGroup
                     from resManifest in cargoManifestGroup.DefaultIfEmpty()
-                    where x.tanggal_masuk.Value >=  startDate.Value && x.tanggal_masuk.Value <= endDate.Value
+                    where x.tanggal_masuk.Value >= _startDate && x.tanggal_masuk.Value <= _endDate
                     select new Ticket()
                     {
                         id = x.id,
@@ -238,11 +254,28 @@ namespace BNRNew_API.Controllers.ticket
                         total_harga = x.total_harga,
                         biaya_tuslah = x.biaya_tuslah,
                         berat = x.berat,
-                        volume  =   x.volume,
+                        volume = x.volume,
+                        jumlah_orang = x.jumlah_orang,
+                        panjang_kenderaan = x.panjang_kenderaan,
+                        panjang_ori_kenderaan = x.panjang_ori_kenderaan,
+                        lebar_kenderaan = x.lebar_kenderaan,
+                        tinggi_kenderaan = x.tinggi_kenderaan,
                         tanggal_masuk = x.tanggal_masuk,
                         jenis_muatan = x.jenis_muatan,
-                        keterangan = x.keterangan
+                        keterangan = x.keterangan,
+                        status = x.status,
+                        CreatedBy = x.CreatedBy
                     };
+
+            if (!String.IsNullOrEmpty(status))
+                q = q.Where(x => x.status == status);
+
+            if (cashier !=  null)
+                q = q.Where(x => x.CreatedBy.Equals(cashier));
+
+            if (!String.IsNullOrEmpty(manifest_no))
+                q = q.Where(x => x.manifest_no.Equals(manifest_no));
+
             return q.ToListAsync();
         }
 
@@ -284,7 +317,7 @@ namespace BNRNew_API.Controllers.ticket
 
         public Task<Ticket> getTicket(long ticketId);
 
-        public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate);
+        public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate,string status, long? cashier, string manifest_no);
 
         public int getTicketCountByGolongan(long golongan);
 
