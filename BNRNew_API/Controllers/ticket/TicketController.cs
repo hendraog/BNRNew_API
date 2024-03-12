@@ -45,6 +45,7 @@ namespace BNRNew_API.Controllers.auth
             request.id = null; // proses insert tidak boleh ada id
 
             Ticket ticket = new Ticket();
+            ticket.printer_count = 0;
             ticket.CreatedAt = DateTime.UtcNow;
             ticket.CreatedBy = sessionUser.id!.Value;
             ticket.status = AppConstant.STATUS_VALID;
@@ -203,6 +204,7 @@ namespace BNRNew_API.Controllers.auth
             printData.Add(new PrintData("data", "isi muatan", "center"));
             printData.Add(new PrintData("newline"));
             printData.Add(new PrintData("data", "Struk tiket ini harap di simpan dengan baik karena harus diserahkan kembali sewaktu kenderaan keluar dari pelabuhan tujuan. Apabila tiket hilang maka akan di kenakan denda sesuai dengan ketentuan yg berlaku", "left"));
+
             return Ok(new PrintDataResponse()
             {
                 print_data = printData,
@@ -219,15 +221,17 @@ namespace BNRNew_API.Controllers.auth
         {
             var sessionUser = getSessionUser();
 
-            Ticket ticket = await service.getTicketDetail(request!.id.Value);
+            Ticket ticket = await service.getTicket(request!.id.Value);
 
             if (ticket == null)
                 return Ok(null);
 
             ticket.UpdatedAt = DateTime.UtcNow;
             ticket.UpdatedBy = sessionUser.id!.Value;
-            ticket.printer_count = ticket.printer_count + 1;
+            ticket.printer_count = (ticket.printer_count?? 0) + 1;
             var ticketdata = await this.service.update(ticket);
+
+
             return Ok(ticketdata);
         }
 
@@ -250,6 +254,7 @@ namespace BNRNew_API.Controllers.auth
                 id
             );
 
+            data.printer_count = data.printer_count ?? 0;
             if (sessionUser.Role == AppConstant.Role_CASHIER && (sessionUser?.id??0) != data.CreatedBy)
                 throw new UnauthorizedAccessException("Role anda tidak berhak untuk mengakses data ini");
 
