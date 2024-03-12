@@ -116,7 +116,7 @@ namespace BNRNew_API.Controllers.auth
 
             row = NPoiUtils.createRow(wb, ws, 5, boldFont, "No Manifest", "No Ticket", "Kasir", "Gol", "No", "No Kend", 
                 "Hrg Dasar", "Hrg Tuslah", "Hrg Total", "Berat (Kg)", "Volume(m3)", "Tanggal/Waktu", "Jenis Muatan", 
-                "Keterangan", "Panjang", "Panjang Ori","lebar", "Tinggi", "Jlh Orang");
+                "Keterangan", "Panjang", "Panjang Ori","lebar", "Tinggi", "Nama Supir", "Nama Kapal","Nama Nahkoda", "Jlh Orang");
 
 
             var startFrom = 6;
@@ -157,6 +157,9 @@ namespace BNRNew_API.Controllers.auth
                     item.panjang_ori_kenderaan ?? 0,
                     item.tinggi_kenderaan ?? 0,
                     item.lebar_kenderaan ?? 0,
+                    item.nama_supir,
+                    item.nama_kapal ,
+                    item.nama_nahkoda,
                     item.jumlah_orang ?? 0) ;
                 startFrom++;
             }
@@ -181,13 +184,16 @@ namespace BNRNew_API.Controllers.auth
                 "",
                 "",
                 "",
+                "",
+                "",
+                "",
                 totalPenumpang);
 
-            CellRangeAddress region = new CellRangeAddress(5, 5, 0, 18);
+            CellRangeAddress region = new CellRangeAddress(5, 5, 0, 21);
             RegionUtil.SetBorderTop((int)BorderStyle.Thin, region, ws, wb);
             RegionUtil.SetBorderBottom((int)BorderStyle.Thin, region, ws, wb);
 
-            CellRangeAddress region1 = new CellRangeAddress(startFrom, startFrom, 0, 18);
+            CellRangeAddress region1 = new CellRangeAddress(startFrom, startFrom, 0, 21);
             RegionUtil.SetBorderTop((int)BorderStyle.Thin, region1, ws, wb);
 
 

@@ -343,6 +343,9 @@ namespace BNRNew_API.Migrations
                     b.Property<string>("nik_penumpang2")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("nik_penumpang3")
+                        .HasColumnType("TEXT");
+
                     b.Property<double?>("panjang_kenderaan")
                         .IsRequired()
                         .HasColumnType("REAL");
@@ -398,6 +401,9 @@ namespace BNRNew_API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("usia_penumpang2")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("usia_penumpang3")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("volume")

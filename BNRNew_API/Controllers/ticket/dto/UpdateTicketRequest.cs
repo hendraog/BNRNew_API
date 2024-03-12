@@ -90,5 +90,17 @@ namespace BNRNew_API.ticket.request
 
         [Required]
         public string tujuan_supir { get; set; }
+
+        public string? nik_penumpang1 { get; set; }
+        public string? nik_penumpang2 { get; set; }
+        public string? nik_penumpang3 { get; set; }
+
+        public int? usia_penumpang1 { get; set; }
+
+        public int? usia_penumpang2 { get; set; }
+
+        public int? usia_penumpang3 { get; set; }
+
+
     }
 }

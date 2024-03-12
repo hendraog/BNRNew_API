@@ -66,7 +66,7 @@ namespace BNRNew_API.Entities
         public double? volume { get; set; }
 
         [Required]
-        public string keterangan { get; set; }
+        public string? keterangan { get; set; }
 
         [Required]
         public string plat_no { get; set; }
@@ -125,10 +125,12 @@ namespace BNRNew_API.Entities
 
         public int? usia_penumpang2 { get; set; }
 
+        public int? usia_penumpang3 { get; set; }
+
         public string? nik_penumpang1 { get; set; }
 
         public string? nik_penumpang2 { get; set; }
-
+        public string? nik_penumpang3 { get; set; }
 
 
         [Required]
@@ -163,6 +165,13 @@ namespace BNRNew_API.Entities
 
         [NotMapped]
         public string manifest_no { get; set; }
+
+        [NotMapped]
+        public string nama_kapal { get; set; }
+
+        [NotMapped]
+        public string nama_nahkoda { get; set; }
+
 
 
     }

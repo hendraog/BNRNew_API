@@ -154,6 +154,30 @@
         <member name="M:BNRNew_API.Migrations.add_nullablenik.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:BNRNew_API.Migrations.add_nullable">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nullable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nullable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nullable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BNRNew_API.Migrations.add_nikdanusia2">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nikdanusia2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nikdanusia2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BNRNew_API.Migrations.add_nikdanusia2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:BNRNew_API.utils.AuthorizeAttribute">
             attribute untuk melakukan validasi JWT token 
         </member>

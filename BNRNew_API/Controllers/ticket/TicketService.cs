@@ -209,7 +209,13 @@ namespace BNRNew_API.Controllers.ticket
                         CreatedByName = u.UserName,
                         UpdatedBy = x.UpdatedBy,
                         UpdatedAt = x.UpdatedAt,
-                        printer_count = x.printer_count
+                        printer_count = x.printer_count,
+                        nik_penumpang1 = x.nik_penumpang1,
+                        nik_penumpang2 = x.nik_penumpang2,
+                        nik_penumpang3 = x.nik_penumpang3,
+                        usia_penumpang1 = x.usia_penumpang1,
+                        usia_penumpang2 = x.usia_penumpang2,
+                        usia_penumpang3 = x.usia_penumpang3,
                         //UpdatedByName = z.UserName
                     };
 
@@ -226,7 +232,7 @@ namespace BNRNew_API.Controllers.ticket
 
         public Task<List<Ticket>> getReportCargo(DateTime? startDate, DateTime? endDate, string status, long? cashier, string manifest_no)
         {
-            var _startDate = DateTime.Now.AddDays(30);
+            var _startDate = DateTime.Now.AddDays(-1000);
             if (startDate != null)
                 _startDate = startDate.Value;
 
@@ -264,6 +270,8 @@ namespace BNRNew_API.Controllers.ticket
                         jenis_muatan = x.jenis_muatan,
                         keterangan = x.keterangan,
                         status = x.status,
+                        nama_nahkoda = resManifest.nama_nahkoda,
+                        nama_kapal = resManifest.nama_kapal,
                         CreatedBy = x.CreatedBy
                     };
 
